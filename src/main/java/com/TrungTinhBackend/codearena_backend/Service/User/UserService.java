@@ -5,5 +5,6 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
-    public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response);
+    public APIResponse login(APIRequestUserLogin apiRequestUserLogin,
+                             HttpServletResponse response);
 }
