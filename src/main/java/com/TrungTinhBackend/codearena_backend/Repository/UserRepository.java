@@ -5,5 +5,6 @@ import org.springframework.security.core.userdetails.User;
 
 public interface UserRepository extends JpaRepository<com.TrungTinhBackend.codearena_backend.Entity.User,Long> {
     public User findByUsernameAndEnabled(String username, boolean b);
-    public User findByUsername(String username);
+    public com.TrungTinhBackend.codearena_backend.Entity.User findByUsername(String username);
+    public com.TrungTinhBackend.codearena_backend.Entity.User findByEmail(String email);
 }
