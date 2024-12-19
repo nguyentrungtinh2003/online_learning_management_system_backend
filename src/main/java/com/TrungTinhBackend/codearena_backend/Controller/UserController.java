@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Controller;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
+import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,5 +34,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<APIResponse> login(@Valid @RequestBody APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) {
         return ResponseEntity.ok(userService.login(apiRequestUserLogin,response));
+    }
+
+    @PutMapping("/update-user/{id}")
+    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart APIRequestUserUpdate apiRequestUserUpdate,@RequestPart MultipartFile img) {
+        return ResponseEntity.ok(userService.updateUser(id,apiRequestUserUpdate,img));
+    }
+
+    @DeleteMapping("/delete-user/{id}")
+    public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deleteUser(id));
     }
 }

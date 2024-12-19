@@ -7,6 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
+import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.cloudinary.Cloudinary;
@@ -168,6 +169,144 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(user1);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            apiResponse.setStatusCode(403L);
+            apiResponse.setMessage("Invalid credentials");
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (Exception e) {
+            apiResponse.setStatusCode(500L);
+            apiResponse.setMessage(e.getMessage());
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        }
+    }
+
+    @Override
+    public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            if(user == null) {
+                apiResponse.setStatusCode(500L);
+                apiResponse.setMessage("User not found");
+                apiResponse.setTimestamp(LocalDateTime.now());
+                return apiResponse;
+            }
+
+            if (img != null && !img.isEmpty()) {
+                try {
+                    if(user.getImg() != null && !user.getImg().isEmpty()) {
+                        String oldImgUrl = user.getImg();
+                        String publicID = oldImgUrl.substring(oldImgUrl.lastIndexOf("/") + 1,oldImgUrl.lastIndexOf("."));
+                        cloudinary.uploader().destroy(publicID,ObjectUtils.emptyMap());
+                    }
+                    Map uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());
+                    String imgUrl = uploadResult.get("url").toString();
+                    user.setImg(imgUrl); // Lưu URL của ảnh
+                }catch (Exception e) {
+                    apiResponse.setStatusCode(500L);
+                    apiResponse.setMessage("Fail update img");
+                    apiResponse.setTimestamp(LocalDateTime.now());
+                }
+            }
+
+            if (apiRequestUserUpdate.getUsername() != null && !apiRequestUserUpdate.getUsername().isEmpty()) {
+                user.setUsername(apiRequestUserUpdate.getUsername());
+            }
+
+            if (apiRequestUserUpdate.getPassword() != null && !apiRequestUserUpdate.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(apiRequestUserUpdate.getPassword()));
+            }
+
+            if (apiRequestUserUpdate.getEmail() != null && !apiRequestUserUpdate.getEmail().isEmpty()) {
+                user.setEmail(apiRequestUserUpdate.getEmail());
+            }
+
+            if (apiRequestUserUpdate.getCoin() != null) {
+                user.setCoin(apiRequestUserUpdate.getCoin());
+            }
+
+            if (apiRequestUserUpdate.getAddress() != null && !apiRequestUserUpdate.getAddress().isEmpty()) {
+                user.setAddress(apiRequestUserUpdate.getAddress());
+            }
+
+            if (apiRequestUserUpdate.getBirthDay() != null) {
+                user.setBirthDay(apiRequestUserUpdate.getBirthDay());
+            }
+
+            if (apiRequestUserUpdate.getPoint() != null) {
+                user.setPoint(apiRequestUserUpdate.getPoint());
+            }
+
+            if (apiRequestUserUpdate.getPhoneNumber() != null && !apiRequestUserUpdate.getPhoneNumber().isEmpty()) {
+                user.setPhoneNumber(apiRequestUserUpdate.getPhoneNumber());
+            }
+
+            if (apiRequestUserUpdate.getRankEnum() != null) {
+                user.setRankEnum(apiRequestUserUpdate.getRankEnum());
+            }
+
+            if (apiRequestUserUpdate.getRoleEnum() != null) {
+                user.setRoleEnum(apiRequestUserUpdate.getRoleEnum());
+            }
+
+            if (apiRequestUserUpdate.getStatusUserEnum() != null) {
+                user.setStatusUserEnum(apiRequestUserUpdate.getStatusUserEnum());
+            }
+
+            if (apiRequestUserUpdate.isEnabled() != user.isEnabled()) {
+                user.setEnabled(apiRequestUserUpdate.isEnabled());
+            }
+
+            if(apiRequestUserUpdate.getDate() != null) {
+                user.setDate(apiRequestUserUpdate.getDate());
+            }
+
+            userRepository.save(user);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("User update success");
+            apiResponse.setData(user);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            apiResponse.setStatusCode(403L);
+            apiResponse.setMessage("Invalid credentials");
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (Exception e) {
+            apiResponse.setStatusCode(500L);
+            apiResponse.setMessage(e.getMessage());
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        }
+    }
+
+    @Override
+    public APIResponse deleteUser(Long id) {
+        APIResponse apiResponse = new APIResponse();
+        try {
+           User user = userRepository.findById(id).orElse(null);
+           if(user == null) {
+               apiResponse.setStatusCode(500L);
+               apiResponse.setMessage("User not found");
+               apiResponse.setTimestamp(LocalDateTime.now());
+               return apiResponse;
+           }
+
+           user.setEnabled(false);
+           user.setDeleted(true);
+
+           userRepository.save(user);
+
+           apiResponse.setStatusCode(200L);
+           apiResponse.setMessage("User delete success");
+           apiResponse.setData(user);
+           apiResponse.setTimestamp(LocalDateTime.now());
+           return apiResponse;
 
         } catch (BadCredentialsException e) {
             apiResponse.setStatusCode(403L);
