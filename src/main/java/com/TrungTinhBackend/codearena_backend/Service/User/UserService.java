@@ -10,13 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     public APIResponse login(APIRequestUserLogin apiRequestUserLogin,
-                             HttpServletResponse response);
+                             HttpServletResponse response) throws Exception;
 
-    public APIResponse userRegister(APIRequestUserRegister apiRequestUserRegister);
+    public APIResponse userRegister(APIRequestUserRegister apiRequestUserRegister) throws Exception;
 
-    public APIResponse adminRegisterUser(APIRequestAdminRegisterUser apiRequestAdminRegisterUser, MultipartFile img);
+    public APIResponse adminRegisterUser(APIRequestAdminRegisterUser apiRequestAdminRegisterUser, MultipartFile img) throws Exception;
 
-    public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img);
+    public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) throws Exception;
 
-    public APIResponse deleteUser(Long id);
+    public APIResponse deleteUser(Long id) throws Exception;
 }

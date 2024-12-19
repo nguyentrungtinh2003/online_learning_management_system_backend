@@ -1,4 +1,4 @@
-package com.TrungTinhBackend.codearena_backend.Service;
+package com.TrungTinhBackend.codearena_backend.Service.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
