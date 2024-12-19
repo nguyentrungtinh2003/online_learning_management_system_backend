@@ -9,6 +9,7 @@ import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private Cloudinary cloudinary;
 
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -111,6 +114,17 @@ public class UserServiceImpl implements UserService{
             user1.setEmail(apiRequestUserRegister.getEmail());
 
             userRepository.save(user1);
+
+
+            // Gửi email sau khi đăng ký thành công
+            String to = user.getEmail();
+            String subject = "Đăng ký thành công";
+            String body = "Chào " + user.getUsername() + ",\n\n"
+                    + "Cảm ơn bạn đã đăng ký tài khoản. Chúc bạn trải nghiệm vui vẻ!\n\n"
+                    + "Trân trọng,\n"
+                    + "Đội ngũ phát triển";
+
+            emailService.sendEmail(to, subject, body);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("User register success");
