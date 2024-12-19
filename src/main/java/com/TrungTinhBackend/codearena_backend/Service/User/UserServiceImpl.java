@@ -52,7 +52,9 @@ public class UserServiceImpl implements UserService{
 
             var user = userRepository.findByUsername(apiRequestUserLogin.getUsername());
             if (user == null) {
-                throw new BadCredentialsException("User not found");
+                apiResponse.setStatusCode(403L);
+                apiResponse.setMessage("Invalid credentials");
+                return apiResponse;
             }
 
             var jwt = jwtUtils.generateToken(user);
@@ -209,6 +211,7 @@ public class UserServiceImpl implements UserService{
                     apiResponse.setStatusCode(500L);
                     apiResponse.setMessage("Fail update img");
                     apiResponse.setTimestamp(LocalDateTime.now());
+                    return apiResponse;
                 }
             }
 
