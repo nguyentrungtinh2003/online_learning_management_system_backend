@@ -14,35 +14,45 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/user-register")
-    public ResponseEntity<APIResponse> userRegister(@Valid @RequestBody APIRequestUserRegister apiRequestUserRegister) {
+    public ResponseEntity<APIResponse> userRegister(@Valid @RequestBody APIRequestUserRegister apiRequestUserRegister) throws Exception {
         return ResponseEntity.ok(userService.userRegister(apiRequestUserRegister));
     }
 
     @PostMapping("/admin-register-user")
     public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart("user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
-                                                         @RequestPart("img") MultipartFile img) {
+                                                         @RequestPart("img") MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.adminRegisterUser(apiRequestAdminRegisterUser,img));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<APIResponse> login(@Valid @RequestBody APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) {
+    public ResponseEntity<APIResponse> login(@Valid @RequestBody APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
         return ResponseEntity.ok(userService.login(apiRequestUserLogin,response));
     }
 
+    @GetMapping("/all-user")
+    public ResponseEntity<APIResponse> getAllUser() throws Exception {
+        return ResponseEntity.ok(userService.getAllUser());
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<APIResponse> getUserById(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
     @PutMapping("/update-user/{id}")
-    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart APIRequestUserUpdate apiRequestUserUpdate,@RequestPart MultipartFile img) {
+    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart APIRequestUserUpdate apiRequestUserUpdate,@RequestPart MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.updateUser(id,apiRequestUserUpdate,img));
     }
 
     @DeleteMapping("/delete-user/{id}")
-    public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
 }

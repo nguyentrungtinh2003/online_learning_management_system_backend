@@ -17,8 +17,8 @@ public class GlobalExceptionHandler {
         response.setStatusCode(400L);
         response.setMessage("Error: " + ex.getMessage());
         response.setTimestamp(LocalDateTime.now());
-        response.setData(null); // Không có dữ liệu trả về
-        response.setToken(null); // Không cần token ở đây
+        response.setData(null);
+        response.setToken(null);
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

@@ -27,13 +27,20 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("api/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("api/student/**").hasRole("STUDENT")
-                        .anyRequest().permitAll());
+                        // Các API cần quyền truy cập
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
+                        .requestMatchers("/api/student/**").hasRole("STUDENT")
 
+                        // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // Các yêu cầu khác không yêu cầu xác thực
+                        .anyRequest().permitAll()
+                );
         return http.build();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

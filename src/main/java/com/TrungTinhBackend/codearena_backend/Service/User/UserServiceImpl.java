@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Service.User;
 
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
+import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -103,6 +105,10 @@ public class UserServiceImpl implements UserService{
             user1.setUsername(apiRequestUserRegister.getUsername());
             user1.setPassword(passwordEncoder.encode(apiRequestUserRegister.getPassword()));
             user1.setEmail(apiRequestUserRegister.getEmail());
+            user1.setEnabled(true);
+            user1.setCoin(0L);
+            user1.setPoint(10L);
+            user1.setRoleEnum(RoleEnum.STUDENT);
 
             userRepository.save(user1);
 
@@ -285,6 +291,42 @@ public class UserServiceImpl implements UserService{
            apiResponse.setData(user);
            apiResponse.setTimestamp(LocalDateTime.now());
            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse getAllUser() throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            List<User> users = userRepository.findAllByIsDeleted(false);
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Get all user success");
+            apiResponse.setData(users);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse getUserById(Long id) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Get user by id "+id+" success");
+            apiResponse.setData(user);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
 
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Invalid credentials");

@@ -11,7 +11,7 @@ public class SwaggerConfig {
     public GroupedOpenApi publicAPI() {
         return GroupedOpenApi.builder()
                 .group("CodeArena-API")
-                .pathsToMatch("/**")
+                .pathsToMatch("/api/**")
                 .build();
     }
 }

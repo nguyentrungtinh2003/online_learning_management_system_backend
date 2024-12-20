@@ -19,4 +19,8 @@ public interface UserService {
     public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) throws Exception;
 
     public APIResponse deleteUser(Long id) throws Exception;
+
+    public APIResponse getAllUser() throws Exception;
+
+    public APIResponse getUserById(Long id) throws Exception;
 }

@@ -1,9 +1,11 @@
 package com.TrungTinhBackend.codearena_backend.Service.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+@Configuration
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
