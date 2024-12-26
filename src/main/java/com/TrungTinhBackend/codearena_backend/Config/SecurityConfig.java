@@ -34,10 +34,11 @@ public class SecurityConfig {
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-
+                
                         // Các yêu cầu khác không yêu cầu xác thực
                         .anyRequest().permitAll()
-                );
+                )
+                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
         return http.build();
     }
 

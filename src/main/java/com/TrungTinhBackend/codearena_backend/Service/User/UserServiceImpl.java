@@ -15,12 +15,20 @@ import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +36,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -334,4 +343,75 @@ public class UserServiceImpl implements UserService{
             throw new Exception("Message : "+e.getMessage(),e);
         }
     }
+
+    @Override
+    public APIResponse getUserByPage(int page, int size) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            Pageable pageable = PageRequest.of(page,size);
+            Page<User> page1 = userRepository.findAllByIsDeletedFalse(pageable);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Get all user by page "+page+" ,size "+size+" success");
+            apiResponse.setData(page1);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse getCurrentUser(Authentication authentication) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            // Lấy thông tin từ Authentication
+            OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) authentication;
+            Map<String, Object> attributes = oAuth2Token.getPrincipal().getAttributes();
+
+            String email = (String) attributes.get("email");
+            String name = (String) attributes.get("name");
+            String profilePicture = (String) attributes.get("picture");
+
+            // Kiểm tra và lưu vào DB nếu cần
+            Optional<User> existingUser = Optional.ofNullable(userRepository.findByEmail(email));
+            if (existingUser.isEmpty()) {
+                User newUser = new User();
+                newUser.setEmail(email);
+                newUser.setUsername(name);
+                newUser.setImg(profilePicture);
+                newUser.setProvider("GOOGLE");
+                userRepository.save(newUser); // Lưu vào DB
+            }
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Login google success");
+            apiResponse.setData(Map.of(
+                    "email", email,
+                    "name", name,
+                    "picture", profilePicture
+            ));
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse logoutGoogle(HttpServletRequest request, HttpServletResponse response) {
+        APIResponse apiResponse = new APIResponse();
+        SecurityContextHolder.clearContext(); // Xóa authentication context
+        new SecurityContextLogoutHandler().logout(request, null, null);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Logout success !");
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
 }

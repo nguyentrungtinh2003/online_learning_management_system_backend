@@ -55,6 +55,8 @@ public class User implements UserDetails {
 
     private LocalDateTime date;
 
+    private String provider;
+
     private String otp;
 
     private LocalDateTime otpExpiry;
