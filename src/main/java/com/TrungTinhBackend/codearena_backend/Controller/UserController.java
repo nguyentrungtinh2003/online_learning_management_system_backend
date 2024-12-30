@@ -1,9 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
+import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -72,5 +71,18 @@ public class UserController {
     @DeleteMapping("/delete-user/{id}")
     public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(userService.deleteUser(id));
+    }
+
+    // API gửi OTP đến email
+    @PostMapping("/forgot-password")
+    public ResponseEntity<APIResponse> forgotPassword(@RequestBody Map<String, String> payload) throws Exception {
+        String email = payload.get("email");
+        return ResponseEntity.ok(userService.sendOtpToEmail(email));
+    }
+
+    // API xác nhận OTP và thay đổi mật khẩu
+    @PostMapping("/reset-password")
+    public ResponseEntity<APIResponse> resetPassword(@RequestBody APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception {
+        return ResponseEntity.ok(userService.verifyOtpAndChangePassword(apiRequestUserResetPassword));
     }
 }

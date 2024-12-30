@@ -5,10 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
+import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
@@ -33,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -412,6 +406,72 @@ public class UserServiceImpl implements UserService{
         apiResponse.setMessage("Logout success !");
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
+    }
+
+    @Override
+    public APIResponse sendOtpToEmail(String email) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            User user = userRepository.findByEmail(email);
+            if(user == null) {
+                throw new RuntimeException("User not found !");
+            }
+
+            String otp = String.format("%06d",new Random().nextInt(999999));
+            user.setOtp(otp);
+            user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
+            userRepository.save(user);
+
+            emailService.sendEmail(email,"Mã OTP của bạn","OTP : "+otp);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Send OTP success !");
+            apiResponse.setData(otp);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            User user = userRepository.findByEmail(apiRequestUserResetPassword.getEmail());
+            if(user == null) {
+                throw new RuntimeException("User not found !");
+            }
+
+            if(!user.getOtp().equals(apiRequestUserResetPassword.getOtp())) {
+                throw new RuntimeException("OTP không đúng !");
+            }
+
+            if(user.getOtpExpiry().isBefore(LocalDateTime.now())) {
+                user.setOtp(null);
+                user.setOtpExpiry(null);
+                userRepository.save(user);
+            }
+
+            user.setOtp(null);
+            user.setOtpExpiry(null);
+            user.setPassword(passwordEncoder.encode(apiRequestUserResetPassword.getPassword()));
+            userRepository.save(user);
+
+
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Reset password success !");
+            apiResponse.setData(null);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 
 }

@@ -1,9 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestAdminRegisterUser;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserLogin;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserRegister;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestUserUpdate;
+import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,4 +29,7 @@ public interface UserService {
 
     public APIResponse logoutGoogle(HttpServletRequest request, HttpServletResponse response);
 
+    public APIResponse sendOtpToEmail(String email) throws Exception;
+
+    public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception;
 }
