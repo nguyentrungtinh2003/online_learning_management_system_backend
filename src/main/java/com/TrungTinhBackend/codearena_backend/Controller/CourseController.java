@@ -23,9 +23,14 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img") MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.updateCourse(id,apiRequestCourse, img));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deleteCourse(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(courseService.deleteCourse(id));
     }
 }

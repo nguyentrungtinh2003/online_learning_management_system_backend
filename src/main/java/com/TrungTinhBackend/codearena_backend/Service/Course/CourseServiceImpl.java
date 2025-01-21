@@ -108,7 +108,27 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public APIResponse deleteCourse(Long id) {
-        return null;
+    public APIResponse deleteCourse(Long id) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+
+            Course course = courseRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Course not found !")
+            );
+
+            courseRepository.deleteById(id);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete course success !");
+            apiResponse.setData(course);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 }
