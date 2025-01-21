@@ -8,6 +8,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
+import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -39,10 +40,11 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Autowired
-    private Cloudinary cloudinary;
+    private ImgService imgService;
 
     @Autowired
     private EmailService emailService;
+
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -151,8 +153,7 @@ public class UserServiceImpl implements UserService{
             User user1 = new User();
 
             if (img != null && !img.isEmpty()) {
-                Map uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());
-                String imgUrl = uploadResult.get("url").toString();
+                String imgUrl = imgService.uploadImg(img);
                 user1.setImg(imgUrl); // Lưu URL của ảnh
             }
 
@@ -196,14 +197,8 @@ public class UserServiceImpl implements UserService{
 
             if (img != null && !img.isEmpty()) {
                 try {
-                    if(user.getImg() != null && !user.getImg().isEmpty()) {
-                        String oldImgUrl = user.getImg();
-                        String publicID = oldImgUrl.substring(oldImgUrl.lastIndexOf("/") + 1,oldImgUrl.lastIndexOf("."));
-                        cloudinary.uploader().destroy(publicID,ObjectUtils.emptyMap());
-                    }
-                    Map uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());
-                    String imgUrl = uploadResult.get("url").toString();
-                    user.setImg(imgUrl); // Lưu URL của ảnh
+                    String imgUrl = imgService.updateImg(user.getImg(), img);
+                    user.setImg(imgUrl);
                 }catch (Exception e) {
                     throw new Exception("Message : "+e.getMessage(),e);
                 }

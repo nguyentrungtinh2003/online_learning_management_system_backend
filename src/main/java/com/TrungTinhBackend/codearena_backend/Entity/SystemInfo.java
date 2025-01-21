@@ -7,36 +7,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Course {
+public class SystemInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String courseName;
+    private String systemName;
 
-    private String description;
+    private String slogan;
 
     private String img;
 
+    private String address;
+
+    private String phoneNumber;
+
+    private String email;
+
     private LocalDateTime date;
+
+    private String socialMediaURL;
+
+    private String description;
 
     private boolean isDeleted;
 
-    @ManyToMany(mappedBy = "courses")
-    private List<User> users;
-
     @OneToOne
-    @JoinColumn(name = "lecturer_id")
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "course")
-    private List<Lesson> lessons;
 }
