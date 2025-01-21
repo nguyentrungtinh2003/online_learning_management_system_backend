@@ -67,8 +67,44 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) {
-        return null;
+    public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+
+            User lecturer = userRepository.findById(apiRequestCourse.getUser().getId()).orElseThrow(
+                    () -> new RuntimeException("User not found !")
+            );
+
+            Course course = courseRepository.findById(apiRequestCourse.getId()).orElseThrow(
+                    () -> new RuntimeException("Course not found !")
+            );
+
+            if(apiRequestCourse.getCourseName() != null && !apiRequestCourse.getCourseName().isEmpty()) {
+                course.setCourseName(apiRequestCourse.getCourseName());
+            }
+            if(apiRequestCourse.getDescription() != null && !apiRequestCourse.getDescription().isEmpty()) {
+                course.setDescription(apiRequestCourse.getDescription());
+            }
+            if(apiRequestCourse.getImg() != null && !apiRequestCourse.getImg().isEmpty()) {
+                course.setImg(imgService.updateImg(course.getImg(),img));
+            }
+            if(lecturer != null) {
+                course.setUser(lecturer);
+            }
+            courseRepository.save(course);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Update course success !");
+            apiResponse.setData(course);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 
     @Override

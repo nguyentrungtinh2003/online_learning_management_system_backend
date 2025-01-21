@@ -22,4 +22,10 @@ public class CourseController {
                                                  @RequestPart(value = "img") MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
+                                                 @RequestPart(value = "img") MultipartFile img) throws Exception {
+        return ResponseEntity.ok(courseService.updateCourse(id,apiRequestCourse, img));
+    }
 }
