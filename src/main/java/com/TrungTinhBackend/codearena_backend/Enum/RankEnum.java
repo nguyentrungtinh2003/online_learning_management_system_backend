@@ -5,5 +5,5 @@ public enum RankEnum {
     SILVER, // bạc
     GOLD,   // vàng
     PLATINUM, // bạch kim
-    DIAMOND   // kim cương
+    DIAMOND,// kim cương
 }

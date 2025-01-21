@@ -1,0 +1,41 @@
+package com.TrungTinhBackend.codearena_backend.Entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Lesson {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String lessonName;
+
+    private String description;
+
+    private String img;
+
+    private LocalDateTime date;
+
+    private String videoURL;
+
+    private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @OneToMany(mappedBy = "lesson")
+    private List<Quiz> quizzes;
+}

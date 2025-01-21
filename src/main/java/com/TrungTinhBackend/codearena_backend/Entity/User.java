@@ -3,10 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Entity;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +37,7 @@ public class User implements UserDetails {
 
     private String img;
 
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     private String address;
 
@@ -64,6 +62,14 @@ public class User implements UserDetails {
     private boolean enabled;
 
     private boolean isDeleted;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_course",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

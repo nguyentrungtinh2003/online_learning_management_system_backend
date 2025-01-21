@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService{
             user1.setCoin(0L);
             user1.setPoint(10L);
             user1.setRoleEnum(RoleEnum.STUDENT);
+            user1.setStatusUserEnum(StatusUserEnum.ACTIVE);
 
             userRepository.save(user1);
 

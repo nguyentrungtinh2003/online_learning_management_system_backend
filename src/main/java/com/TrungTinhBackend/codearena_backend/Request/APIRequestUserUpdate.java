@@ -5,6 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,7 +21,7 @@ public class APIRequestUserUpdate {
 
     private String img;
 
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     private String address;
 

@@ -27,8 +27,8 @@ public class UserController {
     }
 
     @PostMapping("/admin-register-user")
-    public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart("user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
-                                                         @RequestPart("img") MultipartFile img) throws Exception {
+    public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart(value = "user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
+                                                         @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.adminRegisterUser(apiRequestAdminRegisterUser,img));
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/update-user/{id}")
-    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart APIRequestUserUpdate apiRequestUserUpdate,@RequestPart MultipartFile img) throws Exception {
+    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart(value = "user") APIRequestUserUpdate apiRequestUserUpdate,@RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.updateUser(id,apiRequestUserUpdate,img));
     }
 
