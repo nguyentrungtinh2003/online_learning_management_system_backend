@@ -116,7 +116,8 @@ public class CourseServiceImpl implements CourseService{
                     () -> new RuntimeException("Course not found !")
             );
 
-            courseRepository.deleteById(id);
+            course.setDeleted(true);
+            courseRepository.save(course);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete course success !");
