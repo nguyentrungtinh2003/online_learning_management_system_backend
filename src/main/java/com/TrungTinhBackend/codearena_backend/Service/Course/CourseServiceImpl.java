@@ -85,7 +85,7 @@ public class CourseServiceImpl implements CourseService{
             if(apiRequestCourse.getDescription() != null && !apiRequestCourse.getDescription().isEmpty()) {
                 course.setDescription(apiRequestCourse.getDescription());
             }
-            if(apiRequestCourse.getImg() != null && !apiRequestCourse.getImg().isEmpty()) {
+            if(img != null && !img.isEmpty()) {
                 course.setImg(imgService.updateImg(course.getImg(),img));
             }
             if(lecturer != null) {

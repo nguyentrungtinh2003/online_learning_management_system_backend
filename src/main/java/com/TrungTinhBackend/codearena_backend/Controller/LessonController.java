@@ -7,10 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Lesson.LessonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -21,9 +18,16 @@ public class LessonController {
     private LessonService lessonService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "course") APIRequestLesson apiRequestLesson,
+    public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img") MultipartFile img,
                                                  @RequestPart(value = "video") MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
+                                                 @RequestPart(value = "img") MultipartFile img,
+                                                 @RequestPart(value = "video") MultipartFile video) throws Exception {
+        return ResponseEntity.ok(lessonService.updateLesson(id,apiRequestLesson, img, video));
     }
 }
