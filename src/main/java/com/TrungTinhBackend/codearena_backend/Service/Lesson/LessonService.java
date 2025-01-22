@@ -1,0 +1,11 @@
+package com.TrungTinhBackend.codearena_backend.Service.Lesson;
+
+import com.TrungTinhBackend.codearena_backend.Request.APIRequestLesson;
+import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+public interface LessonService {
+    public APIResponse addLesson(APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception;
+    public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception;
+    public APIResponse deleteLesson(Long id) throws Exception;
+}
