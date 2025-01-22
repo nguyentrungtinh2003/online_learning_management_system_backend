@@ -124,6 +124,27 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public APIResponse deleteQuiz(Long id) throws Exception {
-        return null;
+        APIResponse apiResponse = new APIResponse();
+        try {
+
+            Quiz quiz = quizRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Quiz not found !")
+            );
+
+            quiz.setDeleted(true);
+            quizRepository.save(quiz);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete quiz success !");
+            apiResponse.setData(quiz);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 }
