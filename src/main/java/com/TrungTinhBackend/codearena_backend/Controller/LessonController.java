@@ -30,4 +30,9 @@ public class LessonController {
                                                  @RequestPart(value = "video") MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.updateLesson(id,apiRequestLesson, img, video));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deleteLesson(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(lessonService.deleteLesson(id));
+    }
 }

@@ -128,6 +128,27 @@ public class LessonServiceImpl implements LessonService{
 
     @Override
     public APIResponse deleteLesson(Long id) throws Exception {
-        return null;
+        APIResponse apiResponse = new APIResponse();
+        try {
+
+            Lesson lesson = lessonRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Lesson not found !")
+            );
+
+            lesson.setDeleted(true);
+            lessonRepository.save(lesson);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete lesson success !");
+            apiResponse.setData(lesson);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 }
