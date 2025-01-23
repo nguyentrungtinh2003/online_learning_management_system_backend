@@ -67,7 +67,55 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public APIResponse updateQuestion(Long id, APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
-        return null;
+        APIResponse apiResponse = new APIResponse();
+        try {
+            Quiz quiz = quizRepository.findById(apiRequestQuestion.getQuiz().getId()).orElseThrow(
+                    () -> new RuntimeException("Quiz not found !")
+            );
+
+            Question question = questionRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Question not found !")
+            );
+
+            if(apiRequestQuestion.getQuestionName() != null && !apiRequestQuestion.getQuestionName().isEmpty()) {
+                question.setQuestionName(apiRequestQuestion.getQuestionName());
+            }
+            if(apiRequestQuestion.getAnswerA() != null && !apiRequestQuestion.getAnswerA().isEmpty()) {
+                question.setAnswerA(apiRequestQuestion.getAnswerA());
+            }
+            if(apiRequestQuestion.getAnswerB() != null && !apiRequestQuestion.getAnswerB().isEmpty()) {
+                question.setAnswerB(apiRequestQuestion.getAnswerB());
+            }
+            if(apiRequestQuestion.getAnswerC() != null && !apiRequestQuestion.getAnswerC().isEmpty()) {
+                question.setAnswerC(apiRequestQuestion.getAnswerC());
+            }
+            if(apiRequestQuestion.getAnswerD() != null && !apiRequestQuestion.getAnswerD().isEmpty()) {
+                question.setAnswerD(apiRequestQuestion.getAnswerD());
+            }
+            if(apiRequestQuestion.getAnswerCorrect() != null && !apiRequestQuestion.getAnswerCorrect().isEmpty()) {
+                question.setAnswerCorrect(apiRequestQuestion.getAnswerCorrect());
+            }
+            if(img != null) {
+                question.setImg(imgService.updateImg(question.getImg(),img));
+            }
+            if(quiz != null) {
+                question.setQuiz(quiz);
+            }
+
+            questionRepository.save(question);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Update question success !");
+            apiResponse.setData(question);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 
     @Override
