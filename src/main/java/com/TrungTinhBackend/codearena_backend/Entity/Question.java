@@ -29,6 +29,8 @@ public class Question {
 
     private String answerCorrect;
 
+    private String img;
+
     private boolean isDeleted;
 
     @ManyToOne
