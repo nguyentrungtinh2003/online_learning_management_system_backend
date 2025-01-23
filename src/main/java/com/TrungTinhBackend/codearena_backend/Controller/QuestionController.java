@@ -29,4 +29,9 @@ public class QuestionController {
                                                     @RequestPart(value = "img") MultipartFile img) throws Exception {
         return ResponseEntity.ok(questionService.updateQuestion(id,apiRequestQuestion, img));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deleteQuestion(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(questionService.deleteQuestion(id));
+    }
 }

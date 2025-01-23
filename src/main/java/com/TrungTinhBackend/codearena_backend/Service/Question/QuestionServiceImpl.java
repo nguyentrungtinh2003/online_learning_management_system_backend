@@ -120,6 +120,27 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public APIResponse deleteQuestion(Long id) throws Exception {
-        return null;
+        APIResponse apiResponse = new APIResponse();
+        try {
+
+            Question question = questionRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Question not found !")
+            );
+
+            question.setDeleted(true);
+            questionRepository.save(question);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete question success !");
+            apiResponse.setData(question);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
     }
 }
