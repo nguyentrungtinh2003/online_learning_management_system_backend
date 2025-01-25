@@ -29,6 +29,7 @@ public class JwtUtils {
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
+                .claim("role", userDetails.getAuthorities())  // Thêm claim cho role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(Key)
@@ -39,6 +40,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
+                .claim("role", userDetails.getAuthorities())  // Thêm claim cho role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(Key)
@@ -67,5 +69,4 @@ public class JwtUtils {
     public boolean isTokenExpired(String token) {
         return extractClaims(token, Claims::getExpiration).before(new Date());
     }
-
 }

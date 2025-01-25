@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
+import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestLesson;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("api/lessons")
 public class LessonController {
@@ -17,17 +20,31 @@ public class LessonController {
     @Autowired
     private LessonService lessonService;
 
+    @Autowired
+    private LessonRepository lessonRepository;
+
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllLesson() throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all lesson!");
+        apiResponse.setData(lessonRepository.findAll());
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.ok(apiResponse);
+    }
+
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
-                                                 @RequestPart(value = "img") MultipartFile img,
-                                                 @RequestPart(value = "video") MultipartFile video) throws Exception {
+                                                 @RequestPart(value = "img",required = false) MultipartFile img,
+                                                 @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
-                                                 @RequestPart(value = "img") MultipartFile img,
-                                                 @RequestPart(value = "video") MultipartFile video) throws Exception {
+                                                 @RequestPart(value = "img",required = false) MultipartFile img,
+                                                 @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.updateLesson(id,apiRequestLesson, img, video));
     }
 

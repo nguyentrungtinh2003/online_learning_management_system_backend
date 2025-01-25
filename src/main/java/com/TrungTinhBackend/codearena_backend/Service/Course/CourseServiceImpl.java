@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService{
                     () -> new RuntimeException("User not found !")
             );
 
-            Course course = courseRepository.findById(apiRequestCourse.getId()).orElseThrow(
+            Course course = courseRepository.findById(id).orElseThrow(
                     () -> new RuntimeException("Course not found !")
             );
 

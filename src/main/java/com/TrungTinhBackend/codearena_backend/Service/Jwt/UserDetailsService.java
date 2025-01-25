@@ -1,15 +1,16 @@
 package com.TrungTinhBackend.codearena_backend.Service.Jwt;
 
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
@@ -21,18 +22,21 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Lấy entity User từ cơ sở dữ liệu
-        com.TrungTinhBackend.codearena_backend.Entity.User user = userRepository.findByUsernameAndEnabled(username, true);
+        User user = userRepository.findByUsernameAndEnabled(username, true);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
+        // Chuyển role thành GrantedAuthority
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRoleEnum().name());
+
         // Chuyển đổi entity thành UserDetails của Spring Security
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                new ArrayList<>()
+                Collections.singletonList(authority)
+                 // Cung cấp danh sách quyền
         );
     }
-
 }

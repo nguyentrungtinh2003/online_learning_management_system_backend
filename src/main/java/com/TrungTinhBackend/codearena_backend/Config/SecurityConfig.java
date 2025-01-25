@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true) // Bật tính năng dùng @PreAuthorize
 public class SecurityConfig {
 
     @Autowired
@@ -28,9 +30,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         // Các API cần quyền truy cập
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("/api/student/**").hasRole("STUDENT")
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/teacher/**").hasAuthority("TEACHER")
+                        .requestMatchers("/api/student/**").hasAuthority("STUDENT")
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
