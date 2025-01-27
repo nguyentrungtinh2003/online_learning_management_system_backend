@@ -77,4 +77,30 @@ public class ChatServiceImpl implements ChatService{
             throw new Exception("Message : "+e.getMessage(),e);
         }
     }
+
+    @Override
+    public APIResponse deleteChat(Long id) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            Chat chat = chatRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Chat not found !")
+            );
+
+            chat.setDeleted(true);
+
+            chatRepository.save(chat);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete chat success !");
+            apiResponse.setData(chat);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
 }
