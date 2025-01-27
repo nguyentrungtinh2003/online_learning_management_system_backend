@@ -1,9 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.Lesson;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
-import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
-import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
-import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Entity.*;
+import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
@@ -37,6 +35,9 @@ public class LessonServiceImpl implements LessonService{
     @Autowired
     private QuizRepository quizRepository;
 
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
     @Override
     public APIResponse addLesson(APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
@@ -44,6 +45,13 @@ public class LessonServiceImpl implements LessonService{
             Course course = courseRepository.findById(apiRequestLesson.getCourse().getId()).orElseThrow(
                     () -> new RuntimeException("Course not found !")
             );
+
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setChatRoomName("Phòng chat " + apiRequestLesson.getLessonName());
+            chatRoom.setDeleted(false);
+
+            chatRoomRepository.save(chatRoom);
+
             Lesson lesson = new Lesson();
 
             lesson.setLessonName(apiRequestLesson.getLessonName());
@@ -54,6 +62,7 @@ public class LessonServiceImpl implements LessonService{
             lesson.setDeleted(false);
             lesson.setCourse(course);
             lesson.setQuizzes(null);
+            lesson.setChatRoom(chatRoom);
 
             lessonRepository.save(lesson);
 

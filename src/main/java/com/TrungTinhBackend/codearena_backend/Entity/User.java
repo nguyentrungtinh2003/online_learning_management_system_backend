@@ -71,6 +71,17 @@ public class User implements UserDetails {
     )
     private List<Course> courses;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_chatroom",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chatroom_id")
+    )
+    private List<ChatRoom> chatRooms;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Chat> chats;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

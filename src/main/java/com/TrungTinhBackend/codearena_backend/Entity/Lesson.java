@@ -40,4 +40,7 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson")
     private List<Quiz> quizzes;
+
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
+    private ChatRoom chatRoom;
 }
