@@ -24,15 +24,7 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
 
-    @GetMapping("/courses/all")
-    public ResponseEntity<APIResponse> getAllCourse() throws Exception {
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Delete quiz success !");
-        apiResponse.setData(courseRepository.findAll());
-        apiResponse.setTimestamp(LocalDateTime.now());
-        return ResponseEntity.ok(apiResponse);
-    }
+
 
     @PostMapping("courses/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,

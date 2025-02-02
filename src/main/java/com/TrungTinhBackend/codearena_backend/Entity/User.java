@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -81,6 +82,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Chat> chats;
+
+    @ManyToMany(mappedBy = "likedUsers")
+    private Set<Blog> likedBlogs;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

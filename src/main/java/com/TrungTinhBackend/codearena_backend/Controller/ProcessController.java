@@ -16,7 +16,7 @@ public class ProcessController {
     @Autowired
     private ProcessService processService;
 
-    @PutMapping("/update/{userId}/{courseId]/{lessonId}")
+    @PutMapping("/update/{userId}/{courseId}/{lessonId}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long userId,
                                                     @PathVariable Long courseId,
                                                     @PathVariable Long lessonId) throws Exception {
