@@ -7,23 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Blog {
+public class BlogComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String blogName;
-
-    private String description;
+    private String content;
 
     private String img;
 
@@ -31,24 +27,13 @@ public class Blog {
 
     private LocalDateTime date;
 
-    private Long likeCount;
-
-    private Long view;
-
-    @ManyToMany
-    @JoinTable(
-            name = "blog_like",
-            joinColumns = @JoinColumn(name = "blog_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> likedUsers;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "blog")
-    private List<BlogComment> blogComments;
-
-    private boolean isDeleted;
+    @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
 }
