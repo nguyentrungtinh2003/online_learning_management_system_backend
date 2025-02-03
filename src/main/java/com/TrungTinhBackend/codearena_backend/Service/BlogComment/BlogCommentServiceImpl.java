@@ -79,4 +79,30 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             throw new Exception("Message : "+e.getMessage(),e);
         }
     }
+
+    @Override
+    public APIResponse deleteBlogComment(Long id) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            BlogComment blogComment = blogCommentRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Blog comment not found !")
+            );
+
+            blogComment.setDeleted(true);
+
+            blogCommentRepository.save(blogComment);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete blog comment success !");
+            apiResponse.setData(blogComment);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
 }
