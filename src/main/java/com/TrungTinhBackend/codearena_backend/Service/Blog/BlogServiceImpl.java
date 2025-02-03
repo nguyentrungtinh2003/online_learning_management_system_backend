@@ -94,4 +94,30 @@ public class BlogServiceImpl implements BlogService{
             throw new Exception("Message : "+e.getMessage(),e);
         }
     }
+
+    @Override
+    public APIResponse deleteBlog(Long id) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            Blog blog = blogRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Blog not found !")
+            );
+
+            blog.setDeleted(true);
+
+            blogRepository.save(blog);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Delete blog success !");
+            apiResponse.setData(blog);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
 }

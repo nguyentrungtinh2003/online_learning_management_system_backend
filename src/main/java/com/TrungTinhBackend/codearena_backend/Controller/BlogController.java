@@ -29,4 +29,9 @@ public class BlogController {
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(blogService.updateBlog(id, apiRequestBlog, img, video));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deleteBlog(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(blogService.deleteBlog(id));
+    }
 }
