@@ -6,10 +6,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Blog.BlogService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -24,5 +21,12 @@ public class BlogController {
                                                @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(blogService.addBlog(apiRequestBlog, img, video));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
+                                               @RequestPart(value = "img",required = false) MultipartFile img,
+                                               @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
+        return ResponseEntity.ok(blogService.updateBlog(id, apiRequestBlog, img, video));
     }
 }

@@ -41,8 +41,48 @@ public class BlogServiceImpl implements BlogService{
             if(video != null && !video.isEmpty()) {
                 blog.setVideo(videoService.uploadVideo(video));
             }
+            blog.setDate(LocalDateTime.now());
+            blog.setDeleted(false);
+            blog.setLikeCount(0L);
+            blog.setView(0L);
+
+            blogRepository.save(blog);
+
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog success !");
+            apiResponse.setData(blog);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid credentials");
+        } catch (Exception e) {
+            throw new Exception("Message : "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public APIResponse updateBlog(Long id, APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+        try {
+            Blog blog = blogRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Blog not found !")
+            );
+
+            blog.setBlogName(apiRequestBlog.getBlogName());
+            blog.setDescription(apiRequestBlog.getDescription());
+            if(img != null && !img.isEmpty()) {
+                blog.setImg(imgService.updateImg(blog.getImg(),img));
+            }
+            if(video != null && !video.isEmpty()) {
+                blog.setVideo(videoService.updateVideo(blog.getVideo(), video));
+            }
+
+            blogRepository.save(blog);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Update blog success !");
             apiResponse.setData(blog);
             apiResponse.setTimestamp(LocalDateTime.now());
 

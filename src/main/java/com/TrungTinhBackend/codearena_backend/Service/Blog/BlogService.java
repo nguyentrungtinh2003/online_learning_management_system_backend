@@ -6,4 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BlogService {
     public APIResponse addBlog(APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception;
+    public APIResponse updateBlog(Long id, APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception;
 }
