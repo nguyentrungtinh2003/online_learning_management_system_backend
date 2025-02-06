@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService{
             user1.setPassword(passwordEncoder.encode(apiRequestUserRegister.getPassword()));
             user1.setEmail(apiRequestUserRegister.getEmail());
             user1.setEnabled(true);
-            user1.setCoin(0L);
+            user1.setCoin(0.0);
             user1.setPoint(10L);
             user1.setRoleEnum(RoleEnum.STUDENT);
             user1.setStatusUserEnum(StatusUserEnum.ACTIVE);
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService{
             user1.setUsername(apiRequestAdminRegisterUser.getUsername());
             user1.setPassword(passwordEncoder.encode(apiRequestAdminRegisterUser.getPassword()));
             user1.setEmail(apiRequestAdminRegisterUser.getEmail());
-            user1.setCoin(0L);
+            user1.setCoin(0.0);
             user1.setDate(LocalDateTime.now());
             user1.setAddress(apiRequestAdminRegisterUser.getAddress());
             user1.setBirthDay(apiRequestAdminRegisterUser.getBirthDay());

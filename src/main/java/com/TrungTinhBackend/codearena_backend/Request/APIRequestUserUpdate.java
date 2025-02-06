@@ -27,7 +27,7 @@ public class APIRequestUserUpdate {
 
     private Long point;
 
-    private Long coin;
+    private Double coin;
 
     private RankEnum rankEnum;
 

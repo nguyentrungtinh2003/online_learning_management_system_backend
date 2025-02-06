@@ -44,7 +44,7 @@ public class User implements UserDetails {
 
     private Long point;
 
-    private Long coin;
+    private Double coin;
 
     private RankEnum rankEnum;
 

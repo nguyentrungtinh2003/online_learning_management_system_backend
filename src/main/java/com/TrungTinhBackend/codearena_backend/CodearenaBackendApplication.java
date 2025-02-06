@@ -38,6 +38,10 @@ public class CodearenaBackendApplication {
 		System.setProperty("GOOGLE_REDIRECT_URI", dotenv.get("GOOGLE_REDIRECT_URI"));
 		System.setProperty("GOOGLE_SCOPE", dotenv.get("GOOGLE_SCOPE"));
 
+		System.setProperty("PAYPAL_CLIENT_ID", dotenv.get("PAYPAL_CLIENT_ID"));
+		System.setProperty("PAYPAL_CLIENT_SECRET", dotenv.get("PAYPAL_CLIENT_SECRET"));
+		System.setProperty("PAYPAL_MODE", dotenv.get("PAYPAL_MODE"));
+
 		SpringApplication.run(CodearenaBackendApplication.class, args);
 	}
 }
