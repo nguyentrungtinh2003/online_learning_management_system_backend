@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.TrungTinhBackend.codearena_backend.Enum.CourseEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class Course {
     private String description;
 
     private String img;
+
+    private Double price;
+
+    private CourseEnum courseEnum;
 
     private LocalDateTime date;
 

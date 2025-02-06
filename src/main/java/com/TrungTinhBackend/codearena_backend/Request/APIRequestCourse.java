@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Request;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Enum.CourseEnum;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
@@ -19,6 +20,10 @@ public class APIRequestCourse {
     private String description;
 
     private String img;
+
+    private Double price;
+
+    private CourseEnum courseEnum;
 
     private LocalDateTime date;
 

@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Request;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
+import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -18,6 +19,10 @@ public class APIRequestQuiz {
     private String quizName;
 
     private String img;
+
+    private Double price;
+
+    private QuizEnum quizEnum;
 
     private LocalDateTime date;
 

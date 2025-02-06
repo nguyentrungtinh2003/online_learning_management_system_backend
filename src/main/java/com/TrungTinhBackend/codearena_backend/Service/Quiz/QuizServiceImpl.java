@@ -45,6 +45,8 @@ public class QuizServiceImpl implements QuizService{
 
             quiz.setQuizName(apiRequestQuiz.getQuizName());
             quiz.setDescription(apiRequestQuiz.getDescription());
+            quiz.setPrice(apiRequestQuiz.getPrice());
+            quiz.setQuizEnum(apiRequestQuiz.getQuizEnum());
             quiz.setDeleted(false);
             quiz.setDate(LocalDateTime.now());
 
@@ -87,7 +89,12 @@ public class QuizServiceImpl implements QuizService{
             if(apiRequestQuiz.getDescription() != null && !apiRequestQuiz.getDescription().isEmpty()) {
                 quiz.setDescription(apiRequestQuiz.getDescription());
             }
-
+            if(apiRequestQuiz.getPrice() != null && !apiRequestQuiz.getPrice().isInfinite()) {
+                quiz.setPrice(apiRequestQuiz.getPrice());
+            }
+            if(apiRequestQuiz.getQuizEnum() != null ) {
+                quiz.setQuizEnum(apiRequestQuiz.getQuizEnum());
+            }
             if(img != null) {
                 quiz.setImg(imgService.updateImg(quiz.getImg(),img));
             }

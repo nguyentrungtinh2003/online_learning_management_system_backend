@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,10 @@ public class Quiz {
     private String quizName;
 
     private String img;
+
+    private Double price;
+
+    private QuizEnum quizEnum;
 
     private LocalDateTime date;
 

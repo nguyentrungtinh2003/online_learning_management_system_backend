@@ -44,6 +44,8 @@ public class CourseServiceImpl implements CourseService{
 
             course.setCourseName(apiRequestCourse.getCourseName());
             course.setDescription(apiRequestCourse.getDescription());
+            course.setPrice(apiRequestCourse.getPrice());
+            course.setCourseEnum(apiRequestCourse.getCourseEnum());
             course.setDate(LocalDateTime.now());
             course.setDeleted(false);
 
@@ -84,6 +86,12 @@ public class CourseServiceImpl implements CourseService{
             }
             if(apiRequestCourse.getDescription() != null && !apiRequestCourse.getDescription().isEmpty()) {
                 course.setDescription(apiRequestCourse.getDescription());
+            }
+            if(apiRequestCourse.getPrice() != null && !apiRequestCourse.getPrice().isInfinite()) {
+                course.setPrice(apiRequestCourse.getPrice());
+            }
+            if(apiRequestCourse.getCourseEnum() != null) {
+                course.setCourseEnum(apiRequestCourse.getCourseEnum());
             }
             if(img != null && !img.isEmpty()) {
                 course.setImg(imgService.updateImg(course.getImg(),img));
