@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Service.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.QuestionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuestion;
@@ -30,9 +31,9 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public APIResponse addQuestion(APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Quiz quiz = quizRepository.findById(apiRequestQuestion.getQuiz().getId()).orElseThrow(
-                    () -> new RuntimeException("Quiz not found !")
+                    () -> new NotFoundException("Quiz not found by id " + apiRequestQuestion.getQuiz().getId())
             );
 
             Question question = new Question();
@@ -57,24 +58,18 @@ public class QuestionServiceImpl implements QuestionService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateQuestion(Long id, APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Quiz quiz = quizRepository.findById(apiRequestQuestion.getQuiz().getId()).orElseThrow(
-                    () -> new RuntimeException("Quiz not found !")
+                    () -> new NotFoundException("Quiz not found by id " + apiRequestQuestion.getQuiz().getId())
             );
 
             Question question = questionRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Question not found !")
+                    () -> new NotFoundException("Question not found by id " + id)
             );
 
             if(apiRequestQuestion.getQuestionName() != null && !apiRequestQuestion.getQuestionName().isEmpty()) {
@@ -110,21 +105,14 @@ public class QuestionServiceImpl implements QuestionService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteQuestion(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             Question question = questionRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Question not found !")
+                    () -> new NotFoundException("Question not found by id " + id)
             );
 
             question.setDeleted(true);
@@ -136,11 +124,5 @@ public class QuestionServiceImpl implements QuestionService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

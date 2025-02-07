@@ -16,38 +16,25 @@ public class ImgService {
     private Cloudinary cloudinary;
 
     public String uploadImg(MultipartFile img) throws IOException {
-        try {
-            Map uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());
+
+            Map<?,?> uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());
             return uploadResult.get("url").toString();
-        } catch (Exception e) {
-            throw new IOException("Image upload failed: " + e.getMessage(), e);
-        }
     }
 
     public String updateImg(String oldImgUrl, MultipartFile newImg) throws IOException {
-        try {
+
             String publicID = extractPublicID(oldImgUrl);
 
             if (publicID != null) {
                 cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
             }
 
-            Map uploadResult = cloudinary.uploader().upload(newImg.getBytes(), ObjectUtils.emptyMap());
+            Map<?,?> uploadResult = cloudinary.uploader().upload(newImg.getBytes(), ObjectUtils.emptyMap());
             return uploadResult.get("url").toString();
-        } catch (Exception e) {
-            throw new IOException("Image update failed: " + e.getMessage(), e);
-        }
     }
 
     private String extractPublicID(String imgUrl) {
-        try {
-            if (imgUrl == null || imgUrl.isEmpty()) {
-                return null;
-            }
-
-            return imgUrl.substring(imgUrl.lastIndexOf("/") + 1, imgUrl.lastIndexOf("."));
-        } catch (Exception e) {
-            return null;
-        }
+           return (imgUrl == null || imgUrl.isEmpty()) ? null :
+                   imgUrl.substring(imgUrl.lastIndexOf("/") + 1, imgUrl.lastIndexOf("."));
     }
 }

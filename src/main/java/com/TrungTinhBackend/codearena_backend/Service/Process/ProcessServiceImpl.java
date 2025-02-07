@@ -21,7 +21,7 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     public APIResponse updateProcess(Long userId, Long courseId, Long lessonId) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Process lessonProcess = processRepository.findByUserIdAndLessonId(userId, lessonId);
             lessonProcess.setCompletionPercent(100);
             processRepository.save(lessonProcess);
@@ -47,12 +47,6 @@ public class ProcessServiceImpl implements ProcessService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
 }

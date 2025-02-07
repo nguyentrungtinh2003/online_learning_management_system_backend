@@ -16,7 +16,7 @@ public class VideoService {
     private Cloudinary cloudinary;
 
     public String uploadVideo(MultipartFile video) throws IOException {
-        Map uploadResult = cloudinary.uploader().upload(video.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+        Map<?,?> uploadResult = cloudinary.uploader().upload(video.getBytes(), ObjectUtils.asMap("resource_type", "video"));
         return uploadResult.get("url").toString();
     }
 
@@ -24,7 +24,7 @@ public class VideoService {
         String publicId = extractPublicIdFromUrl(oldVideoUrl);
         cloudinary.uploader().destroy(publicId,ObjectUtils.asMap("resource_type", "video"));
 
-        Map uploadResult = cloudinary.uploader().upload(video.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+        Map<?,?> uploadResult = cloudinary.uploader().upload(video.getBytes(), ObjectUtils.asMap("resource_type", "video"));
         return uploadResult.get("url").toString();
     }
 

@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.Chat;
 import com.TrungTinhBackend.codearena_backend.Entity.ChatRoom;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.ChatRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
@@ -39,13 +40,13 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public APIResponse addChat(APIRequestChat apiRequestChat, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findById(apiRequestChat.getSender().getId()).orElseThrow(
-                    () -> new RuntimeException("User not found !")
+                    () -> new NotFoundException("User not found by id " + apiRequestChat.getSender().getId())
             );
 
             ChatRoom chatRoom = chatRoomRepository.findById(apiRequestChat.getChatRoom().getId()).orElseThrow(
-                    () -> new RuntimeException("Chat Room not found !")
+                    () -> new NotFoundException("Chat Room not found by id " + apiRequestChat.getChatRoom().getId())
             );
 
             Chat chat = new Chat();
@@ -70,20 +71,14 @@ public class ChatServiceImpl implements ChatService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
-    public APIResponse deleteChat(Long id) throws Exception {
+    public APIResponse deleteChat(Long id) {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Chat chat = chatRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Chat not found !")
+                    () -> new NotFoundException("Chat not found by id " + id)
             );
 
             chat.setDeleted(true);
@@ -97,10 +92,5 @@ public class ChatServiceImpl implements ChatService{
 
             return apiResponse;
 
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

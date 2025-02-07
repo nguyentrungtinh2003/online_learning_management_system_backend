@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuestionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
@@ -36,9 +37,9 @@ public class QuizServiceImpl implements QuizService{
     @Override
     public APIResponse addQuiz(APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Lesson lesson = lessonRepository.findById(apiRequestQuiz.getLesson().getId()).orElseThrow(
-                    () -> new RuntimeException("Lesson not found !")
+                    () -> new NotFoundException("Lesson not found by id " + apiRequestQuiz.getLesson().getId())
             );
 
             Quiz quiz = new Quiz();
@@ -64,24 +65,18 @@ public class QuizServiceImpl implements QuizService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateQuiz(Long id, APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Lesson lesson = lessonRepository.findById(apiRequestQuiz.getLesson().getId()).orElseThrow(
-                    () -> new RuntimeException("Lesson not found !")
+                    () -> new NotFoundException("Lesson not found by id " + apiRequestQuiz.getLesson().getId())
             );
 
             Quiz quiz = quizRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Quiz not found !")
+                    () -> new NotFoundException("Quiz not found by id " + id)
             );
             if(apiRequestQuiz.getQuizName() != null && !apiRequestQuiz.getQuizName().isEmpty()) {
                 quiz.setQuizName(apiRequestQuiz.getQuizName());
@@ -107,7 +102,7 @@ public class QuizServiceImpl implements QuizService{
                 );
 
                 if (questionList.size() != apiRequestQuiz.getQuestions().size()) {
-                    throw new RuntimeException("One or more questions not found!");
+                    throw new NotFoundException("One or more questions not found !");
                 }
 
                 quiz.setQuestions(questionList);
@@ -121,21 +116,14 @@ public class QuizServiceImpl implements QuizService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteQuiz(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             Quiz quiz = quizRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Quiz not found !")
+                    () -> new NotFoundException("Quiz not found by id " + id)
             );
 
             quiz.setDeleted(true);
@@ -147,11 +135,5 @@ public class QuizServiceImpl implements QuizService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

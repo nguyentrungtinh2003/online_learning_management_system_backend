@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Service.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestBlog;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -29,8 +30,7 @@ public class BlogServiceImpl implements BlogService{
 
     @Override
     public APIResponse addBlog(APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
-        APIResponse apiResponse = new APIResponse();
-        try {
+       APIResponse apiResponse = new APIResponse();
             Blog blog = new Blog();
 
             blog.setBlogName(apiRequestBlog.getBlogName());
@@ -55,19 +55,14 @@ public class BlogServiceImpl implements BlogService{
 
             return apiResponse;
 
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateBlog(Long id, APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Blog blog = blogRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Blog not found !")
+                    () -> new NotFoundException("Blog not found by id " + id)
             );
 
             blog.setBlogName(apiRequestBlog.getBlogName());
@@ -87,20 +82,14 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteBlog(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Blog blog = blogRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Blog not found !")
+                    () -> new NotFoundException("Blog not found by id " + id)
             );
 
             blog.setDeleted(true);
@@ -113,11 +102,5 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.Lesson;
 
 import com.TrungTinhBackend.codearena_backend.Entity.*;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
@@ -41,9 +42,9 @@ public class LessonServiceImpl implements LessonService{
     @Override
     public APIResponse addLesson(APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Course course = courseRepository.findById(apiRequestLesson.getCourse().getId()).orElseThrow(
-                    () -> new RuntimeException("Course not found !")
+                    () -> new NotFoundException("Course not found by id " + apiRequestLesson.getCourse().getId())
             );
 
             ChatRoom chatRoom = new ChatRoom();
@@ -72,24 +73,18 @@ public class LessonServiceImpl implements LessonService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Course course = courseRepository.findById(apiRequestLesson.getCourse().getId()).orElseThrow(
-                    () -> new RuntimeException("Course not found !")
+                    () -> new NotFoundException("Course not found by id " + apiRequestLesson.getCourse().getId())
             );
 
             Lesson lesson = lessonRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Lesson not found !")
+                    () -> new NotFoundException("Lesson not found by id " + id)
             );
 
             if(apiRequestLesson.getLessonName() != null && !apiRequestLesson.getLessonName().isEmpty()) {
@@ -113,7 +108,7 @@ public class LessonServiceImpl implements LessonService{
                 );
 
                 if (quizList.size() != apiRequestLesson.getQuizzes().size()) {
-                    throw new RuntimeException("One or more quizzes not found!");
+                    throw new NotFoundException("One or more quizzes not found !");
                 }
 
                 lesson.setQuizzes(quizList);
@@ -127,21 +122,14 @@ public class LessonServiceImpl implements LessonService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteLesson(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             Lesson lesson = lessonRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Lesson not found !")
+                    () -> new NotFoundException("Lesson not found by id " + id)
             );
 
             lesson.setDeleted(true);
@@ -153,11 +141,5 @@ public class LessonServiceImpl implements LessonService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

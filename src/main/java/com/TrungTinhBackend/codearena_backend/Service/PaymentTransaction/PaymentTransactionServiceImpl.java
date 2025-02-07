@@ -36,7 +36,6 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
     @Override
     public APIResponse handlePayment(APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
             // Tạo thanh toán
             Payment payment = createPayment(apiRequestPaymentTransaction.getAmount());
 
@@ -67,12 +66,6 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     private Payment createPayment(Double total) throws PayPalRESTException {

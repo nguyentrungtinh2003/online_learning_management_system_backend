@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Service.Course;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
@@ -34,10 +35,9 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public APIResponse addCourse(APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             User lecturer = userRepository.findById(apiRequestCourse.getUser().getId()).orElseThrow(
-                    () -> new RuntimeException("User not found !")
+                    () -> new NotFoundException("User not found by id " + apiRequestCourse.getUser().getId())
             );
 
             Course course = new Course();
@@ -60,25 +60,18 @@ public class CourseServiceImpl implements CourseService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             User lecturer = userRepository.findById(apiRequestCourse.getUser().getId()).orElseThrow(
-                    () -> new RuntimeException("User not found !")
+                    () -> new NotFoundException("User not found by id " + apiRequestCourse.getUser().getId())
             );
 
             Course course = courseRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Course not found !")
+                    () -> new NotFoundException("Course not found by id " + id)
             );
 
             if(apiRequestCourse.getCourseName() != null && !apiRequestCourse.getCourseName().isEmpty()) {
@@ -107,21 +100,14 @@ public class CourseServiceImpl implements CourseService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteCourse(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             Course course = courseRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Course not found !")
+                    () -> new NotFoundException("Course not found by id " + id)
             );
 
             course.setDeleted(true);
@@ -133,11 +119,5 @@ public class CourseServiceImpl implements CourseService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

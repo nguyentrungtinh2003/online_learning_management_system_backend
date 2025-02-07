@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.BlogComment;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogCommentRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
@@ -39,14 +40,13 @@ public class BlogCommentServiceImpl implements BlogCommentService{
     @Override
     public APIResponse addBlogComment(APIRequestBlogComment apiRequestBlogComment, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
 
             User user = userRepository.findById(apiRequestBlogComment.getUser().getId()).orElseThrow(
-                    () -> new RuntimeException("User not found !")
+                    () -> new NotFoundException("User not found by id " + apiRequestBlogComment.getUser().getId())
             );
 
             Blog blog = blogRepository.findById(apiRequestBlogComment.getBlog().getId()).orElseThrow(
-                    () -> new RuntimeException("Blog not found !")
+                    () -> new NotFoundException("Blog not found by id " + apiRequestBlogComment.getBlog().getId())
             );
 
             BlogComment blogComment = new BlogComment();
@@ -72,20 +72,14 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteBlogComment(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             BlogComment blogComment = blogCommentRepository.findById(id).orElseThrow(
-                    () -> new RuntimeException("Blog comment not found !")
+                    () -> new NotFoundException("Blog comment not found by id " + id)
             );
 
             blogComment.setDeleted(true);
@@ -98,11 +92,5 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 }

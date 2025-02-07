@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -57,12 +58,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(apiRequestUserLogin.getUsername(), apiRequestUserLogin.getPassword()));
 
             var user = userRepository.findByUsername(apiRequestUserLogin.getUsername());
             if (user == null) {
-                throw new RuntimeException("User not found !");
+                throw new NotFoundException("User not found by username " + apiRequestUserLogin.getUsername());
             }
 
             var jwt = jwtUtils.generateToken(user);
@@ -90,18 +91,12 @@ public class UserServiceImpl implements UserService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse userRegister(APIRequestUserRegister apiRequestUserRegister) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findByEmail(apiRequestUserRegister.getEmail());
             if(user != null) {
                 throw new RuntimeException("Email already exists !");
@@ -134,21 +129,15 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(user1);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-           throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse adminRegisterUser(APIRequestAdminRegisterUser apiRequestAdminRegisterUser, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findByEmail(apiRequestAdminRegisterUser.getEmail());
             if(user != null) {
-                throw new RuntimeException("User not found !");
+                throw new RuntimeException("Email already exists !");
             }
             User user1 = new User();
 
@@ -178,30 +167,20 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(user1);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findById(id).orElse(null);
             if(user == null) {
-                throw new RuntimeException("User not found !");
+                throw new NotFoundException("User not found by id " + id);
             }
 
             if (img != null && !img.isEmpty()) {
-                try {
                     String imgUrl = imgService.updateImg(user.getImg(), img);
                     user.setImg(imgUrl);
-                }catch (Exception e) {
-                    throw new Exception("Message : "+e.getMessage(),e);
-                }
             }
 
             if (apiRequestUserUpdate.getUsername() != null && !apiRequestUserUpdate.getUsername().isEmpty()) {
@@ -263,21 +242,15 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(user);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse deleteUser(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
            User user = userRepository.findById(id).orElse(null);
            if(user == null) {
-               throw new RuntimeException("User not found !");
+               throw new NotFoundException("User not found by id " + id);
            }
 
            user.setEnabled(false);
@@ -290,54 +263,38 @@ public class UserServiceImpl implements UserService{
            apiResponse.setData(user);
            apiResponse.setTimestamp(LocalDateTime.now());
            return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse getAllUser() throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             List<User> users = userRepository.findAllByIsDeleted(false);
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Get all user success");
             apiResponse.setData(users);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse getUserById(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
-            User user = userRepository.findById(id).orElse(null);
+
+            User user = userRepository.findById(id).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + id)
+            );
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Get user by id "+id+" success");
             apiResponse.setData(user);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse getUserByPage(int page, int size) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             Pageable pageable = PageRequest.of(page,size);
             Page<User> page1 = userRepository.findAllByIsDeletedFalse(pageable);
 
@@ -346,17 +303,11 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(page1);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse getCurrentUser(Authentication authentication) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
             // Lấy thông tin từ Authentication
             OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) authentication;
             Map<String, Object> attributes = oAuth2Token.getPrincipal().getAttributes();
@@ -385,11 +336,6 @@ public class UserServiceImpl implements UserService{
             ));
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
@@ -407,10 +353,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public APIResponse sendOtpToEmail(String email) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findByEmail(email);
             if(user == null) {
-                throw new RuntimeException("User not found !");
+                throw new NotFoundException("User not found by email " + email);
             }
 
             String otp = String.format("%06d",new Random().nextInt(999999));
@@ -425,24 +371,19 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(otp);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
     @Override
     public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        try {
+
             User user = userRepository.findByEmail(apiRequestUserResetPassword.getEmail());
             if(user == null) {
-                throw new RuntimeException("User not found !");
+                throw new NotFoundException("User not found by email " + apiRequestUserResetPassword.getEmail());
             }
 
             if(!user.getOtp().equals(apiRequestUserResetPassword.getOtp())) {
-                throw new RuntimeException("OTP không đúng !");
+                throw new RuntimeException("Invalid OTP !");
             }
 
             if(user.getOtpExpiry().isBefore(LocalDateTime.now())) {
@@ -456,18 +397,11 @@ public class UserServiceImpl implements UserService{
             user.setPassword(passwordEncoder.encode(apiRequestUserResetPassword.getPassword()));
             userRepository.save(user);
 
-
-
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Reset password success !");
             apiResponse.setData(null);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
-        } catch (BadCredentialsException e) {
-            throw new RuntimeException("Invalid credentials");
-        } catch (Exception e) {
-            throw new Exception("Message : "+e.getMessage(),e);
-        }
     }
 
 }
