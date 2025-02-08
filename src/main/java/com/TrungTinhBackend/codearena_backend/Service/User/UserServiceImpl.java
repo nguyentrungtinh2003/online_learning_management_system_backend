@@ -231,10 +231,6 @@ public class UserServiceImpl implements UserService{
                 user.setEnabled(apiRequestUserUpdate.isEnabled());
             }
 
-            if(apiRequestUserUpdate.getDate() != null) {
-                user.setDate(apiRequestUserUpdate.getDate());
-            }
-
             userRepository.save(user);
 
             apiResponse.setStatusCode(200L);

@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Response;
 
+import com.TrungTinhBackend.codearena_backend.Entity.Chat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
