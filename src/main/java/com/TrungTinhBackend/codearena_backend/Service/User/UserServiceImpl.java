@@ -11,6 +11,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
+import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.servlet.http.Cookie;
@@ -55,6 +56,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @Override
     public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
         APIResponse apiResponse = new APIResponse();
@@ -68,6 +72,8 @@ public class UserServiceImpl implements UserService{
 
             var jwt = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+
+            refreshTokenService.createRefreshToken(refreshToken,user);
 
             // Tạo cookie chứa JWT token
             Cookie jwtCookie = new Cookie("authToken", jwt);
