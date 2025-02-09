@@ -58,6 +58,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchUser(@RequestParam(required = false) String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(userService.searchUser(keyword, page, size));
+    }
+
     @GetMapping("/logout/google")
     public ResponseEntity<APIResponse> logoutGoogle(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return ResponseEntity.ok(userService.logoutGoogle(request,response));

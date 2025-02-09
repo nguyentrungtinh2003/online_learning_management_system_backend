@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,8 @@ public interface UserService {
     public APIResponse getUserById(Long id) throws Exception;
 
     public APIResponse getUserByPage(int page, int size) throws Exception;
+
+    public APIResponse searchUser(String keyword, int page, int size);
 
     public APIResponse getCurrentUser(Authentication authentication) throws Exception;
 

@@ -308,6 +308,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse searchUser(String keyword, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+
+        Page<User> page1 = userRepository.searchUser(keyword,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Search user success");
+        apiResponse.setData(page1);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getCurrentUser(Authentication authentication) throws Exception {
         APIResponse apiResponse = new APIResponse();
             // Lấy thông tin từ Authentication
