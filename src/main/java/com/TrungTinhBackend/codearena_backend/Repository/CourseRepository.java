@@ -13,7 +13,6 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
 
     @Query("SELECT c FROM Course c WHERE " +
     "LOWER(c.courseName) LIKE LOWER(CONCAT('%',:keyword,'%')) OR " +
-            "LOWER(c.description) LIKE LOWER(CONCAT('%',:keyword,'%')) OR " +
-            "LOWER(c.price) LIKE LOWER(CONCAT('%',:keyword,'%'))")
+            "LOWER(c.description) LIKE LOWER(CONCAT('%',:keyword,'%'))")
     Page<Course> searchCourse(@Param("keyword") String keyword, Pageable pageable);
 }
