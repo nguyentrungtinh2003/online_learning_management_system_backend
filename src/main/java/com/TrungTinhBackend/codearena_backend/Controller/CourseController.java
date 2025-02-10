@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/courses")
 public class CourseController {
 
     @Autowired
@@ -26,19 +26,26 @@ public class CourseController {
 
 
 
-    @PostMapping("courses/add")
+    @PostMapping("/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
-    @PutMapping("courses/update/{id}")
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchCourse(@RequestParam(required = false) String keyword,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(courseService.searchCourse(keyword, page,size));
+    }
+
+    @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.updateCourse(id,apiRequestCourse, img));
     }
 
-    @DeleteMapping("courses/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> deleteCourse(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }

@@ -41,6 +41,13 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchLesson(@RequestParam(required = false) String keyword,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(lessonService.searchLesson(keyword, page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,

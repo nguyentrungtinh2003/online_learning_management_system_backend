@@ -9,4 +9,5 @@ public interface CourseService {
     public APIResponse addCourse(APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception;
     public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception;
     public APIResponse deleteCourse(Long id) throws Exception;
+    public APIResponse searchCourse(String keyword, int page, int size);
 }

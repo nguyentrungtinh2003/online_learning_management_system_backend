@@ -11,6 +11,9 @@ import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -119,5 +122,19 @@ public class CourseServiceImpl implements CourseService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
+    }
+
+    @Override
+    public APIResponse searchCourse(String keyword, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Course> courses = courseRepository.searchCourse(keyword,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Search course success !");
+        apiResponse.setData(courses);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
     }
 }

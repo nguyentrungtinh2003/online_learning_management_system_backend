@@ -23,6 +23,13 @@ public class BlogController {
         return ResponseEntity.ok(blogService.addBlog(apiRequestBlog, img, video));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(blogService.searchBlog(keyword, page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
