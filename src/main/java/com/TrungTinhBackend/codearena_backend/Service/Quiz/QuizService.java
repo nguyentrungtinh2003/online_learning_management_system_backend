@@ -8,4 +8,5 @@ public interface QuizService {
     public APIResponse addQuiz(APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception;
     public APIResponse updateQuiz(Long id, APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception;
     public APIResponse deleteQuiz(Long id) throws Exception;
+    public APIResponse searchQuiz(String keyword, int page, int size);
 }

@@ -24,6 +24,13 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.addQuestion(apiRequestQuestion, img));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchQuestion(@RequestParam String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(questionService.searchQuestion(keyword, page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateQuestion(@PathVariable Long id,@Valid @RequestPart(value = "question") APIRequestQuestion apiRequestQuestion,
                                                     @RequestPart(value = "img") MultipartFile img) throws Exception {

@@ -23,6 +23,13 @@ public class QuizController {
         return ResponseEntity.ok(quizService.addQuiz(apiRequestQuiz, img));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchQuiz(@RequestParam String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(quizService.searchQuiz(keyword, page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateQuiz(@PathVariable Long id, @Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
                                                @RequestPart(value = "img") MultipartFile img) throws Exception {
