@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<com.TrungTinhBackend.codea
     public Page<User> findAllByIsDeletedFalse(Pageable pageable);
     public com.TrungTinhBackend.codearena_backend.Entity.User findByUsername(String username);
     public com.TrungTinhBackend.codearena_backend.Entity.User findByEmail(String email);
-    @Query("SELECT u FROM User u WHERE " +
+    @Query("SELECT u FROM users u WHERE " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.phoneNumber) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
