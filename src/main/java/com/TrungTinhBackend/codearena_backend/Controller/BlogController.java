@@ -30,6 +30,17 @@ public class BlogController {
         return ResponseEntity.ok(blogService.searchBlog(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getBlogByPage(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(blogService.getBlogByPage(page,size));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getBlogById(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(blogService.getBlogById(id));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
                                                @RequestPart(value = "img",required = false) MultipartFile img,

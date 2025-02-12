@@ -9,4 +9,6 @@ public interface BlogService {
     public APIResponse updateBlog(Long id, APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception;
     public APIResponse deleteBlog(Long id) throws Exception;
     public APIResponse searchBlog(String keyword, int page, int size);
+    public APIResponse getBlogByPage(int page, int size);
+    public APIResponse getBlogById(Long id);
 }
