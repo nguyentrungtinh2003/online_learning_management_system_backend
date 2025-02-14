@@ -44,6 +44,7 @@ public class CodearenaBackendApplication {
 		System.setProperty("DATABASE_URL", System.getenv("DATABASE_URL"));
 		System.setProperty("DATABASE_USERNAME", System.getenv("DATABASE_USERNAME"));
 		System.setProperty("DATABASE_PASSWORD", System.getenv("DATABASE_PASSWORD"));
+		System.setProperty("SERVER.PORT", System.getenv("SERVER.PORT"));
 
 		System.setProperty("CLOUDINARY_API_KEY", System.getenv("CLOUDINARY_API_KEY"));
 		System.setProperty("CLOUDINARY_API_SECRET", System.getenv("CLOUDINARY_API_SECRET"));
