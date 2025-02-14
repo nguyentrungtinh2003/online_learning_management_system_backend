@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @GetMapping("/user-page")
+    @GetMapping("/page")
     public ResponseEntity<APIResponse> getUserByPage(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "6") int size) throws Exception {
         return ResponseEntity.ok(userService.getUserByPage(page,size));

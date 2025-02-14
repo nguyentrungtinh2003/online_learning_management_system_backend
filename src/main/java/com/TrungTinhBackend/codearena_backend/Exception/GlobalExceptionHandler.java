@@ -8,6 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
@@ -77,7 +78,11 @@ public class GlobalExceptionHandler {
 
     // Xử lý lỗi chung (Exception)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIResponse> handleGeneralException(Exception ex) {
+    public ResponseEntity<APIResponse> handleGeneralException(Exception ex, WebRequest request) {
+
+        if(request.getDescription(false).contains("/v3/api-docs")) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         APIResponse response = new APIResponse();
         response.setStatusCode(500L);
         response.setMessage("System error: " + ex.getMessage());
