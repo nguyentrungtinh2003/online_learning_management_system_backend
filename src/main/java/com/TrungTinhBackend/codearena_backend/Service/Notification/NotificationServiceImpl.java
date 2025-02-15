@@ -40,12 +40,10 @@ public class NotificationServiceImpl implements NotificationService{
     @Override
     public APIResponse addNotification(APIRequestNotification apiRequestNotification) {
         APIResponse apiResponse = new APIResponse();
-
         Notification notification = new Notification();
         List<Long> allUserIds = userRepository.getAllUserIds();  // Lấy tất cả user ID
 
         for (Long userId : allUserIds) {
-
             notification.setMessage(apiRequestNotification.getMessage());
             notification.setReceiverId(apiRequestNotification.getReceiverId());
             notification.setCreatedAt(LocalDateTime.now());
@@ -94,7 +92,7 @@ public class NotificationServiceImpl implements NotificationService{
     public APIResponse getUserNotifications(Long userId) {
         APIResponse apiResponse = new APIResponse();
 
-        List<Notification> notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Notification> notifications = notificationRepository.findByReceiverIdOrderByCreatedAtDesc(userId);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get notification by user success !");
