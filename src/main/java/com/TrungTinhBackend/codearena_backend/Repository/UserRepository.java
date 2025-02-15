@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<com.TrungTinhBackend.codea
             "LOWER(u.phoneNumber) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.address) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<User> searchUser(@Param("keyword") String keyword, Pageable pageable);
+    @Query("SELECT u.id FROM User u")
+    List<Long> getAllUserIds();
 }

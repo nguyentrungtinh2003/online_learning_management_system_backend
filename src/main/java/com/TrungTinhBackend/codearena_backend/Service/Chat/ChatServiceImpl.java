@@ -13,6 +13,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,9 @@ public class ChatServiceImpl implements ChatService{
 
     @Autowired
     private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Override
     public APIResponse addChat(APIRequestChat apiRequestChat, MultipartFile img, MultipartFile video) throws Exception {
@@ -69,6 +73,8 @@ public class ChatServiceImpl implements ChatService{
             apiResponse.setMessage("Add chat success !");
             apiResponse.setData(chat);
             apiResponse.setTimestamp(LocalDateTime.now());
+
+            messagingTemplate.convertAndSend("/topic/chatroom/" + chatRoom.getId(),chat);
 
             return apiResponse;
     }

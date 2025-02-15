@@ -2,13 +2,16 @@ package com.TrungTinhBackend.codearena_backend.Service.Notification;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Notification;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
+import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import com.TrungTinhBackend.codearena_backend.Repository.*;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestNotification;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -28,18 +31,53 @@ public class NotificationServiceImpl implements NotificationService{
     @Autowired
     private BlogRepository blogRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public APIResponse addNotification(APIRequestNotification apiRequestNotification) {
         APIResponse apiResponse = new APIResponse();
 
         Notification notification = new Notification();
-        notification.setMessage(apiRequestNotification.getMessage());
+        List<Long> allUserIds = userRepository.getAllUserIds();  // Lấy tất cả user ID
 
+        for (Long userId : allUserIds) {
+
+            notification.setMessage(apiRequestNotification.getMessage());
+            notification.setReceiverId(apiRequestNotification.getReceiverId());
+            notification.setCreatedAt(LocalDateTime.now());
+            notification.setStatus(NotificationStatus.UNREAD);
+            notification.setType(apiRequestNotification.getType());
+            notification.setRelatedId(apiRequestNotification.getRelatedId()); // Clone object
+            notification.setReceiverId(userId);
+            notificationRepository.save(notification);
+
+            // Gửi WebSocket cho từng user
+            messagingTemplate.convertAndSend("/topic/user/" + userId, notification);
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Add notification success !");
+        apiResponse.setData(notification);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse sendSystemNotification(Long userId, String message,String type,Long relatedId) {
+        APIResponse apiResponse = new APIResponse();
+
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setReceiverId(userId);
         notification.setCreatedAt(LocalDateTime.now());
         notification.setStatus(NotificationStatus.UNREAD);
-        notification.setType(apiRequestNotification.getType());
-        notification.setRelatedId(apiRequestNotification.getRelatedId());
+        notification.setType(NotificationType.valueOf(type));
+        notification.setRelatedId(relatedId);
 
         notificationRepository.save(notification);
 
@@ -47,6 +85,22 @@ public class NotificationServiceImpl implements NotificationService{
         apiResponse.setMessage("Add notification success !");
         apiResponse.setData(notification);
         apiResponse.setTimestamp(LocalDateTime.now());
+
+        messagingTemplate.convertAndSend("/topic/user/"+userId,notification);
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getUserNotifications(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Notification> notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get notification by user success !");
+        apiResponse.setData(notifications);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
         return apiResponse;
     }
 }

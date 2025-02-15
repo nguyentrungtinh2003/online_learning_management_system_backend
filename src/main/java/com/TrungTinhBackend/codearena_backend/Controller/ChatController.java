@@ -22,21 +22,12 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
     @MessageMapping("/chat.sendMessage")
     public ResponseEntity<APIResponse> addChat(@Valid @RequestPart(value = "chat") APIRequestChat apiRequestChat,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         APIResponse apiResponse = chatService.addChat(apiRequestChat, img, video);
 
-        if(apiResponse.getStatusCode() == 200L) {
-            Chat saveChat = (Chat) apiResponse.getData();
-            String destination = "/topic/chatroom/" + apiRequestChat.getChatRoom().getId();
-
-            messagingTemplate.convertAndSend(destination,saveChat);
-        }
         return ResponseEntity.status(apiResponse.getStatusCode().intValue()).body(apiResponse);
     }
 
