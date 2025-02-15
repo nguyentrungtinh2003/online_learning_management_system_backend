@@ -36,25 +36,6 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = new Notification();
         notification.setMessage(apiRequestNotification.getMessage());
 
-        switch (apiRequestNotification.getType()) {
-            case BLOG:
-                 notification.setRelatedData( blogRepository.findById(apiRequestNotification.getReceiverId()).orElseThrow(
-                         () -> new RuntimeException("Blog not found !")
-                 ));
-            case LESSON:
-                notification.setRelatedData(lessonRepository.findById(apiRequestNotification.getReceiverId()).orElseThrow(
-                        () -> new RuntimeException("Lesson not found !")
-                ));
-            case COURSE:
-                notification.setRelatedData(blogRepository.findById(apiRequestNotification.getReceiverId()).orElseThrow(
-                        () -> new RuntimeException("Course not found !")
-                ));
-            case QUIZ:
-                notification.setRelatedData(quizRepository.findById(apiRequestNotification.getReceiverId()).orElseThrow(
-                        () -> new RuntimeException("Quiz not found !")
-                ));
-        }
-
         notification.setCreatedAt(LocalDateTime.now());
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setType(apiRequestNotification.getType());

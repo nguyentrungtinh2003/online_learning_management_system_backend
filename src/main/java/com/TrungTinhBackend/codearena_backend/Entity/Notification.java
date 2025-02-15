@@ -37,7 +37,5 @@ public class Notification {
 
     private Long relatedId;
 
-    private Object relatedData;
-
     private String link;
 }
