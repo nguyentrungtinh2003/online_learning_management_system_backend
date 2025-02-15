@@ -29,15 +29,15 @@ public class RefreshTokenController {
 
     @PostMapping("/refresh")
     public APIResponse refreshToken(@Valid @RequestBody APIRequestRefreshToken apiRequestRefreshToken) {
-        String refreshToken = apiRequestRefreshToken.getToken();
+        String refreshToken1 = apiRequestRefreshToken.getToken();
 
-        RefreshToken refreshToken1 = refreshTokenService.findByToken(apiRequestRefreshToken.getToken()).orElseThrow(
+        RefreshToken refreshToken2 = refreshTokenService.findByToken(apiRequestRefreshToken.getToken()).orElseThrow(
                 () -> new NotFoundException("Refresh token not found !")
         );
 
-        refreshTokenService.verifyExpiration(refreshToken1);
+        refreshTokenService.verifyExpiration(refreshToken2);
 
-        String accessToken = jwtUtils.generateToken(refreshToken1.getUser());
+        String accessToken = jwtUtils.generateToken(refreshToken2.getUser());
 
         APIResponse apiResponse = new APIResponse();
 
