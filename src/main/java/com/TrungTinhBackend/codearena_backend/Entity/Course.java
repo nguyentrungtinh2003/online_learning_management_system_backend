@@ -35,9 +35,9 @@ public class Course {
     private LocalDateTime date;
 
     private boolean isDeleted;
-
-    @ManyToMany(mappedBy = "courses")
-    private List<User> users;
+    
+    @OneToMany(mappedBy = "course")
+    private List<Enrollment> enrollments;
 
     @OneToOne
     @JoinColumn(name = "lecturer_id")
@@ -45,4 +45,7 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private List<Lesson> lessons;
+
+    @OneToMany(mappedBy = "course")
+    private List<CourseMaterial> courseMaterials;
 }

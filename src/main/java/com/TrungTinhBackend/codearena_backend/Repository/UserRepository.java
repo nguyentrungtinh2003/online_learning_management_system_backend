@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<com.TrungTinhBackend.codearena_backend.Entity.User,Long> {
+public interface UserRepository extends JpaRepository<User,Long> {
     public User findByUsernameAndEnabled(String username, boolean b);
     public List<User> findAllByIsDeleted(boolean isDeleted);
     public Page<User> findAllByIsDeletedFalse(Pageable pageable);

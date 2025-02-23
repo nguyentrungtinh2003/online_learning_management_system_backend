@@ -22,7 +22,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
@@ -65,13 +64,8 @@ public class User implements UserDetails {
 
     private boolean isDeleted;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_course",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private List<Course> courses;
+    @OneToMany(mappedBy = "user")
+    private List<Enrollment> enrollments;
 
     @ManyToMany
     @JoinTable(
@@ -92,6 +86,15 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<BlogComment> blogComments;
+
+    @OneToMany(mappedBy = "user")
+    private List<LessonComment> lessonComments;
+
+    @OneToMany(mappedBy = "lecturer")
+    private List<CourseMaterial> courseMaterials;
+
+    @OneToMany(mappedBy = "user")
+    private List<PaymentTransaction> paymentTransaction;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

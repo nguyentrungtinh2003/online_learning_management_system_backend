@@ -6,28 +6,29 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshToken {
+public class CourseMaterial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private String title;
+    private String description;
+    private String file;
+    private LocalDateTime uploadDate;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @Column(nullable = false)
-    private Date expiryDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User lecturer;
 }

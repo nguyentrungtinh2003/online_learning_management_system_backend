@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService{
             // Tạo cookie chứa JWT token
             Cookie jwtCookie = new Cookie("authToken", jwt);
             jwtCookie.setHttpOnly(true); // Cookie không thể truy cập từ JavaScript để bảo mật
-            jwtCookie.setMaxAge(24 * 60 * 60); // Cookie hết hạn sau 24 giờ
+            jwtCookie.setMaxAge(60 * 60); // Cookie hết hạn sau 24 giờ
             jwtCookie.setPath("/"); // Có hiệu lực trên toàn bộ ứng dụng
             response.addCookie(jwtCookie); // Thêm cookie vào phản hồi
 

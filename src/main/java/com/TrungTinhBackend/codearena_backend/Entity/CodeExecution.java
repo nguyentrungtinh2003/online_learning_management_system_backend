@@ -6,28 +6,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshToken {
+public class CodeExecution {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private String language;
+
+    @Column(columnDefinition = "TEXT")
+    private String code;
+
+    @Column(columnDefinition = "TEXT")
+    private String output;
+
+    private LocalDateTime executedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Column(nullable = false, unique = true)
-    private String token;
-
-    @Column(nullable = false)
-    private Date expiryDate;
 }
