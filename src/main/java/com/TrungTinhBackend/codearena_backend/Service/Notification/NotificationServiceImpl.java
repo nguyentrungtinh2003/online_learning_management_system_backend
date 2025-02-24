@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Service.Notification;
 import com.TrungTinhBackend.codearena_backend.Entity.Notification;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.*;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestNotification;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -45,12 +46,13 @@ public class NotificationServiceImpl implements NotificationService{
 
         for (Long userId : allUserIds) {
             notification.setMessage(apiRequestNotification.getMessage());
-            notification.setReceiverId(apiRequestNotification.getReceiverId());
+            notification.setReceiver(userRepository.findById(apiRequestNotification.getReceiver().getId()).orElseThrow(
+                    () -> new NotFoundException("User not found !")
+            ));
             notification.setCreatedAt(LocalDateTime.now());
             notification.setStatus(NotificationStatus.UNREAD);
             notification.setType(apiRequestNotification.getType());
             notification.setRelatedId(apiRequestNotification.getRelatedId()); // Clone object
-            notification.setReceiverId(userId);
             notificationRepository.save(notification);
 
             // Gửi WebSocket cho từng user
@@ -71,7 +73,9 @@ public class NotificationServiceImpl implements NotificationService{
 
         Notification notification = new Notification();
         notification.setMessage(message);
-        notification.setReceiverId(userId);
+        notification.setReceiver(userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        ));
         notification.setCreatedAt(LocalDateTime.now());
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setType(NotificationType.valueOf(type));
@@ -92,7 +96,7 @@ public class NotificationServiceImpl implements NotificationService{
     public APIResponse getUserNotifications(Long userId) {
         APIResponse apiResponse = new APIResponse();
 
-        List<Notification> notifications = notificationRepository.findByReceiverIdOrderByCreatedAtDesc(userId);
+        List<Notification> notifications = notificationRepository.findByReceiver_IdOrderByCreatedAtDesc(userId);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get notification by user success !");

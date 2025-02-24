@@ -22,7 +22,9 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long receiverId;
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = true)
+    private User receiver;
 
     private String message;
 

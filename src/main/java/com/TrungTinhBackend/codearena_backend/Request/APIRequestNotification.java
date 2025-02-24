@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Request;
 
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class APIRequestNotification {
 
-    private Long receiverId;
+    private User receiver;
 
     private String message;
 
