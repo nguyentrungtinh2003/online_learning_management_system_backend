@@ -312,7 +312,6 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-
         Page<User> page1 = userRepository.searchUser(keyword,pageable);
 
         apiResponse.setStatusCode(200L);

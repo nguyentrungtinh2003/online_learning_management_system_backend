@@ -32,6 +32,11 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<APIResponse> getCourseByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(courseService.getCourseByUserId(userId));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchCourse(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,

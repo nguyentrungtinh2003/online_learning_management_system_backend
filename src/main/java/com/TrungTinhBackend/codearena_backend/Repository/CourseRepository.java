@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CourseRepository extends JpaRepository<Course,Long> {
 
@@ -15,4 +17,7 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     "LOWER(c.courseName) LIKE LOWER(CONCAT('%',:keyword,'%')) OR " +
             "LOWER(c.description) LIKE LOWER(CONCAT('%',:keyword,'%'))")
     Page<Course> searchCourse(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT c FROM Course c JOIN c.enrollments e WHERE e.user.id = :userId")
+    List<Course> findCourseByUserId(@Param("userId") Long userId);
 }

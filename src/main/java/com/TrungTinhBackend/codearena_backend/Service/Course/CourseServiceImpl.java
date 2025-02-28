@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -130,6 +131,19 @@ public class CourseServiceImpl implements CourseService{
 
         Pageable pageable = PageRequest.of(page,size);
         Page<Course> courses = courseRepository.searchCourse(keyword,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Search course success !");
+        apiResponse.setData(courses);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getCourseByUserId(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Course> courses = courseRepository.findCourseByUserId(userId);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search course success !");
