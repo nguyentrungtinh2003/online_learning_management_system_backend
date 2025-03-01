@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class LessonCommentServiceImpl implements LessonCommentService{
@@ -65,6 +66,20 @@ public class LessonCommentServiceImpl implements LessonCommentService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add lesson comment success !");
         apiResponse.setData(lessonComment);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllLessonComment() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<LessonComment> lessonComments = lessonCommentRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all lesson comment success !");
+        apiResponse.setData(lessonComments);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
