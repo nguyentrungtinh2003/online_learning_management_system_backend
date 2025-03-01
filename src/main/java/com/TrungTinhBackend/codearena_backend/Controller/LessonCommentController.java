@@ -28,4 +28,9 @@ public class LessonCommentController {
     public ResponseEntity<APIResponse> getAllLessonComment() {
         return ResponseEntity.ok(lessonCommentService.getAllLessonComment());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getLessonCommentById(@PathVariable Long id) {
+        return ResponseEntity.ok(lessonCommentService.getLessonCommentById(id));
+    }
 }

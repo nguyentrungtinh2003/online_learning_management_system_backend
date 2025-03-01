@@ -84,4 +84,20 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getLessonCommentById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        LessonComment lessonComment = lessonCommentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Lesson comment not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get lesson comment by id success !");
+        apiResponse.setData(lessonComment);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }
