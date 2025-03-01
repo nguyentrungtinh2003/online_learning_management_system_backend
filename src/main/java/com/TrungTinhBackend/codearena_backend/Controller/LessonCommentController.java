@@ -33,4 +33,9 @@ public class LessonCommentController {
     public ResponseEntity<APIResponse> getLessonCommentById(@PathVariable Long id) {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentById(id));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deleteLessonCommentById(@PathVariable Long id) {
+        return ResponseEntity.ok(lessonCommentService.deleteLessonComment(id));
+    }
 }

@@ -10,4 +10,5 @@ public interface LessonCommentService {
     public APIResponse addLessonComment(APIRequestLessonComment apiRequestLessonComment, MultipartFile img, MultipartFile video) throws IOException;
     public APIResponse getAllLessonComment();
     public APIResponse getLessonCommentById(Long id);
+    public APIResponse deleteLessonComment(Long id);
 }
