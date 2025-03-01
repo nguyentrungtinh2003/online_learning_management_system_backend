@@ -34,6 +34,13 @@ public class LessonCommentController {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentById(id));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchLessonComment(@RequestParam(required = false) String keyword,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(lessonCommentService.searchLessonComment(keyword, page,size));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> deleteLessonCommentById(@PathVariable Long id) {
         return ResponseEntity.ok(lessonCommentService.deleteLessonComment(id));
