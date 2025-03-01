@@ -12,4 +12,5 @@ public interface LessonCommentService {
     public APIResponse getLessonCommentById(Long id);
     public APIResponse deleteLessonComment(Long id);
     public APIResponse searchLessonComment(String keyword, int page, int size);
+    public APIResponse getLessonCommentByPage(int page, int size);
 }

@@ -138,4 +138,20 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getLessonCommentByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+
+        Page<LessonComment> lessonComments = lessonCommentRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get lesson comment by page success !");
+        apiResponse.setData(lessonComments);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

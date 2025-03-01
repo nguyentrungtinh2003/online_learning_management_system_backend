@@ -41,6 +41,12 @@ public class LessonCommentController {
         return ResponseEntity.ok(lessonCommentService.searchLessonComment(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getLessonCommentByPage(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(lessonCommentService.getLessonCommentByPage(page,size));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> deleteLessonCommentById(@PathVariable Long id) {
         return ResponseEntity.ok(lessonCommentService.deleteLessonComment(id));
