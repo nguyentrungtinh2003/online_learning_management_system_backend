@@ -122,4 +122,19 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
+    @Override
+    public APIResponse getBlogByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Blog> blogs = blogRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog by page success !");
+        apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }
