@@ -143,4 +143,19 @@ public class QuestionServiceImpl implements QuestionService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getQuestionByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Question> questions = questionRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get question by page success !");
+        apiResponse.setData(questions);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

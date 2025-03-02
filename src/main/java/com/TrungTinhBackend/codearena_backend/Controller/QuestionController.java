@@ -31,6 +31,12 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.searchQuestion(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getQuestionByPage(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(questionService.getQuestionByPage(page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateQuestion(@PathVariable Long id,@Valid @RequestPart(value = "question") APIRequestQuestion apiRequestQuestion,
                                                     @RequestPart(value = "img") MultipartFile img) throws Exception {
