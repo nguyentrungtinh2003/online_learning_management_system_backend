@@ -11,4 +11,5 @@ public interface CourseService {
     public APIResponse deleteCourse(Long id) throws Exception;
     public APIResponse searchCourse(String keyword, int page, int size);
     public APIResponse getCourseByUserId(Long userId);
+    public APIResponse getCourseByPage(int page, int size);
 }

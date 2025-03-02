@@ -42,6 +42,12 @@ public class CourseController {
         return ResponseEntity.ok(courseService.searchCourse(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getCourseByPage(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(courseService.getCourseByPage(page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {

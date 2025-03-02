@@ -151,4 +151,18 @@ public class CourseServiceImpl implements CourseService{
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getCourseByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Course> courses = courseRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get course by page success !");
+        apiResponse.setData(courses);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
 }
