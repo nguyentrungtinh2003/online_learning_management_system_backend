@@ -48,6 +48,12 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.searchLesson(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getLessonByPage(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(lessonService.getLessonByPage(page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,

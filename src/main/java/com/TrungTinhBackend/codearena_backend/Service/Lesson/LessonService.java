@@ -9,4 +9,5 @@ public interface LessonService {
     public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception;
     public APIResponse deleteLesson(Long id) throws Exception;
     public APIResponse searchLesson(String keyword, int page, int size);
+    public APIResponse getLessonByPage(int page, int size);
 }
