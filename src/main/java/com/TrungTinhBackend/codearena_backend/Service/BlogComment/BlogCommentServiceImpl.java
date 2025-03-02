@@ -111,4 +111,19 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getBlogCommentByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<BlogComment> blogComments = blogCommentRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog comment by page success !");
+        apiResponse.setData(blogComments);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }
