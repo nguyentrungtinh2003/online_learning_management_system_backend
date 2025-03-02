@@ -24,6 +24,13 @@ public class BlogCommentController {
         return ResponseEntity.ok(blogCommentService.addBlogComment(apiRequestBlogComment, img, video));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchBlogComment(@RequestParam String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(blogCommentService.searchBlogComment(keyword, page,size));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> deleteBlogComment(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(blogCommentService.deleteBlogComment(id));
