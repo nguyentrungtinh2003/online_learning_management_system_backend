@@ -30,6 +30,12 @@ public class QuizController {
         return ResponseEntity.ok(quizService.searchQuiz(keyword, page,size));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getQuizByPage(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(quizService.getQuizByPage(page,size));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateQuiz(@PathVariable Long id, @Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
                                                @RequestPart(value = "img") MultipartFile img) throws Exception {

@@ -154,4 +154,19 @@ public class QuizServiceImpl implements QuizService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getQuizByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Quiz> quizzes = quizRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get quiz by page success !");
+        apiResponse.setData(quizzes);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }
