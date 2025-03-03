@@ -93,6 +93,22 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
+    public APIResponse getLessonById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Lesson lesson = lessonRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Lesson not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get lesson by id success !");
+        apiResponse.setData(lesson);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

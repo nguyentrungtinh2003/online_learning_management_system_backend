@@ -35,6 +35,11 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.getAllLesson());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getLessonById(@PathVariable Long id) {
+        return ResponseEntity.ok(lessonService.getLessonById(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchLesson(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
