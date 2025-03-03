@@ -31,6 +31,13 @@ public class ChatController {
         return ResponseEntity.status(apiResponse.getStatusCode().intValue()).body(apiResponse);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchChat(@RequestParam(required = false) String keyword,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(chatService.searchChat(keyword, page,size));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> addChat(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(chatService.deleteChat(id));
