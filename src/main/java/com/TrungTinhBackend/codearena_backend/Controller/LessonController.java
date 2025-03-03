@@ -23,22 +23,16 @@ public class LessonController {
     @Autowired
     private LessonRepository lessonRepository;
 
-    @GetMapping("/all")
-    public ResponseEntity<APIResponse> getAllLesson() throws Exception {
-        APIResponse apiResponse = new APIResponse();
-        apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Get all lesson!");
-        apiResponse.setData(lessonRepository.findAll());
-        apiResponse.setTimestamp(LocalDateTime.now());
-        return ResponseEntity.ok(apiResponse);
-    }
-
-
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllLesson() {
+        return ResponseEntity.ok(lessonService.getAllLesson());
     }
 
     @GetMapping("/search")

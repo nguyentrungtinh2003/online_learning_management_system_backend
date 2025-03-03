@@ -79,6 +79,20 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
+    public APIResponse getAllLesson() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Lesson> lessons = lessonRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all lesson success !");
+        apiResponse.setData(lessons);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
