@@ -30,6 +30,11 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllCourse() {
+        return ResponseEntity.ok(courseService.getAllCourse());
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<APIResponse> getCourseByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(courseService.getCourseByUserId(userId));

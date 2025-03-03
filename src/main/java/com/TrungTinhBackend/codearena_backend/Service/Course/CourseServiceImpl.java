@@ -67,6 +67,20 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public APIResponse getAllCourse() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Course> courses = courseRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all course success !");
+        apiResponse.setData(courses);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
