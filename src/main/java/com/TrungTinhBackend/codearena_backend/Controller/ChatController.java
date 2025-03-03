@@ -34,8 +34,14 @@ public class ChatController {
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchChat(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+                                                    @RequestParam(defaultValue = "5") int size) {
         return ResponseEntity.ok(chatService.searchChat(keyword, page,size));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getChatByPage(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(chatService.getChatByPage(page,size));
     }
 
     @DeleteMapping("/delete/{id}")

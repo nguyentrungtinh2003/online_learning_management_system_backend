@@ -108,10 +108,25 @@ public class ChatServiceImpl implements ChatService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<Chat> chats = chatRepository.findAll(pageable);
+        Page<Chat> chats = chatRepository.searchChat(keyword,pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search chat success !");
+        apiResponse.setData(chats);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getChatByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Chat> chats = chatRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get chat by page success !");
         apiResponse.setData(chats);
         apiResponse.setTimestamp(LocalDateTime.now());
 
