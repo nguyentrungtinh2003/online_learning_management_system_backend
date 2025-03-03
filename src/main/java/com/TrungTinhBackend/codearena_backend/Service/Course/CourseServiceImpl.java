@@ -81,6 +81,22 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public APIResponse getCourseById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get course by id success !");
+        apiResponse.setData(course);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
