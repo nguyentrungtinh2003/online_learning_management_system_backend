@@ -183,4 +183,20 @@ public class QuizServiceImpl implements QuizService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getQuizById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Quiz quiz = quizRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Quiz not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get quiz by id success !");
+        apiResponse.setData(quiz);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

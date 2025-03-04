@@ -11,4 +11,5 @@ public interface QuizService {
     public APIResponse searchQuiz(String keyword, int page, int size);
     public APIResponse getQuizByPage(int page, int size);
     public APIResponse getAllQuiz();
+    public APIResponse getQuizById(Long id);
 }

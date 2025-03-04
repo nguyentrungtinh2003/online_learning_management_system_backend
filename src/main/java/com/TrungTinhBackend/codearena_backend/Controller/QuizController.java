@@ -28,6 +28,11 @@ public class QuizController {
         return ResponseEntity.ok(quizService.getAllQuiz());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getQuizById(@PathVariable Long id) {
+        return ResponseEntity.ok(quizService.getQuizById(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchQuiz(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
