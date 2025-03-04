@@ -8,6 +8,9 @@ import com.TrungTinhBackend.codearena_backend.Repository.*;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestNotification;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -97,6 +100,21 @@ public class NotificationServiceImpl implements NotificationService{
         APIResponse apiResponse = new APIResponse();
 
         List<Notification> notifications = notificationRepository.findByReceiver_IdOrderByCreatedAtDesc(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get notification by user success !");
+        apiResponse.setData(notifications);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse searchNotification(String keyword, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Notification> notifications = notificationRepository.searchNotification(keyword,pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get notification by user success !");

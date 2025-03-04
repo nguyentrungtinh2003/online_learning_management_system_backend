@@ -26,4 +26,11 @@ public class NotificationController {
     public ResponseEntity<APIResponse> getNotificationByUserId(@PathVariable Long userId) throws Exception {
         return ResponseEntity.ok(notificationService.getUserNotifications(userId));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchNotification(@RequestParam(required = false) String keyword,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(notificationService.searchNotification(keyword, page,size));
+    }
 }
