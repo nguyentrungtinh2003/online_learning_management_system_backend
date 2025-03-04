@@ -10,4 +10,5 @@ public interface QuizService {
     public APIResponse deleteQuiz(Long id) throws Exception;
     public APIResponse searchQuiz(String keyword, int page, int size);
     public APIResponse getQuizByPage(int page, int size);
+    public APIResponse getAllQuiz();
 }

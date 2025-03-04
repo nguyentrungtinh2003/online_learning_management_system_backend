@@ -23,6 +23,11 @@ public class QuizController {
         return ResponseEntity.ok(quizService.addQuiz(apiRequestQuiz, img));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllQuiz() {
+        return ResponseEntity.ok(quizService.getAllQuiz());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchQuiz(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,

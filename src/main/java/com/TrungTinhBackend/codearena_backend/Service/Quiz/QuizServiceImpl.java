@@ -169,4 +169,18 @@ public class QuizServiceImpl implements QuizService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getAllQuiz() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Quiz> quizzes = quizRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all quiz success !");
+        apiResponse.setData(quizzes);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }
