@@ -11,4 +11,5 @@ public interface NotificationService {
     public APIResponse sendSystemNotification(Long userId, String message, String type, Long relatedId);
     public APIResponse getUserNotifications(Long userId);
     public APIResponse searchNotification(String keyword, int page, int size);
+    public APIResponse getNotificationByPage(int page, int size);
 }

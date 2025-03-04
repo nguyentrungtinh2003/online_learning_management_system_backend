@@ -117,7 +117,22 @@ public class NotificationServiceImpl implements NotificationService{
         Page<Notification> notifications = notificationRepository.searchNotification(keyword,pageable);
 
         apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Get notification by user success !");
+        apiResponse.setMessage("Search notification success !");
+        apiResponse.setData(notifications);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getNotificationByPage(int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Notification> notifications = notificationRepository.findAll(pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get notification by page success !");
         apiResponse.setData(notifications);
         apiResponse.setTimestamp(LocalDateTime.now());
 

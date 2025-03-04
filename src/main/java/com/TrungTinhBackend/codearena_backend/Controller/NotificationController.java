@@ -30,7 +30,13 @@ public class NotificationController {
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchNotification(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
+                                                    @RequestParam(defaultValue = "5") int size) {
         return ResponseEntity.ok(notificationService.searchNotification(keyword, page,size));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getNotificationByPage(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(notificationService.getNotificationByPage(page,size));
     }
 }
