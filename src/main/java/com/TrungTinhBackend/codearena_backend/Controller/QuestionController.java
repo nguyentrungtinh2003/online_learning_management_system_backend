@@ -24,6 +24,11 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.addQuestion(apiRequestQuestion, img));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllQuestion() {
+        return ResponseEntity.ok(questionService.getAllQuestion());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchQuestion(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,

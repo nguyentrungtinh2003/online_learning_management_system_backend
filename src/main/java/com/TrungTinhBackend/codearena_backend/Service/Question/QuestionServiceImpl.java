@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class QuestionServiceImpl implements QuestionService{
@@ -153,6 +154,20 @@ public class QuestionServiceImpl implements QuestionService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get question by page success !");
+        apiResponse.setData(questions);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllQuestion() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Question> questions = questionRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all question success !");
         apiResponse.setData(questions);
         apiResponse.setTimestamp(LocalDateTime.now());
 

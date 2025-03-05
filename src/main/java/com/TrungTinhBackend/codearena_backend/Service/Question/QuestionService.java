@@ -11,4 +11,5 @@ public interface QuestionService {
     public APIResponse deleteQuestion(Long id) throws Exception;
     public APIResponse searchQuestion(String keyword, int page, int size);
     public APIResponse getQuestionByPage(int page, int size);
+    public APIResponse getAllQuestion();
 }
