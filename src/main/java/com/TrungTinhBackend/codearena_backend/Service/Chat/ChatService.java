@@ -9,4 +9,5 @@ public interface ChatService {
     public APIResponse deleteChat(Long id) throws Exception;
     public APIResponse searchChat(String keyword, int page, int size);
     public APIResponse getChatByPage(int page, int size);
+    public APIResponse getAllChat();
 }

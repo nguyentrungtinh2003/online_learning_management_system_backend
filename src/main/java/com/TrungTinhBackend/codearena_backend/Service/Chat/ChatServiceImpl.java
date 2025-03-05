@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ChatServiceImpl implements ChatService{
@@ -127,6 +128,20 @@ public class ChatServiceImpl implements ChatService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get chat by page success !");
+        apiResponse.setData(chats);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllChat() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Chat> chats = chatRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all chat success !");
         apiResponse.setData(chats);
         apiResponse.setTimestamp(LocalDateTime.now());
 
