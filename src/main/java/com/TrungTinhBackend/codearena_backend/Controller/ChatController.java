@@ -36,6 +36,11 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getAllChat());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getChatById(@PathVariable Long id) {
+        return ResponseEntity.ok(chatService.getChatById(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchChat(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,

@@ -147,4 +147,20 @@ public class ChatServiceImpl implements ChatService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getChatById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Chat chat = chatRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Chat not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get chat by id success !");
+        apiResponse.setData(chat);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

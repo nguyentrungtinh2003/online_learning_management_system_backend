@@ -10,4 +10,5 @@ public interface ChatService {
     public APIResponse searchChat(String keyword, int page, int size);
     public APIResponse getChatByPage(int page, int size);
     public APIResponse getAllChat();
+    public APIResponse getChatById(Long id);
 }
