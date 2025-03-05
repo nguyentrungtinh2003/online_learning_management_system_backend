@@ -173,4 +173,20 @@ public class QuestionServiceImpl implements QuestionService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getQuestionById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Question not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get question by id success !");
+        apiResponse.setData(question);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

@@ -12,4 +12,5 @@ public interface QuestionService {
     public APIResponse searchQuestion(String keyword, int page, int size);
     public APIResponse getQuestionByPage(int page, int size);
     public APIResponse getAllQuestion();
+    public APIResponse getQuestionById(Long id);
 }

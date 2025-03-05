@@ -29,6 +29,11 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.getAllQuestion());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getQuestionById(@PathVariable Long id) {
+        return ResponseEntity.ok(questionService.getQuestionById(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchQuestion(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
