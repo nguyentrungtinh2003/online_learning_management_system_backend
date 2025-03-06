@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BlogCommentServiceImpl implements BlogCommentService{
@@ -121,6 +122,20 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get blog comment by page success !");
+        apiResponse.setData(blogComments);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllBlogComment() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<BlogComment> blogComments = blogCommentRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all blog comment success !");
         apiResponse.setData(blogComments);
         apiResponse.setTimestamp(LocalDateTime.now());
 

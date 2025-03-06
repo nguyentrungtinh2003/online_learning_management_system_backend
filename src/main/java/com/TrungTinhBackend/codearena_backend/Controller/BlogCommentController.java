@@ -24,6 +24,11 @@ public class BlogCommentController {
         return ResponseEntity.ok(blogCommentService.addBlogComment(apiRequestBlogComment, img, video));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllBlogComment() {
+        return ResponseEntity.ok(blogCommentService.getAllBlogComment());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlogComment(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,

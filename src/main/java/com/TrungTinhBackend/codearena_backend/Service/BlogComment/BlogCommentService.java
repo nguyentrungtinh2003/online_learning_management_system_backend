@@ -9,4 +9,5 @@ public interface BlogCommentService {
     public APIResponse deleteBlogComment(Long id) throws Exception;
     public APIResponse searchBlogComment(String keyword, int page, int size);
     public APIResponse getBlogCommentByPage(int page, int size);
+    public APIResponse getAllBlogComment();
 }
