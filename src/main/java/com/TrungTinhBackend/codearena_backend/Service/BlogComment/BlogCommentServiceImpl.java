@@ -141,4 +141,20 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getBlogCommentById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        BlogComment blogComment = blogCommentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Blog comment not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog comment by id success !");
+        apiResponse.setData(blogComment);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

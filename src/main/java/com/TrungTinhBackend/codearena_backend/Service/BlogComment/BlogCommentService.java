@@ -10,4 +10,5 @@ public interface BlogCommentService {
     public APIResponse searchBlogComment(String keyword, int page, int size);
     public APIResponse getBlogCommentByPage(int page, int size);
     public APIResponse getAllBlogComment();
+    public APIResponse getBlogCommentById(Long id);
 }
