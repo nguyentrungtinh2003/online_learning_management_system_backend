@@ -16,4 +16,5 @@ public interface BlogCommentRepository extends JpaRepository<BlogComment,Long> {
             "LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<BlogComment> searchBlogComment(@Param("keyword") String keyword, Pageable pageable);
     List<BlogComment> findByBlogId(Long blogId);
+    List<BlogComment> findByUserId(Long userId);
 }

@@ -39,6 +39,11 @@ public class BlogCommentController {
         return ResponseEntity.ok(blogCommentService.getBlogCommentByBlogId(blogId));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<APIResponse> getBlogCommentByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(blogCommentService.getBlogCommentByUserId(userId));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlogComment(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
