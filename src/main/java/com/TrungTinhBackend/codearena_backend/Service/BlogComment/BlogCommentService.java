@@ -11,4 +11,5 @@ public interface BlogCommentService {
     public APIResponse getBlogCommentByPage(int page, int size);
     public APIResponse getAllBlogComment();
     public APIResponse getBlogCommentById(Long id);
+    public APIResponse getBlogCommentByBlogId(Long blogId);
 }

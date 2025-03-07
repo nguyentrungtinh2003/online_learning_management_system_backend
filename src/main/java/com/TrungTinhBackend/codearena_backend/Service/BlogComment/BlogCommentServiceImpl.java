@@ -157,4 +157,18 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getBlogCommentByBlogId(Long blogId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<BlogComment> blogComments = blogCommentRepository.findByBlogId(blogId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog comment by blog id success !");
+        apiResponse.setData(blogComments);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

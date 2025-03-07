@@ -8,9 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BlogCommentRepository extends JpaRepository<BlogComment,Long> {
     @Query("SELECT b FROM BlogComment b WHERE " +
             "LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<BlogComment> searchBlogComment(@Param("keyword") String keyword, Pageable pageable);
+    List<BlogComment> findByBlogId(Long blogId);
 }
