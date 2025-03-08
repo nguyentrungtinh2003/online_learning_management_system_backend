@@ -11,10 +11,12 @@ import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuiz;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -145,7 +147,8 @@ public class QuizServiceImpl implements QuizService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<Quiz> quizzes = quizRepository.searchQuiz(keyword,pageable);
+        Specification<Quiz> specification = QuizSpecification.searchByKeyword(keyword);
+        Page<Quiz> quizzes = quizRepository.findAll(specification,pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search quiz success !");
