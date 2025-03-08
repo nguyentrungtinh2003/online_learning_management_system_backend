@@ -12,6 +12,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,6 +60,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private UserSpecification userSpecification;
 
     @Override
     public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
@@ -312,11 +317,13 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<User> page1 = userRepository.searchUser(keyword,pageable);
+        Specification<User> specification = UserSpecification.searchByKeyword(keyword);
+
+        Page<User> users = userRepository.findAll(specification,pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search user success");
-        apiResponse.setData(page1);
+        apiResponse.setData(users);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
