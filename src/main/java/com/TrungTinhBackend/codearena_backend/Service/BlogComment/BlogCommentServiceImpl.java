@@ -11,11 +11,13 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestBlogComment;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogCommentSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,7 +105,8 @@ public class BlogCommentServiceImpl implements BlogCommentService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<BlogComment> blogComments = blogCommentRepository.searchBlogComment(keyword,pageable);
+        Specification<BlogComment> specification = BlogCommentSpecification.searchByKeyword(keyword);
+        Page<BlogComment> blogComments = blogCommentRepository.findAll(specification,pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search blog comment success !");
