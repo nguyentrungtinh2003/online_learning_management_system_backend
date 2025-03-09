@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/teacher/**").hasAuthority("TEACHER")
                         .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+                        .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
                         .requestMatchers("/swagger-ui/**","/swagger-ui.html", "/v3/api-docs/**").permitAll()
