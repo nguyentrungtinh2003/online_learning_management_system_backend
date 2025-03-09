@@ -2,7 +2,9 @@ package com.TrungTinhBackend.codearena_backend.Service.Search.Specification;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourseSpecification {
     public static Specification<Course> searchByKeyword(String keyword) {
         return (root, query, criteriaBuilder) -> {

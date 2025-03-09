@@ -2,7 +2,9 @@ package com.TrungTinhBackend.codearena_backend.Service.Search.Specification;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuizSpecification {
     public static Specification<Quiz> searchByKeyword(String keyword) {
         return (root,query,criteriaBuilder) -> {
