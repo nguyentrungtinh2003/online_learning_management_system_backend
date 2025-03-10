@@ -155,4 +155,20 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
+    @Override
+    public APIResponse getBlogById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Blog not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog by id success !");
+        apiResponse.setData(blog);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }

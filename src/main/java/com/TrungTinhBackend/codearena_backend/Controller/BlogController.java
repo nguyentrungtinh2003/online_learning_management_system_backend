@@ -28,6 +28,12 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getAllBlog());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getBlogById(@PathVariable Long id) {
+        return ResponseEntity.ok(blogService.getBlogById(id));
+    }
+
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,

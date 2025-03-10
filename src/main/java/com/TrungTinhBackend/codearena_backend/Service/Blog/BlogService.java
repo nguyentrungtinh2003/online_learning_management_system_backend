@@ -11,4 +11,5 @@ public interface BlogService {
     public APIResponse searchBlog(String keyword, int page, int size);
     public APIResponse getBlogByPage(int page, int size);
     public APIResponse getAllBlog();
+    public APIResponse getBlogById(Long id);
 }
