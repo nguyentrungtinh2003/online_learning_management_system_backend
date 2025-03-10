@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BlogServiceImpl implements BlogService{
@@ -134,6 +135,20 @@ public class BlogServiceImpl implements BlogService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get blog by page success !");
+        apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllBlog() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Blog> blogs = blogRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all blog success !");
         apiResponse.setData(blogs);
         apiResponse.setTimestamp(LocalDateTime.now());
 

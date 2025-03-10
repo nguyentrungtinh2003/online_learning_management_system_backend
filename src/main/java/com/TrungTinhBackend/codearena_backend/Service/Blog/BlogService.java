@@ -10,5 +10,5 @@ public interface BlogService {
     public APIResponse deleteBlog(Long id) throws Exception;
     public APIResponse searchBlog(String keyword, int page, int size);
     public APIResponse getBlogByPage(int page, int size);
-
+    public APIResponse getAllBlog();
 }

@@ -23,6 +23,11 @@ public class BlogController {
         return ResponseEntity.ok(blogService.addBlog(apiRequestBlog, img, video));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllBlog() {
+        return ResponseEntity.ok(blogService.getAllBlog());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
