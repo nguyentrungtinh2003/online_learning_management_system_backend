@@ -31,4 +31,6 @@ public class CourseMaterial {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User lecturer;
+
+    private boolean isDeleted;
 }
