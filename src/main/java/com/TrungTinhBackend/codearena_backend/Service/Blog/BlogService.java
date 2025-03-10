@@ -12,4 +12,5 @@ public interface BlogService {
     public APIResponse getBlogByPage(int page, int size);
     public APIResponse getAllBlog();
     public APIResponse getBlogById(Long id);
+    public APIResponse getBlogByUserId(Long userId);
 }

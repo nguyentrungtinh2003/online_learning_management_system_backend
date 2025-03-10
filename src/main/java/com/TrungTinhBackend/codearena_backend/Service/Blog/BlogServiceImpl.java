@@ -171,4 +171,18 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
+    @Override
+    public APIResponse getBlogByUserId(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Blog> blogs = blogRepository.findByUserId(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blog by userId success !");
+        apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }

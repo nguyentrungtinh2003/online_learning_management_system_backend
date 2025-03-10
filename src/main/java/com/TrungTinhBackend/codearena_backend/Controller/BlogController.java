@@ -33,6 +33,11 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogById(id));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<APIResponse> getBlogByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(blogService.getBlogByUserId(userId));
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
