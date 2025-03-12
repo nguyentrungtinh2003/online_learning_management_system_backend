@@ -9,6 +9,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourseMaterial;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.File.FileService;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseMaterialSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -95,12 +96,82 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
     }
 
     @Override
-    public APIResponse updateCourseMaterial(Long id, APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) {
-        return null;
+    public APIResponse updateCourseMaterial(Long id, APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) throws IOException {
+        APIResponse apiResponse = new APIResponse();
+
+        CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course material not found !")
+        );
+        courseMaterial.setTitle(apiRequestCourseMaterial.getTitle());
+        courseMaterial.setDescription(apiRequestCourseMaterial.getDescription());
+        courseMaterial.setDeleted(false);
+        courseMaterial.setUploadDate(LocalDateTime.now());
+        if(file != null || file.isEmpty()) {
+            courseMaterial.setFile(fileService.uploadFile(file));
+        }
+
+        courseMaterial.setCourse(courseRepository.findById(apiRequestCourseMaterial.getCourse().getId()).orElseThrow(
+                () -> new NotFoundException("Course not found !")
+        ));
+
+        courseMaterial.setLecturer(userRepository.findById(apiRequestCourseMaterial.getLecturer().getId()).orElseThrow(
+                () -> new NotFoundException("Lecturer not found !")
+        ));
+
+        courseMaterialRepository.save(courseMaterial);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Update course material success !");
+        apiResponse.setData(courseMaterial);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
     }
 
     @Override
     public APIResponse deleteCourseMaterial(Long id) {
-        return null;
+        APIResponse apiResponse = new APIResponse();
+
+        CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course material not found !")
+        );
+
+        courseMaterial.setDeleted(true);
+        courseMaterialRepository.save(courseMaterial);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Delete course material success !");
+        apiResponse.setData(courseMaterial);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse searchCourseMaterial(String keyword, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Specification<CourseMaterial> specification = CourseMaterialSpecification.searchByKeyword(keyword);
+        Page<CourseMaterial> courseMaterials = courseMaterialRepository.findAll(specification,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Search course material success !");
+        apiResponse.setData(courseMaterials);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getCourseMaterialById(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course material not found !")
+        );
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get course material by id success !");
+        apiResponse.setData(courseMaterial);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
     }
 }

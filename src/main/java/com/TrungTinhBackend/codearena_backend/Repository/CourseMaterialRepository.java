@@ -2,8 +2,9 @@ package com.TrungTinhBackend.codearena_backend.Repository;
 
 import com.TrungTinhBackend.codearena_backend.Entity.CourseMaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CourseMaterialRepository extends JpaRepository<CourseMaterial,Long> {
+public interface CourseMaterialRepository extends JpaRepository<CourseMaterial,Long>, JpaSpecificationExecutor<CourseMaterial> {
 }

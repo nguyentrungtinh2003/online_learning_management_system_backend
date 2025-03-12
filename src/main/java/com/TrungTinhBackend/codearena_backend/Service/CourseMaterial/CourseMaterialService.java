@@ -10,6 +10,8 @@ public interface CourseMaterialService {
     public APIResponse addCourseMaterial(APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) throws IOException;
     public APIResponse getAllCourseMaterial();
     public APIResponse getCourseMaterialByPage(int page, int size);
-    public APIResponse updateCourseMaterial(Long id,APIRequestCourseMaterial apiRequestCourseMaterial,MultipartFile file);
+    public APIResponse updateCourseMaterial(Long id,APIRequestCourseMaterial apiRequestCourseMaterial,MultipartFile file) throws IOException;
     public APIResponse deleteCourseMaterial(Long id);
+    public APIResponse searchCourseMaterial(String keyword, int page, int size);
+    public APIResponse getCourseMaterialById(Long id);
 }
