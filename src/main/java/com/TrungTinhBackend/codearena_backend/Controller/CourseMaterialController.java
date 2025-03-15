@@ -36,7 +36,7 @@ public class CourseMaterialController {
         return ResponseEntity.ok(courseMaterialService.getCourseMaterialByPage(page,size));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/{id}")
     public ResponseEntity<APIResponse> getCourseMaterialById(@PathVariable Long id) {
         return ResponseEntity.ok(courseMaterialService.getCourseMaterialById(id));
     }
