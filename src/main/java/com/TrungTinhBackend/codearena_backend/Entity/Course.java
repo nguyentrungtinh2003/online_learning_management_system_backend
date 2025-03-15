@@ -39,7 +39,7 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments;
 
-    @OneToOne
+    @ManyToOne()
     @JoinColumn(name = "lecturer_id")
     private User user;
 
