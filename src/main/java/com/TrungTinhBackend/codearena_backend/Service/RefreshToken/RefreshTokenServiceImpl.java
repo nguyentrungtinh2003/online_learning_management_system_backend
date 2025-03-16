@@ -29,6 +29,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
         if(existingRefreshToken != null) {
             existingRefreshToken.setToken(refreshToken);
             existingRefreshToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+            refreshTokenRepository.save(existingRefreshToken);
         }
 
         RefreshToken refreshToken1 = new RefreshToken();
