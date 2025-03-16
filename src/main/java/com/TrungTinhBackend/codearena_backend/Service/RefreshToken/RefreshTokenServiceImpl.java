@@ -3,7 +3,6 @@ package com.TrungTinhBackend.codearena_backend.Service.RefreshToken;
 import com.TrungTinhBackend.codearena_backend.Entity.RefreshToken;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Repository.RefreshTokenRepository;
-import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
 
     @Override
     public RefreshToken createRefreshToken(String refreshToken, User user) {
+
+        deleteByUser(user);
+
         RefreshToken refreshToken1 = new RefreshToken();
         refreshToken1.setToken(refreshToken);
         refreshToken1.setUser(user);
