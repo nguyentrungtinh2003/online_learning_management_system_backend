@@ -26,18 +26,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
                 ()-> new NotFoundException("Refresh Token not found")
         );
 
+        RefreshToken refreshToken1 = new RefreshToken();
+
         if(existingRefreshToken != null) {
             existingRefreshToken.setToken(refreshToken);
             existingRefreshToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
             refreshTokenRepository.save(existingRefreshToken);
+        }else{
+            refreshToken1.setToken(refreshToken);
+            refreshToken1.setUser(user);
+            refreshToken1.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+
+            refreshTokenRepository.save(refreshToken1);
         }
-
-        RefreshToken refreshToken1 = new RefreshToken();
-        refreshToken1.setToken(refreshToken);
-        refreshToken1.setUser(user);
-        refreshToken1.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
-
-        refreshTokenRepository.save(refreshToken1);
         return refreshToken1;
     }
 
