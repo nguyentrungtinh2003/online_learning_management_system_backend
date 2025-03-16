@@ -20,7 +20,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
     @Override
     public RefreshToken createRefreshToken(String refreshToken, User user) {
 
-        deleteByUser(user);
+        refreshTokenRepository.deleteByUser(user);
 
         RefreshToken refreshToken1 = new RefreshToken();
         refreshToken1.setToken(refreshToken);
@@ -42,10 +42,5 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
             throw new RuntimeException("Refresh token invalid !");
         }
         return token;
-    }
-
-    @Override
-    public void deleteByUser(User user) {
-        refreshTokenRepository.deleteByUser(user);
     }
 }

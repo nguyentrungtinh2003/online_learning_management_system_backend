@@ -13,7 +13,4 @@ public interface RefreshTokenService {
 
     // Kiểm tra refresh token có hết hạn chưa
     public RefreshToken verifyExpiration(RefreshToken token);
-
-    // Xóa token khi user logout
-    public void deleteByUser(User user);
 }
