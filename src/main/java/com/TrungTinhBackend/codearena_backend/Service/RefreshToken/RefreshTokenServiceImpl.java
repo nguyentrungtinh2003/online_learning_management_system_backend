@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Service.RefreshToken;
 
 import com.TrungTinhBackend.codearena_backend.Entity.RefreshToken;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
     public static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày (7 * 24 giờ * 60 phút * 60 giây * 1000 mili giây)
 
     @Override
-    @Transactional
     public RefreshToken createRefreshToken(String refreshToken, User user) {
 
-        refreshTokenRepository.deleteByUser(user);
+        RefreshToken existingRefreshToken = refreshTokenRepository.findByUser(user).orElseThrow(
+                ()-> new NotFoundException("Refresh Token not found")
+        );
+
+        if(existingRefreshToken != null) {
+            existingRefreshToken.setToken(refreshToken);
+            existingRefreshToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+        }
 
         RefreshToken refreshToken1 = new RefreshToken();
         refreshToken1.setToken(refreshToken);

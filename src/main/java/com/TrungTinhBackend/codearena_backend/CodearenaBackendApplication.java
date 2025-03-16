@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @SpringBootApplication
-@EnableTransactionManagement
 public class CodearenaBackendApplication {
 
 	public static void main(String[] args) throws IOException {
