@@ -21,25 +21,27 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
 
     @Override
     public RefreshToken createRefreshToken(String refreshToken, User user) {
+        // Tìm token hiện có
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUser(user);
+        RefreshToken tokenToSave;
 
-        RefreshToken existingRefreshToken = refreshTokenRepository.findByUser(user).orElseThrow(
-                ()-> new NotFoundException("Refresh Token not found")
-        );
-
-        RefreshToken refreshToken1 = new RefreshToken();
-
-        if(existingRefreshToken != null) {
-            existingRefreshToken.setToken(refreshToken);
-            existingRefreshToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
-            refreshTokenRepository.save(existingRefreshToken);
-        }else{
-            refreshToken1.setToken(refreshToken);
-            refreshToken1.setUser(user);
-            refreshToken1.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
-
-            refreshTokenRepository.save(refreshToken1);
+        if (optionalRefreshToken.isPresent()) {
+            // Nếu token tồn tại -> Cập nhật
+            RefreshToken existingToken = optionalRefreshToken.get();
+            existingToken.setToken(refreshToken);
+            existingToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+            tokenToSave = existingToken;
+        } else {
+            // Nếu chưa tồn tại -> Tạo mới
+            RefreshToken newToken = new RefreshToken();
+            newToken.setToken(refreshToken);
+            newToken.setUser(user);
+            newToken.setExpiryDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+            tokenToSave = newToken;
         }
-        return refreshToken1;
+
+        // Lưu và trả về token
+        return refreshTokenRepository.save(tokenToSave);
     }
 
     @Override
