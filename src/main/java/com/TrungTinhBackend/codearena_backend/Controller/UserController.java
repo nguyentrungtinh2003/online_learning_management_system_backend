@@ -37,9 +37,14 @@ public class UserController {
         return ResponseEntity.ok(userService.login(apiRequestUserLogin,response));
     }
     //--google ----
-    @GetMapping("/user")
+    @GetMapping("/user-google")
     public ResponseEntity<APIResponse> getCurrentUser(Authentication authentication) throws Exception {
         return ResponseEntity.ok(userService.getCurrentUser(authentication));
+    }
+    //--info user login ---
+    @GetMapping("/user-info")
+    public ResponseEntity<APIResponse> getUserInfo(@CookieValue(value = "authToken", required = false) String jwt) throws Exception {
+        return ResponseEntity.ok(userService.getUserInfo(jwt));
     }
 
     @GetMapping("/all-user")

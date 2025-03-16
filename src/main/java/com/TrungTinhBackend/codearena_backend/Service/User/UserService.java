@@ -29,6 +29,7 @@ public interface UserService {
     public APIResponse searchUser(String keyword, int page, int size);
 
     public APIResponse getCurrentUser(Authentication authentication) throws Exception;
+    public APIResponse getUserInfo(String jwt);
 
     public APIResponse logoutGoogle(HttpServletRequest request, HttpServletResponse response);
 

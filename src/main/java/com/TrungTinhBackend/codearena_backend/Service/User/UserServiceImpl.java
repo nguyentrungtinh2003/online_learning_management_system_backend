@@ -363,6 +363,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse getUserInfo(String jwt) {
+        APIResponse apiResponse = new APIResponse();
+
+        String username = jwtUtils.extractUsername(jwt);
+        User user = userRepository.findByUsername(username);
+
+        if (jwt == null || !jwtUtils.isTokenValid(jwt,user)) {
+            throw  new BadCredentialsException("Token invalid");
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get user info success !");
+        apiResponse.setData(user);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse logoutGoogle(HttpServletRequest request, HttpServletResponse response) {
         APIResponse apiResponse = new APIResponse();
         SecurityContextHolder.clearContext(); // Xóa authentication context
