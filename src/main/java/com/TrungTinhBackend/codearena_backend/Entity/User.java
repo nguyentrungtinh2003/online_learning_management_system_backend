@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Entity;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -98,6 +99,7 @@ public class User implements UserDetails {
     private List<PaymentTransaction> paymentTransaction;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore()
     private List<Course> courses;
 
     @Override
