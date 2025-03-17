@@ -72,7 +72,7 @@ public class CourseServiceImpl implements CourseService{
     public APIResponse getAllCourse() {
         APIResponse apiResponse = new APIResponse();
 
-        List<Course> courses = courseRepository.findAll();
+        List<Course> courses = courseRepository.findByIsDeletedFalse();
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get all course success !");
