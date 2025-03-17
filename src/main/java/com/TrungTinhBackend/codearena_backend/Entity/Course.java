@@ -40,7 +40,7 @@ public class Course {
     private List<Enrollment> enrollments;
 
     @ManyToOne()
-    @JoinColumn(name = "lecturer_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "course")

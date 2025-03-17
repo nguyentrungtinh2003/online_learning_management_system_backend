@@ -97,6 +97,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<PaymentTransaction> paymentTransaction;
 
+    @OneToMany(mappedBy = "user")
+    private List<Course> courses;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
