@@ -84,7 +84,7 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse getAllLesson() {
         APIResponse apiResponse = new APIResponse();
 
-        List<Lesson> lessons = lessonRepository.findAll();
+        List<Lesson> lessons = lessonRepository.findByIsDeletedFalse();
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get all lesson success !");
@@ -199,7 +199,7 @@ public class LessonServiceImpl implements LessonService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<Lesson> lessons = lessonRepository.findAll(pageable);
+        Page<Lesson> lessons = lessonRepository.findByIsDeletedFalse(pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get lesson by page success !");
