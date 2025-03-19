@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -38,11 +40,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            List<GrantedAuthority> authorities = jwtUtils.extractRoles(jwtToken); // Lấy quyền từ token
 
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
-                setAuthentication(userDetails, request);
+                setAuthentication(userDetails, authorities, request);
             } else {
-                // Nếu token hết hạn, thử lấy refresh token để cấp lại
                 String refreshToken = extractRefreshToken(request);
                 if (refreshToken != null && jwtUtils.isTokenValid(refreshToken, userDetails)) {
                     String newAccessToken = jwtUtils.generateToken(userDetails);
@@ -55,19 +57,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     newAccessTokenCookie.setMaxAge(900); // 15 phút
                     response.addCookie(newAccessTokenCookie);
 
-                    setAuthentication(userDetails, request);
+                    setAuthentication(userDetails, authorities, request); // Truyền authorities
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
                 }
             }
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthentication(UserDetails userDetails, HttpServletRequest request) {
+    private void setAuthentication(UserDetails userDetails, List<GrantedAuthority> authorities, HttpServletRequest request) {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities()
+                userDetails, null, authorities // Dùng authorities từ token
         );
         token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         securityContext.setAuthentication(token);
@@ -75,24 +78,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String getAccessTokenFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
-
-        for (Cookie cookie : cookies) {
-            if ("accessToken".equals(cookie.getName())) {
-                return cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
             }
         }
         return null;
     }
 
     private String extractRefreshToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
-
-        for (Cookie cookie : cookies) {
-            if ("refresh_token".equals(cookie.getName())) {
-                return cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("refresh_token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
             }
         }
         return null;
