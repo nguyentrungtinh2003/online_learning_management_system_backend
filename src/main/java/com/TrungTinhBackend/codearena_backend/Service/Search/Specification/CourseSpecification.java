@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 public class CourseSpecification {
     public static Specification<Course> searchByKeyword(String keyword) {
         return (root, query, criteriaBuilder) -> {
-            if(keyword == null || keyword.isEmpty()) {
+            if(keyword == null || keyword.trim().isEmpty()) {
                 return criteriaBuilder.conjunction();
             }
-            String pattern = "%" + keyword.toLowerCase() + "%";
+            String pattern = "%" + keyword.trim().toLowerCase() + "%";
             return criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("courseName")),pattern),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),pattern)
