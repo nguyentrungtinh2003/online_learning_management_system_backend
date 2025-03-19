@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Config;
 
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +42,18 @@ public class SecurityConfig {
                         // Các yêu cầu khác không yêu cầu xác thực
                         .anyRequest().permitAll()
                 )
-                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Please log in\"}");
+                            } else {
+                                response.sendRedirect("/oauth2/authorization/google");
+                            }
+                        })
+                );
+//                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
         return http.build();
     }
 
