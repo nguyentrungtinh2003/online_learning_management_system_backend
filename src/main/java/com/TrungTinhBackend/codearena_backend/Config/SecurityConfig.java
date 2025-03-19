@@ -52,8 +52,8 @@ public class SecurityConfig {
                                 response.sendRedirect("/oauth2/authorization/google");
                             }
                         })
-                );
-//                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
+                )
+                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
         return http.build();
     }
 

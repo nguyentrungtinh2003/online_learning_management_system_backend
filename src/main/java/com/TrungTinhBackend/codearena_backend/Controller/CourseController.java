@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("api/admin/courses")
+@RequestMapping("api/courses")
 public class CourseController {
 
     @Autowired
