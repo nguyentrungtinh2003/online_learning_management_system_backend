@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/")
 public class UserController {
 
     @Autowired
@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok(userService.userRegister(apiRequestUserRegister));
     }
 
-    @PostMapping("/admin-register-user")
+    @PostMapping("/admin/admin-register-user")
     public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart(value = "user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
                                                          @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.adminRegisterUser(apiRequestAdminRegisterUser,img));
@@ -47,12 +47,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserInfo(jwt));
     }
 
-    @GetMapping("/all-user")
+    @GetMapping("/admin/all-user")
     public ResponseEntity<APIResponse> getAllUser() throws Exception {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @GetMapping("/page")
+    @GetMapping("/admin/page")
     public ResponseEntity<APIResponse> getUserByPage(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "6") int size) throws Exception {
         return ResponseEntity.ok(userService.getUserByPage(page,size));
@@ -75,12 +75,12 @@ public class UserController {
         return ResponseEntity.ok(userService.logoutGoogle(request,response));
     }
 
-    @PutMapping("/update-user/{id}")
+    @PutMapping("/admin/update-user/{id}")
     public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart(value = "user") APIRequestUserUpdate apiRequestUserUpdate,@RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.updateUser(id,apiRequestUserUpdate,img));
     }
 
-    @DeleteMapping("/delete-user/{id}")
+    @DeleteMapping("/admin/delete-user/{id}")
     public ResponseEntity<APIResponse> deleteUser(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(userService.deleteUser(id));
     }

@@ -35,36 +35,36 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourse());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("teacher/courses/{id}")
     public ResponseEntity<APIResponse> getCourseById(@PathVariable Long id) {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("teacher/courses/user/{userId}")
     public ResponseEntity<APIResponse> getCourseByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(courseService.getCourseByUserId(userId));
     }
 
-    @GetMapping("/search")
+    @GetMapping("teacher/courses/search")
     public ResponseEntity<APIResponse> searchCourse(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "5") int size) throws Exception {
         return ResponseEntity.ok(courseService.searchCourse(keyword, page,size));
     }
 
-    @GetMapping("/page")
+    @GetMapping("teacher/courses/page")
     public ResponseEntity<APIResponse> getCourseByPage(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "6") int size) throws Exception {
         return ResponseEntity.ok(courseService.getCourseByPage(page,size));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("teacher/courses/update/{id}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.updateCourse(id,apiRequestCourse, img));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("teacher/courses/delete/{id}")
     public ResponseEntity<APIResponse> deleteCourse(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }

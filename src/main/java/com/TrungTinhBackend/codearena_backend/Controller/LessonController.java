@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("api/lessons")
+@RequestMapping("api/")
 public class LessonController {
 
     @Autowired
@@ -23,44 +23,44 @@ public class LessonController {
     @Autowired
     private LessonRepository lessonRepository;
 
-    @PostMapping("/add")
+    @PostMapping("teacher/lessons/add")
     public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
     }
 
-    @GetMapping("/all")
+    @GetMapping("teacher/lessons/all")
     public ResponseEntity<APIResponse> getAllLesson() {
         return ResponseEntity.ok(lessonService.getAllLesson());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("lessons/{id}")
     public ResponseEntity<APIResponse> getLessonById(@PathVariable Long id) {
         return ResponseEntity.ok(lessonService.getLessonById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping("lessons/search")
     public ResponseEntity<APIResponse> searchLesson(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "5") int size) throws Exception {
         return ResponseEntity.ok(lessonService.searchLesson(keyword, page,size));
     }
 
-    @GetMapping("/page")
+    @GetMapping("teacher/lessons/page")
     public ResponseEntity<APIResponse> getLessonByPage(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "6") int size) throws Exception {
         return ResponseEntity.ok(lessonService.getLessonByPage(page,size));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("teacher/lessons/update/{id}")
     public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
         return ResponseEntity.ok(lessonService.updateLesson(id,apiRequestLesson, img, video));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("teacher/lessons/delete/{id}")
     public ResponseEntity<APIResponse> deleteLesson(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(lessonService.deleteLesson(id));
     }
