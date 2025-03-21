@@ -32,8 +32,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         // Các API cần quyền truy cập
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("/api/student/**").hasRole("STUDENT")
+                        .requestMatchers("/api/teacher/**").hasAnyRole("TEACHER","ADMIN")
+                        .requestMatchers("/api/student/**").hasAnyRole("STUDENT","ADMIN")
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn

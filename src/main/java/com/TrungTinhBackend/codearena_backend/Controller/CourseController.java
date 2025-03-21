@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("api/courses")
+@RequestMapping("api/")
 public class CourseController {
 
     @Autowired
@@ -24,13 +24,13 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
 
-    @PostMapping("/add")
+    @PostMapping("teacher/courses/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
-    @GetMapping("/all")
+    @GetMapping("admin/courses/all")
     public ResponseEntity<APIResponse> getAllCourse() {
         return ResponseEntity.ok(courseService.getAllCourse());
     }
