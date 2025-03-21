@@ -44,13 +44,9 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Please log in\"}");
-                            } else {
-                                response.sendRedirect("/oauth2/authorization/google");
-                            }
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"You are not authorized to access this resource\"}");
                         })
                 )
                 .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
