@@ -456,8 +456,8 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
 
         User user = userRepository.findByUsername(username);
-        RefreshToken refreshToken = refreshTokenRepository.findByUser(user);
-        refreshTokenRepository.delete(refreshToken);
+        Optional<RefreshToken> refreshToken= refreshTokenRepository.findByUser(user);
+        refreshToken.ifPresent(refreshTokenRepository::delete);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Logout success !");
