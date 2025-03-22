@@ -65,6 +65,7 @@ public class JwtUtils {
                 .getBody();
 
         List<String> roles = claims.get("role", List.class); // Lấy danh sách role
+        System.out.println("Roles from JWT: " + roles);
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
