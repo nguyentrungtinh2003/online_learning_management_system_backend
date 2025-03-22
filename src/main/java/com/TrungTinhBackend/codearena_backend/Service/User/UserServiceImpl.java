@@ -465,5 +465,4 @@ public class UserServiceImpl implements UserService{
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
-
 }
