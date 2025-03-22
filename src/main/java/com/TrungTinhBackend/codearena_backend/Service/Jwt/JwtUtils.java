@@ -2,6 +2,8 @@ package com.TrungTinhBackend.codearena_backend.Service.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
     private SecretKey Key;
 
     public static final long ACCESS_TOKEN_EXPIRATION_TIME = 15 * 60 * 1000; // 15 phút
@@ -65,7 +69,7 @@ public class JwtUtils {
                 .getBody();
 
         List<String> roles = claims.get("role", List.class); // Lấy danh sách role
-        System.out.println("Roles from JWT: " + roles);
+        logger.info("Roles in JWT {}",roles);
         return roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
