@@ -1,10 +1,12 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
+import com.TrungTinhBackend.codearena_backend.Entity.RefreshToken;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
+import com.TrungTinhBackend.codearena_backend.Repository.RefreshTokenRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -60,6 +62,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private UserSpecification userSpecification;
@@ -444,6 +449,21 @@ public class UserServiceImpl implements UserService{
             apiResponse.setData(null);
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
+    }
+
+    @Override
+    public APIResponse logout(String username) {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findByUsername(username);
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user);
+        refreshTokenRepository.delete(refreshToken);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Logout success !");
+        apiResponse.setData(null);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
     }
 
 }

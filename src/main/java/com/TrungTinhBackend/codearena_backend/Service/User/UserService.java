@@ -36,4 +36,6 @@ public interface UserService {
     public APIResponse sendOtpToEmail(String email) throws Exception;
 
     public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception;
+
+    public APIResponse logout(String username);
 }

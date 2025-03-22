@@ -85,6 +85,11 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
 
+    @DeleteMapping("/logout")
+    public ResponseEntity<APIResponse> logout(@PathVariable String username) throws Exception {
+        return ResponseEntity.ok(userService.logout(username));
+    }
+
     // API gửi OTP đến email
     @PostMapping("/forgot-password")
     public ResponseEntity<APIResponse> forgotPassword(@RequestBody Map<String, String> payload) throws Exception {
