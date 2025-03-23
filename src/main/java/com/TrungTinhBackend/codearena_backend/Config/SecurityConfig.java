@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Config;
 
+import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtAuthFilter;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -49,6 +51,7 @@ public class SecurityConfig {
                             response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"You are not authorized to access this resource\"}");
                         })
                 )
+                .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
         return http.build();
     }
