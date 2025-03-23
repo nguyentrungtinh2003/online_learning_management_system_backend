@@ -25,6 +25,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -86,19 +88,22 @@ public class UserServiceImpl implements UserService{
             refreshTokenService.createRefreshToken(refreshToken,user);
 
             // Tạo cookie chứa JWT token
-            Cookie jwtCookie = new Cookie("authToken", jwt);
-            jwtCookie.setHttpOnly(true); // Cookie không thể truy cập từ JavaScript để bảo mật
-            jwtCookie.setMaxAge(60 * 60); // Cookie hết hạn sau 24 giờ
-            jwtCookie.setPath("/"); // Có hiệu lực trên toàn bộ ứng dụng
-            response.addCookie(jwtCookie); // Thêm cookie vào phản hồi
+            ResponseCookie jwtCookie = ResponseCookie.from("authToken", jwt)
+                    .httpOnly(true)
+                    .secure(true)// Cookie không thể truy cập từ JavaScript để bảo mật
+                    .maxAge(60 * 60)// Cookie hết hạn sau 24 giờ
+                    .path("/") // Có hiệu lực trên toàn bộ ứng dụng
+                    .build();// Thêm cookie vào phản hồi
 
-            // Thêm refresh token vào cookie
-            Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
-            refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true); // Nếu đang sử dụng HTTPS
-            refreshTokenCookie.setPath("/"); // Có thể truy cập toàn bộ website
-            refreshTokenCookie.setMaxAge(60 * 60 * 24 * 30); // Đặt thời gian sống cho cookie (ví dụ: 30 ngày)
-            response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .secure(true) // Nếu deploy trên HTTPS
+                .path("/")
+                .maxAge(60 * 60 * 24 * 30)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Login success !");
