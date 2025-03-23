@@ -90,8 +90,6 @@ public class UserServiceImpl implements UserService{
             jwtCookie.setHttpOnly(true); // Cookie không thể truy cập từ JavaScript để bảo mật
             jwtCookie.setMaxAge(60 * 60); // Cookie hết hạn sau 24 giờ
             jwtCookie.setPath("/"); // Có hiệu lực trên toàn bộ ứng dụng
-        jwtCookie.setDomain("codearena-backend-dev.onrender.com"); // Đổi thành domain của backend
-        response.addHeader("Set-Cookie", "authToken=" + jwt + "; Path=/; HttpOnly; Secure; SameSite=None");
             response.addCookie(jwtCookie); // Thêm cookie vào phản hồi
 
             // Thêm refresh token vào cookie
@@ -100,8 +98,6 @@ public class UserServiceImpl implements UserService{
             refreshTokenCookie.setSecure(true); // Nếu đang sử dụng HTTPS
             refreshTokenCookie.setPath("/"); // Có thể truy cập toàn bộ website
             refreshTokenCookie.setMaxAge(60 * 60 * 24 * 30); // Đặt thời gian sống cho cookie (ví dụ: 30 ngày)
-        refreshTokenCookie.setDomain("codearena-backend-dev.onrender.com"); // Đổi thành domain của backend
-        response.addHeader("Set-Cookie", "refresh_token=" + refreshToken + "; Path=/; HttpOnly; Secure; SameSite=None");
             response.addCookie(refreshTokenCookie);
 
             apiResponse.setStatusCode(200L);
