@@ -18,7 +18,7 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:3000","https://codearena-frontend-dev.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .exposedHeaders(HttpHeaders.SET_COOKIE) // Cho phép React đọc cookie
+                        .exposedHeaders("Set-Cookie") // Cho phép React đọc cookie
                         .allowCredentials(true);
             }
         };
