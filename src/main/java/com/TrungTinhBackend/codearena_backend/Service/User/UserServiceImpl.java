@@ -103,11 +103,10 @@ public class UserServiceImpl implements UserService{
                 .sameSite("None")
                 .maxAge(60 * 60 * 24 * 30)
                 .build();
+        response.addHeader("Set-Cookie", jwtCookie.toString());
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
-
-            apiResponse.setStatusCode(200L);
+        apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Login success !");
             apiResponse.setToken(jwt);
             apiResponse.setData(user);
