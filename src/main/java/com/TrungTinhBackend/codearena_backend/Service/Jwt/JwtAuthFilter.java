@@ -50,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     String newAccessToken = jwtUtils.generateToken(userDetails);
 
                     // Ghi đè accessToken vào Cookie
-                    Cookie newAccessTokenCookie = new Cookie("accessToken", newAccessToken);
+                    Cookie newAccessTokenCookie = new Cookie("authToken", newAccessToken);
                     newAccessTokenCookie.setHttpOnly(true);
                     newAccessTokenCookie.setSecure(true);
                     newAccessTokenCookie.setPath("/");
@@ -80,7 +80,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private String getAccessTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("accessToken".equals(cookie.getName())) {
+                if ("authToken".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
