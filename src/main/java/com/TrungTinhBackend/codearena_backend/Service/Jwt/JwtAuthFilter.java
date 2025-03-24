@@ -62,9 +62,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                     response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-                    // **Thêm header Authorization**
-                    response.setHeader("Authorization", "Bearer " + newAccessToken);
-
                     setAuthentication(userDetails, authorities, request); // Truyền authorities
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
