@@ -6,6 +6,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,13 +51,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (refreshToken != null && jwtUtils.isTokenValid(refreshToken, userDetails)) {
                     String newAccessToken = jwtUtils.generateToken(userDetails);
 
-                    // Ghi đè accessToken vào Cookie
-                    Cookie newAccessTokenCookie = new Cookie("authToken", newAccessToken);
-                    newAccessTokenCookie.setHttpOnly(true);
-                    newAccessTokenCookie.setSecure(true);
-                    newAccessTokenCookie.setPath("/");
-                    newAccessTokenCookie.setMaxAge(900); // 15 phút
-                    response.addCookie(newAccessTokenCookie);
+                    // Ghi accessToken vào cookie
+                    ResponseCookie jwtCookie = ResponseCookie.from("authToken", newAccessToken)
+                            .httpOnly(true)
+                            .secure(true)
+                            .sameSite("None")
+                            .path("/")
+                            .maxAge(900) // 15 phút
+                            .build();
+
+                    response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+                    // **Thêm header Authorization**
+                    response.setHeader("Authorization", "Bearer " + newAccessToken);
 
                     setAuthentication(userDetails, authorities, request); // Truyền authorities
                 } else {
