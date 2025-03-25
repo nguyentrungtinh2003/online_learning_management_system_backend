@@ -33,7 +33,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRoleEnum().name()))
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRoleEnum().name()))
         );
     }
 }
