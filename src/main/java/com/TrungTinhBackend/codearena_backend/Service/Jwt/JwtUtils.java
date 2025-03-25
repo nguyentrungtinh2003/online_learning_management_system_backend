@@ -2,6 +2,8 @@ package com.TrungTinhBackend.codearena_backend.Service.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,11 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,16 +21,15 @@ import java.util.stream.Collectors;
 public class JwtUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    private SecretKey Key;
+    private final SecretKey key;
 
-    public static final long ACCESS_TOKEN_EXPIRATION_TIME = 15 * 60 * 1000; // 15 phút
-    public static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày (7 * 24 giờ * 60 phút * 60 giây * 1000 mili giây)
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 15 * 60 * 1000; // 15 phút
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày
 
     public JwtUtils() {
         String secretString = "563858594676085648355464835539438557565846474655";
         byte[] keyBytes = secretString.getBytes(StandardCharsets.UTF_8);
-        this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
-
+        this.key = Keys.hmacShaKeyFor(keyBytes);  // Tạo SecretKey chuẩn HS256
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -39,21 +37,23 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername())
                 .claim("role", userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))  // Thêm claim cho role
+                        .collect(Collectors.toList()))  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-                .signWith(Key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails) {
+    public String generateRefreshToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities())  // Thêm claim cho role
+                .claim("role", userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-                .signWith(Key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -62,22 +62,27 @@ public class JwtUtils {
     }
 
     public List<GrantedAuthority> extractRoles(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Key) // Key của bạn
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        List<String> roles = claims.get("role", List.class); // Lấy danh sách role
-        logger.info("Roles in JWT {}",roles);
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            Object rolesObject = claims.get("role");
+            if (rolesObject instanceof List<?>) {
+                List<String> roles = (List<String>) rolesObject;
+                return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            logger.error("Lỗi khi lấy role từ JWT: {}", e.getMessage());
+        }
+        return Collections.emptyList();
     }
 
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Key)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -86,8 +91,7 @@ public class JwtUtils {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpired(String token) {
