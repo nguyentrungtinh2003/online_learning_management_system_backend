@@ -33,11 +33,13 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
+        String role = userDetails.getAuthorities().stream()
+                .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
+                .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
+                .orElse("ROLE_USER"); // Giá trị mặc định nếu không có quyền
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))  // Thêm claim role
+                .claim("role",role)  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -45,12 +47,14 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken(Map<String, Object> claims, UserDetails userDetails) {
+        String role = userDetails.getAuthorities().stream()
+                .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
+                .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
+                .orElse("ROLE_USER"); // Giá trị mặc định nếu không có quyền
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()))  // Thêm claim role
+                .claim("role", role)  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service("customUserDetailsService")
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
@@ -28,15 +29,11 @@ public class UserDetailsService implements org.springframework.security.core.use
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
-        // Chuyển role thành GrantedAuthority
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRoleEnum().name());
-
         // Chuyển đổi entity thành UserDetails của Spring Security
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.singletonList(authority)
-                 // Cung cấp danh sách quyền
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRoleEnum().name()))
         );
     }
 }
