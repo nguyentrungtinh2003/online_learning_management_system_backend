@@ -96,15 +96,7 @@ public class UserServiceImpl implements UserService{
                     .path("/") // Có hiệu lực trên toàn bộ ứng dụng
                     .build();// Thêm cookie vào phản hồi
 
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
-                .httpOnly(true)
-                .secure(true) // Nếu deploy trên HTTPS
-                .path("/")
-                .sameSite("Strict")
-                .maxAge(60 * 60 * 24 * 30)
-                .build();
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
         apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Login success !");
