@@ -44,7 +44,8 @@ public class SecurityConfig {
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
                         .requestMatchers("/swagger-ui/**","/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                
+
+                        .requestMatchers("/api/login").permitAll()
                         // Các yêu cầu khác không yêu cầu xác thực
                         .anyRequest().permitAll()
                 )
