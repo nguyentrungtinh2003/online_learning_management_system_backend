@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService{
                     .httpOnly(true)
                     .secure(true)// Cookie không thể truy cập từ JavaScript để bảo mật
                     .maxAge(60 * 60)// Cookie hết hạn sau 24 giờ
-                    .sameSite("None")
+                    .sameSite("Strict")
                     .path("/") // Có hiệu lực trên toàn bộ ứng dụng
                     .build();// Thêm cookie vào phản hồi
 
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService{
                 .httpOnly(true)
                 .secure(true) // Nếu deploy trên HTTPS
                 .path("/")
-                .sameSite("None")
+                .sameSite("Strict")
                 .maxAge(60 * 60 * 24 * 30)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());

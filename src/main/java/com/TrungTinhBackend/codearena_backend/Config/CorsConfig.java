@@ -17,7 +17,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000","https://codearena-frontend-dev.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedHeaders("Authorization", "Content-Type", "Cookie")
                         .exposedHeaders("Set-Cookie") // Cho phép React đọc cookie
                         .allowCredentials(true);
             }
