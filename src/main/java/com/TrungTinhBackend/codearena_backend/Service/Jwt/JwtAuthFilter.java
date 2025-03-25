@@ -10,9 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            List<GrantedAuthority> authorities = jwtUtils.extractRoles(jwtToken); // Lấy quyền từ token
+            List<GrantedAuthority> authorities = jwtUtils.extractRoles(jwtToken);
 
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
                 setAuthentication(userDetails, authorities, request);
@@ -51,7 +51,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (refreshToken != null && jwtUtils.isTokenValid(refreshToken, userDetails)) {
                     String newAccessToken = jwtUtils.generateToken(userDetails);
 
-                    // Ghi accessToken vào cookie
                     ResponseCookie jwtCookie = ResponseCookie.from("authToken", newAccessToken)
                             .httpOnly(true)
                             .secure(true)
@@ -61,8 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             .build();
 
                     response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-
-                    setAuthentication(userDetails, authorities, request); // Truyền authorities
+                    setAuthentication(userDetails, authorities, request);
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
@@ -73,13 +71,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(UserDetails userDetails, List<GrantedAuthority> authorities, HttpServletRequest request) {
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetails, null, authorities // Dùng authorities từ token
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, authorities
         );
-        token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        securityContext.setAuthentication(token);
-        SecurityContextHolder.setContext(securityContext);
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String getAccessTokenFromCookie(HttpServletRequest request) {
