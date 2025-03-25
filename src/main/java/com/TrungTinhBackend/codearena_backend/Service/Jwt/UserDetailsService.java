@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-@Service
+@Service("customUserDetailsService")
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
