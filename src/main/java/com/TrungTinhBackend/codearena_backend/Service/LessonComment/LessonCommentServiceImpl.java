@@ -38,6 +38,13 @@ public class LessonCommentServiceImpl implements LessonCommentService{
     @Autowired
     private LessonCommentRepository lessonCommentRepository;
 
+    public LessonCommentServiceImpl(UserRepository userRepository, LessonRepository lessonRepository, ImgService imgService, VideoService videoService) {
+        this.userRepository = userRepository;
+        this.lessonRepository = lessonRepository;
+        this.imgService = imgService;
+        this.videoService = videoService;
+    }
+
 
     @Override
     public APIResponse addLessonComment(APIRequestLessonComment apiRequestLessonComment, MultipartFile img, MultipartFile video) throws IOException {

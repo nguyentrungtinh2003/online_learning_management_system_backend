@@ -41,6 +41,15 @@ public class NotificationServiceImpl implements NotificationService{
     @Autowired
     private UserRepository userRepository;
 
+    public NotificationServiceImpl(NotificationRepository notificationRepository, CourseRepository courseRepository, LessonRepository lessonRepository, QuizRepository quizRepository, SimpMessagingTemplate messagingTemplate, UserRepository userRepository) {
+        this.notificationRepository = notificationRepository;
+        this.courseRepository = courseRepository;
+        this.lessonRepository = lessonRepository;
+        this.quizRepository = quizRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.userRepository = userRepository;
+    }
+
     @Override
     public APIResponse addNotification(APIRequestNotification apiRequestNotification) {
         APIResponse apiResponse = new APIResponse();

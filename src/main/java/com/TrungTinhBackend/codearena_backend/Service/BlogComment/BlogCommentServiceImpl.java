@@ -43,6 +43,14 @@ public class BlogCommentServiceImpl implements BlogCommentService{
     @Autowired
     private UserRepository userRepository;
 
+    public BlogCommentServiceImpl(BlogCommentRepository blogCommentRepository, ImgService imgService, VideoService videoService, BlogRepository blogRepository, UserRepository userRepository) {
+        this.blogCommentRepository = blogCommentRepository;
+        this.imgService = imgService;
+        this.videoService = videoService;
+        this.blogRepository = blogRepository;
+        this.userRepository = userRepository;
+    }
+
     @Override
     public APIResponse addBlogComment(APIRequestBlogComment apiRequestBlogComment, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();

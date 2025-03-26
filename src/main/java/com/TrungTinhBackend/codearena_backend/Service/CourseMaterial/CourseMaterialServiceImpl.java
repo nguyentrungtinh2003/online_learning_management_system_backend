@@ -38,6 +38,13 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
     @Autowired
     private FileService fileService;
 
+    public CourseMaterialServiceImpl(CourseMaterialRepository courseMaterialRepository, UserRepository userRepository, CourseRepository courseRepository, FileService fileService) {
+        this.courseMaterialRepository = courseMaterialRepository;
+        this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
+        this.fileService = fileService;
+    }
+
     @Override
     public APIResponse addCourseMaterial(APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) throws IOException {
         APIResponse apiResponse = new APIResponse();

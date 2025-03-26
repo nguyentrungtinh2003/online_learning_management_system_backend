@@ -15,6 +15,10 @@ public class ImgService {
     @Autowired
     private Cloudinary cloudinary;
 
+    public ImgService(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
+
     public String uploadImg(MultipartFile img) throws IOException {
 
             Map<?,?> uploadResult = cloudinary.uploader().upload(img.getBytes(), ObjectUtils.emptyMap());

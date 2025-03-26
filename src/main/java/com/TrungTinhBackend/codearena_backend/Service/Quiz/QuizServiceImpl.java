@@ -39,6 +39,13 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private QuestionRepository questionRepository;
 
+    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository) {
+        this.quizRepository = quizRepository;
+        this.imgService = imgService;
+        this.lessonRepository = lessonRepository;
+        this.questionRepository = questionRepository;
+    }
+
     @Override
     public APIResponse addQuiz(APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();

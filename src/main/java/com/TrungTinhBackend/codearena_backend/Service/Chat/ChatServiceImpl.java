@@ -45,6 +45,15 @@ public class ChatServiceImpl implements ChatService{
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    public ChatServiceImpl(ImgService imgService, VideoService videoService, ChatRepository chatRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository, SimpMessagingTemplate messagingTemplate) {
+        this.imgService = imgService;
+        this.videoService = videoService;
+        this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
+        this.chatRoomRepository = chatRoomRepository;
+        this.messagingTemplate = messagingTemplate;
+    }
+
     @Override
     public APIResponse addChat(APIRequestChat apiRequestChat, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();

@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtUtils jwtUtils;
-    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
-
     @Autowired
-    public JwtAuthFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+    private JwtUtils jwtUtils;
+    @Autowired
+    private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+
+    public JwtAuthFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override

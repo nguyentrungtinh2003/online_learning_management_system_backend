@@ -34,6 +34,12 @@ public class BlogServiceImpl implements BlogService{
     @Autowired
     private VideoService videoService;
 
+    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService) {
+        this.blogRepository = blogRepository;
+        this.imgService = imgService;
+        this.videoService = videoService;
+    }
+
     @Override
     public APIResponse addBlog(APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
        APIResponse apiResponse = new APIResponse();

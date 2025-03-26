@@ -33,6 +33,12 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
 
     private static final double COIN_RATE = 10.0; // 1 USD = 10 Coin
 
+    public PaymentTransactionServiceImpl(APIContext apiContext, PaymentTransactionRepository paymentTransactionRepository, UserRepository userRepository) {
+        this.apiContext = apiContext;
+        this.paymentTransactionRepository = paymentTransactionRepository;
+        this.userRepository = userRepository;
+    }
+
     @Override
     public APIResponse handlePayment(APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
         APIResponse apiResponse = new APIResponse();

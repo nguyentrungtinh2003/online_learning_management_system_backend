@@ -38,6 +38,12 @@ public class CourseServiceImpl implements CourseService{
     @Autowired
     private ImgService imgService;
 
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, ImgService imgService) {
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
+        this.imgService = imgService;
+    }
+
     @Override
     public APIResponse addCourse(APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();

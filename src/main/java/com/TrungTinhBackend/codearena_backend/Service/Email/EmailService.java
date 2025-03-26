@@ -14,6 +14,10 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
     public APIResponse sendEmail(String to, String subject, String body) {
         APIResponse apiResponse = new APIResponse();
 

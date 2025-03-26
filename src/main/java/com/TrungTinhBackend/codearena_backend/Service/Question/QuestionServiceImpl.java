@@ -34,6 +34,12 @@ public class QuestionServiceImpl implements QuestionService{
     @Autowired
     private QuizRepository quizRepository;
 
+    public QuestionServiceImpl(QuestionRepository questionRepository, ImgService imgService, QuizRepository quizRepository) {
+        this.questionRepository = questionRepository;
+        this.imgService = imgService;
+        this.quizRepository = quizRepository;
+    }
+
     @Override
     public APIResponse addQuestion(APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();

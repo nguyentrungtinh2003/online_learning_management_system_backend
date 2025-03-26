@@ -19,6 +19,10 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Autowired
     private UserRepository userRepository;
 
+    public UserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

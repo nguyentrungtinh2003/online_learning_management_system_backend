@@ -71,6 +71,17 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserSpecification userSpecification;
 
+    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, UserSpecification userSpecification) {
+        this.userRepository = userRepository;
+        this.imgService = imgService;
+        this.emailService = emailService;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+        this.refreshTokenService = refreshTokenService;
+        this.userSpecification = userSpecification;
+    }
+
     @Override
     public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
         APIResponse apiResponse = new APIResponse();

@@ -31,6 +31,12 @@ public class SearchAllServiceImpl implements SearchAllService{
     @Autowired
     private BlogRepository blogRepository;
 
+    public SearchAllServiceImpl(UserRepository userRepository, CourseRepository courseRepository, BlogRepository blogRepository) {
+        this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
+        this.blogRepository = blogRepository;
+    }
+
     @Override
     public APIResponse searchAll(String keyword) {
 

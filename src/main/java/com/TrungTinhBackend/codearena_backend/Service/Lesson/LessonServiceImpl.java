@@ -44,6 +44,15 @@ public class LessonServiceImpl implements LessonService{
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    public LessonServiceImpl(LessonRepository lessonRepository, ImgService imgService, VideoService videoService, CourseRepository courseRepository, QuizRepository quizRepository, ChatRoomRepository chatRoomRepository) {
+        this.lessonRepository = lessonRepository;
+        this.imgService = imgService;
+        this.videoService = videoService;
+        this.courseRepository = courseRepository;
+        this.quizRepository = quizRepository;
+        this.chatRoomRepository = chatRoomRepository;
+    }
+
     @Override
     public APIResponse addLesson(APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();

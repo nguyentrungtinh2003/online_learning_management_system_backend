@@ -19,6 +19,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService{
 
     public static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày (7 * 24 giờ * 60 phút * 60 giây * 1000 mili giây)
 
+    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
     @Override
     public RefreshToken createRefreshToken(String refreshToken, User user) {
         // Tìm token hiện có

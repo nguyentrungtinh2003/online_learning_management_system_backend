@@ -18,6 +18,10 @@ public class ProcessServiceImpl implements ProcessService{
     @Autowired
     private ProcessRepository processRepository;
 
+    public ProcessServiceImpl(ProcessRepository processRepository) {
+        this.processRepository = processRepository;
+    }
+
     @Override
     public APIResponse updateProcess(Long userId, Long courseId, Long lessonId) throws Exception {
         APIResponse apiResponse = new APIResponse();
