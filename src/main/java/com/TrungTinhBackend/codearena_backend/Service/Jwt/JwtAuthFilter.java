@@ -31,8 +31,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
-    public JwtAuthFilter(JwtUtils jwtUtils) {
+    public JwtAuthFilter(JwtUtils jwtUtils, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
