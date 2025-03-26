@@ -33,13 +33,12 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        String role = userDetails.getAuthorities().stream()
-                .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
-                .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
-                .orElse("ROLE_STUDENT"); // Giá trị mặc định nếu không có quyền
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .claim("role",role)  // Thêm claim role
+                .claim("roles",roles)  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -47,14 +46,13 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken(Map<String, Object> claims, UserDetails userDetails) {
-        String role = userDetails.getAuthorities().stream()
-                .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
-                .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
-                .orElse("ROLE_STUDENT"); // Giá trị mặc định nếu không có quyền
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
-                .claim("role", role)  // Thêm claim role
+                .claim("roles", roles)  // Thêm claim role
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -73,7 +71,7 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
 
-            List<String> roles = claims.get("role", List.class);
+            List<String> roles = claims.get("roles", List.class);
             if (roles == null) return Collections.emptyList();
             return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
