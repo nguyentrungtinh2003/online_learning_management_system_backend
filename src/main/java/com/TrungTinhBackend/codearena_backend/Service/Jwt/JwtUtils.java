@@ -25,7 +25,7 @@ public class JwtUtils {
     private final SecretKey key;
     String secretString = "aB1cD2eF3gH4iJ5kL6mN7pQ8rS9tU0vW!X@Y#Z$1234567890";
 
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 15 * 60 * 1000; // 15 phút
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // test 7 ngày
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày
 
     public JwtUtils() {
