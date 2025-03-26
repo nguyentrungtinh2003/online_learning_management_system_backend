@@ -24,6 +24,11 @@ public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
 
+    public CourseController(CourseService courseService, CourseRepository courseRepository) {
+        this.courseService = courseService;
+        this.courseRepository = courseRepository;
+    }
+
     @PostMapping("teacher/courses/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {

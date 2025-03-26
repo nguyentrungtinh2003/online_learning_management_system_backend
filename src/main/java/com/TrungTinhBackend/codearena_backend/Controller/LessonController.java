@@ -23,6 +23,11 @@ public class LessonController {
     @Autowired
     private LessonRepository lessonRepository;
 
+    public LessonController(LessonService lessonService, LessonRepository lessonRepository) {
+        this.lessonService = lessonService;
+        this.lessonRepository = lessonRepository;
+    }
+
     @PostMapping("teacher/lessons/add")
     public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,

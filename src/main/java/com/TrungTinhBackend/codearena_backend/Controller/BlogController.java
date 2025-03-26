@@ -16,6 +16,10 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addBlog(@Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
                                                @RequestPart(value = "img",required = false) MultipartFile img,

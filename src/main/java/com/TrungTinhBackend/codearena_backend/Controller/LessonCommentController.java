@@ -17,6 +17,10 @@ public class LessonCommentController {
     @Autowired
     private LessonCommentService lessonCommentService;
 
+    public LessonCommentController(LessonCommentService lessonCommentService) {
+        this.lessonCommentService = lessonCommentService;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") APIRequestLessonComment apiRequestLessonComment,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,

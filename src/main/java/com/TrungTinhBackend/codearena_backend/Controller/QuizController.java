@@ -17,6 +17,10 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
+    public QuizController(QuizService quizService) {
+        this.quizService = quizService;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
                                                  @RequestPart(value = "img") MultipartFile img) throws Exception {

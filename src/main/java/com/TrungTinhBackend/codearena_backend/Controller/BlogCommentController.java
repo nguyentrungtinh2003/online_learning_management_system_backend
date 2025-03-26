@@ -17,6 +17,10 @@ public class BlogCommentController {
     @Autowired
     private BlogCommentService blogCommentService;
 
+    public BlogCommentController(BlogCommentService blogCommentService) {
+        this.blogCommentService = blogCommentService;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addBlogComment(@Valid @RequestPart(value = "blogComment") APIRequestBlogComment apiRequestBlogComment,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
