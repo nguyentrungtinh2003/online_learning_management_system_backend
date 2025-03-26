@@ -37,9 +37,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Không dùng session
                 .authorizeHttpRequests(request -> request
                         // Các API cần quyền truy cập
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/teacher/**").hasAnyRole("TEACHER","ADMIN")
-                        .requestMatchers("/api/student/**").hasAnyRole("STUDENT","ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_TEACHER","ROLE_ADMIN")
+                        .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_STUDENT","ROLE_ADMIN")
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
