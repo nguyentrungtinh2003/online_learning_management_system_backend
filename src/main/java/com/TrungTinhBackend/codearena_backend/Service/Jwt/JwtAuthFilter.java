@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
-    private final UserDetailsService userDetailsService;
+    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
     @Autowired
     public JwtAuthFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
