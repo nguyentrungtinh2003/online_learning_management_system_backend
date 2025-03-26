@@ -27,7 +27,7 @@ public class JwtUtils {
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày
 
     public JwtUtils() {
-        String secretString = "563858594676085648355464835539438557565846474655";
+        String secretString = "aB1cD2eF3gH4iJ5kL6mN7pQ8rS9tU0vW!X@Y#Z$1234567890";
         byte[] keyBytes = secretString.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);  // Tạo SecretKey chuẩn HS256
     }
@@ -70,8 +70,10 @@ public class JwtUtils {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
-            return claims.get("roles", List.class);
+            List<String> roles = claims.get("roles", List.class);
+            return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("Lỗi khi lấy role từ JWT: {}", e.getMessage());
         }
