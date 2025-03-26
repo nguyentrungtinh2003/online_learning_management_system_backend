@@ -1,9 +1,9 @@
 package com.TrungTinhBackend.codearena_backend.Config;
 
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtAuthFilter;
+import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +26,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(prePostEnabled = true) // Bật tính năng dùng @PreAuthorize
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
+
+    public SecurityConfig(UserDetailsService userDetailsService, JwtUtils jwtUtils) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtils = jwtUtils;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,12 +43,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         // Các API cần quyền truy cập
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_TEACHER","ROLE_ADMIN")
-                        .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_STUDENT","ROLE_ADMIN")
+                        .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_TEACHER", "ROLE_ADMIN")
+                        .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
-                        .requestMatchers("/swagger-ui/**","/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/api/login").permitAll()
                         // Các yêu cầu khác không yêu cầu xác thực
@@ -56,9 +61,15 @@ public class SecurityConfig {
                             response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"You are not authorized to access this resource\"}");
                         })
                 )
-                .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                // 🔹 Sử dụng Bean thay vì tạo mới instance
+                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter() {
+        return new JwtAuthFilter(jwtUtils, userDetailsService);
     }
 
     @Bean
