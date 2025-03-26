@@ -22,10 +22,6 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
-    }
-
     @MessageMapping("/chat.sendMessage")
     public ResponseEntity<APIResponse> addChat(@Valid @RequestPart(value = "chat") APIRequestChat apiRequestChat,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,

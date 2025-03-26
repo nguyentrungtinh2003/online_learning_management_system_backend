@@ -19,10 +19,6 @@ public class CourseMaterialController {
     @Autowired
     private CourseMaterialService courseMaterialService;
 
-    public CourseMaterialController(CourseMaterialService courseMaterialService) {
-        this.courseMaterialService = courseMaterialService;
-    }
-
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addCourseMaterial(@Valid @RequestPart(value = "course-material") APIRequestCourseMaterial apiRequestCourseMaterial,
                                                  @RequestPart(value = "file",required = false) MultipartFile file) throws IOException {

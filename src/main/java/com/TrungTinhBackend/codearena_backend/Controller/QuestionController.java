@@ -18,10 +18,6 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
-    public QuestionController(QuestionService questionService) {
-        this.questionService = questionService;
-    }
-
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addQuestion(@Valid @RequestPart(value = "question") APIRequestQuestion apiRequestQuestion,
                                                @RequestPart(value = "img") MultipartFile img) throws Exception {

@@ -16,10 +16,6 @@ public class SearchAllController {
     @Autowired
     private SearchAllService allService;
 
-    public SearchAllController(SearchAllService allService) {
-        this.allService = allService;
-    }
-
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchAll(@RequestParam(required = false) String keyword) throws Exception {
         return ResponseEntity.ok(allService.searchAll(keyword));

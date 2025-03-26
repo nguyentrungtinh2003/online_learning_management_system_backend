@@ -17,10 +17,6 @@ public class PaymentTransactionController {
     @Autowired
     private PaymentTransactionService paymentTransactionService;
 
-    public PaymentTransactionController(PaymentTransactionService paymentTransactionService) {
-        this.paymentTransactionService = paymentTransactionService;
-    }
-
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addPayment(@Valid @RequestBody APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.handlePayment(apiRequestPaymentTransaction));

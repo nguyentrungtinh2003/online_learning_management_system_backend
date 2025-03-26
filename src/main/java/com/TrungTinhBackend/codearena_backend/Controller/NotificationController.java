@@ -17,10 +17,6 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
-
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addNotification(@Valid @RequestBody APIRequestNotification apiRequestNotification) throws Exception {
         return ResponseEntity.ok(notificationService.addNotification(apiRequestNotification));

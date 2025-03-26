@@ -16,10 +16,6 @@ public class ProcessController {
     @Autowired
     private ProcessService processService;
 
-    public ProcessController(ProcessService processService) {
-        this.processService = processService;
-    }
-
     @PutMapping("/update/{userId}/{courseId}/{lessonId}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long userId,
                                                     @PathVariable Long courseId,

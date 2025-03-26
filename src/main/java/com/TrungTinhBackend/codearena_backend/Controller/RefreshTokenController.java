@@ -27,11 +27,6 @@ public class RefreshTokenController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public RefreshTokenController(RefreshTokenService refreshTokenService, JwtUtils jwtUtils) {
-        this.refreshTokenService = refreshTokenService;
-        this.jwtUtils = jwtUtils;
-    }
-
     @PostMapping("/refresh")
     public APIResponse refreshToken(@Valid @RequestBody APIRequestRefreshToken apiRequestRefreshToken) {
         String refreshToken1 = apiRequestRefreshToken.getToken();
