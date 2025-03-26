@@ -71,10 +71,7 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
 
-            List<String> roles = claims.get("roles", List.class);
-            if (roles == null) return Collections.emptyList();
-            return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
+            return claims.get("roles", List.class);
         } catch (Exception e) {
             logger.error("Lỗi khi lấy role từ JWT: {}", e.getMessage());
         }
