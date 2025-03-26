@@ -36,7 +36,7 @@ public class JwtUtils {
         String role = userDetails.getAuthorities().stream()
                 .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
                 .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
-                .orElse("ROLE_USER"); // Giá trị mặc định nếu không có quyền
+                .orElse("ROLE_STUDENT"); // Giá trị mặc định nếu không có quyền
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("role",role)  // Thêm claim role
@@ -50,7 +50,7 @@ public class JwtUtils {
         String role = userDetails.getAuthorities().stream()
                 .findFirst() // Lấy quyền đầu tiên (vì chỉ có 1 role)
                 .map(GrantedAuthority::getAuthority) // Lấy tên quyền (VD: "ROLE_ADMIN")
-                .orElse("ROLE_USER"); // Giá trị mặc định nếu không có quyền
+                .orElse("ROLE_STUDENT"); // Giá trị mặc định nếu không có quyền
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
