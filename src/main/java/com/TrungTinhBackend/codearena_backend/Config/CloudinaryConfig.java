@@ -2,11 +2,15 @@ package com.TrungTinhBackend.codearena_backend.Config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Getter
+@Setter
 public class CloudinaryConfig {
     @Value("${cloudinary.cloud_name}")
     private String cloudName;
