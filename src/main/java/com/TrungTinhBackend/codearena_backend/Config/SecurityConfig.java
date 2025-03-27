@@ -44,13 +44,11 @@ public class SecurityConfig {
                         // Các API cần quyền truy cập
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_TEACHER", "ROLE_ADMIN")
-                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
+                        .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-
-                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("api/login","/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         // Các yêu cầu khác không yêu cầu xác thực
                         .anyRequest().permitAll()
                 )
