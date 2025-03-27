@@ -44,7 +44,7 @@ public class SecurityConfig {
                         // Các API cần quyền truy cập
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/teacher/**").hasAnyAuthority("ROLE_TEACHER", "ROLE_ADMIN")
-                        .requestMatchers("/api/student/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
+                        .requestMatchers("/api/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn

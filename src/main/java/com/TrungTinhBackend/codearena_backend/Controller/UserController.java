@@ -21,12 +21,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("user-register")
+    @PostMapping("register")
     public ResponseEntity<APIResponse> userRegister(@Valid @RequestBody APIRequestUserRegister apiRequestUserRegister) throws Exception {
         return ResponseEntity.ok(userService.userRegister(apiRequestUserRegister));
     }
 
-    @PostMapping("admin/admin-register-user")
+    @PostMapping("admin/register/user")
     public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart(value = "user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
                                                          @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(userService.adminRegisterUser(apiRequestAdminRegisterUser,img));
@@ -63,7 +63,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/user/search")
+    @GetMapping("admin/user/search")
     public ResponseEntity<APIResponse> searchUser(@RequestParam(required = false) String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) throws Exception {
