@@ -22,11 +22,6 @@ public class PayPalConfig {
     @Value("${paypal.mode}")
     private String mode;
 
-    public PayPalConfig(String clientId, String clientSecret, String mode) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.mode = mode;
-    }
 
     @Bean
     public APIContext apiContext() throws PayPalRESTException {
