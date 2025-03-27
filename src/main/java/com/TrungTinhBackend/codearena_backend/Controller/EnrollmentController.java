@@ -16,7 +16,7 @@ public class EnrollmentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    @PostMapping("/enroll/{userId}/{courseId")
+    @PostMapping("/enroll/{userId}/{courseId}")
     public ResponseEntity<APIResponse> enrollUser(@PathVariable Long userId, @PathVariable Long courseId) {
         return ResponseEntity.ok(enrollmentService.enrollUser(userId, courseId));
     }
