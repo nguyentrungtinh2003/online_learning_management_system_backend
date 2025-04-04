@@ -62,7 +62,7 @@ public class SecurityConfig {
                 )
                 // 🔹 Sử dụng Bean thay vì tạo mới instance
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:3000/", true));
+                .oauth2Login(oauth -> oauth.defaultSuccessUrl("https://codearena-frontend-dev.vercel.app/", true));
         return http.build();
     }
 
