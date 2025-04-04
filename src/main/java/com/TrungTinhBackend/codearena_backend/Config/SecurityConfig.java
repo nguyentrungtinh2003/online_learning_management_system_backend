@@ -48,7 +48,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
 
                         // Thêm các đường dẫn Swagger UI và tài liệu API để không bị chặn
-                        .requestMatchers("api/login","/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("api/login","/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/oauth2/**",             // 👈 Cho phép truy cập OAuth2 endpoint
+                                "/login/oauth2/**" ).permitAll()
                         // Các yêu cầu khác không yêu cầu xác thực
                         .anyRequest().permitAll()
                 )
