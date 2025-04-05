@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 public class APIRequestPaymentTransaction {
 
-    private User user;
+    private Long userId;
 
     @NotNull(message = "Price is required!")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0!")

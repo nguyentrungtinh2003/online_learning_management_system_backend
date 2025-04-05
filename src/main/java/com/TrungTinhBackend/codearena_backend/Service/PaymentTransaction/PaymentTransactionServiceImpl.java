@@ -51,7 +51,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
                 Double coinAmount = (paymentAmount * COIN_RATE);
 
 // Cập nhật số dư coin cho người dùng
-                Optional<User> userOpt = userRepository.findById(apiRequestPaymentTransaction.getUser().getId());
+                Optional<User> userOpt = userRepository.findById(apiRequestPaymentTransaction.getUserId());
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
                     user.setCoin(user.getCoin() + coinAmount);
