@@ -92,8 +92,8 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         payment.setTransactions(Collections.singletonList(transaction));
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:3000/cancel");
-        redirectUrls.setReturnUrl("http://localhost:3000/success");
+        redirectUrls.setCancelUrl("https://codearena-frontend-dev.vercel.app/");
+        redirectUrls.setReturnUrl("https://codearena-frontend-dev.vercel.app/");
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);
