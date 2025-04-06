@@ -140,6 +140,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
             return response;
 
         } catch (PayPalRESTException e) {
+            System.err.println("PayPal Error: " + e.getDetails());
             e.printStackTrace();
             throw new Exception("PayPal Payment Execution failed: " + e.getDetails(), e);
         } catch (Exception e) {
