@@ -80,41 +80,62 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
 
     @Override
     public APIResponse executePayment(String paymentId, String payerId, Long userId) throws Exception {
-        Payment payment = new Payment();
-        payment.setId(paymentId);
+        try {
+            // Khởi tạo đối tượng Payment từ paymentId
+            Payment payment = new Payment();
+            payment.setId(paymentId);
 
-        PaymentExecution paymentExecution = new PaymentExecution();
-        paymentExecution.setPayerId(payerId);
+            // Khởi tạo PaymentExecution để thực hiện thanh toán
+            PaymentExecution paymentExecution = new PaymentExecution();
+            paymentExecution.setPayerId(payerId);
 
-        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+            // Thực hiện thanh toán với PayPal
+            Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
-        if (executedPayment.getState().equals("approved")) {
-            double paymentAmount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
-            double coinAmount = paymentAmount * COIN_RATE;
+            // Kiểm tra trạng thái thanh toán
+            if (executedPayment.getState().equals("approved")) {
+                double paymentAmount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
 
-            Optional<User> userOpt = userRepository.findById(userId);
-            if (userOpt.isPresent()) {
-                User user = userOpt.get();
-                user.setCoin(user.getCoin() + coinAmount);
-                userRepository.save(user);
+                // Kiểm tra COIN_RATE hợp lệ
+                if (COIN_RATE <= 0) {
+                    throw new Exception("Invalid coin rate.");
+                }
 
-                PaymentTransaction transaction = new PaymentTransaction();
-                transaction.setUser(user);
-                transaction.setAmount(paymentAmount);
-                transaction.setCoinAmount(coinAmount);
-                transaction.setStatus(PaymentTransactionStatus.COMPLETED);
-                paymentTransactionRepository.save(transaction);
+                double coinAmount = paymentAmount * COIN_RATE;
+
+                // Lấy người dùng từ database
+                Optional<User> userOpt = userRepository.findById(userId);
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
+                    user.setCoin(user.getCoin() + coinAmount);
+                    userRepository.save(user);
+
+                    // Lưu thông tin giao dịch vào database
+                    PaymentTransaction transaction = new PaymentTransaction();
+                    transaction.setUser(user);
+                    transaction.setAmount(paymentAmount);
+                    transaction.setCoinAmount(coinAmount);
+                    transaction.setStatus(PaymentTransactionStatus.COMPLETED);
+                    paymentTransactionRepository.save(transaction);
+
+                    // Trả về thông tin thành công
+                    APIResponse response = new APIResponse();
+                    response.setStatusCode(200L);
+                    response.setMessage("Payment Success and Coins Added");
+                    response.setData(executedPayment);
+                    response.setTimestamp(LocalDateTime.now());
+                    return response;
+                } else {
+                    throw new Exception("User not found.");
+                }
+            } else {
+                throw new Exception("Payment not approved.");
             }
-
-            APIResponse response = new APIResponse();
-            response.setStatusCode(200L);
-            response.setMessage("Payment Success and Coins Added");
-            response.setData(executedPayment);
-            response.setTimestamp(LocalDateTime.now());
-
-            return response;
-        } else {
-            throw new Exception("Payment not approved.");
+        } catch (PayPalRESTException e) {
+            throw new Exception("PayPal Payment Execution failed: " + e.getMessage(), e);
+        } catch (Exception e) {
+            // Xử lý các ngoại lệ khác
+            throw new Exception("An error occurred while processing the payment: " + e.getMessage(), e);
         }
     }
 }
