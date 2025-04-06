@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,60 +82,68 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
     @Override
     public APIResponse executePayment(String paymentId, String payerId, Long userId) throws Exception {
         try {
-            // Khởi tạo đối tượng Payment từ paymentId
             Payment payment = new Payment();
             payment.setId(paymentId);
 
-            // Khởi tạo PaymentExecution để thực hiện thanh toán
             PaymentExecution paymentExecution = new PaymentExecution();
             paymentExecution.setPayerId(payerId);
 
-            // Thực hiện thanh toán với PayPal
+            // Gọi PayPal để xác nhận thanh toán
             Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
-            // Kiểm tra trạng thái thanh toán
-            if (executedPayment.getState().equals("approved")) {
-                double paymentAmount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
-
-                // Kiểm tra COIN_RATE hợp lệ
-                if (COIN_RATE <= 0) {
-                    throw new Exception("Invalid coin rate.");
-                }
-
-                double coinAmount = paymentAmount * COIN_RATE;
-
-                // Lấy người dùng từ database
-                Optional<User> userOpt = userRepository.findById(userId);
-                if (userOpt.isPresent()) {
-                    User user = userOpt.get();
-                    user.setCoin(user.getCoin() + coinAmount);
-                    userRepository.save(user);
-
-                    // Lưu thông tin giao dịch vào database
-                    PaymentTransaction transaction = new PaymentTransaction();
-                    transaction.setUser(user);
-                    transaction.setAmount(paymentAmount);
-                    transaction.setCoinAmount(coinAmount);
-                    transaction.setStatus(PaymentTransactionStatus.COMPLETED);
-                    paymentTransactionRepository.save(transaction);
-
-                    // Trả về thông tin thành công
-                    APIResponse response = new APIResponse();
-                    response.setStatusCode(200L);
-                    response.setMessage("Payment Success and Coins Added");
-                    response.setData(executedPayment);
-                    response.setTimestamp(LocalDateTime.now());
-                    return response;
-                } else {
-                    throw new Exception("User not found.");
-                }
-            } else {
+            if (!"approved".equalsIgnoreCase(executedPayment.getState())) {
                 throw new Exception("Payment not approved.");
             }
+
+            // Lấy danh sách giao dịch
+            List<Transaction> transactions = executedPayment.getTransactions();
+            if (transactions == null || transactions.isEmpty()) {
+                throw new Exception("No transaction found in executed payment.");
+            }
+
+            Amount executedAmount = transactions.get(0).getAmount();
+            if (executedAmount == null || executedAmount.getTotal() == null) {
+                throw new Exception("Executed amount or total is null.");
+            }
+
+            double paymentAmount = Double.parseDouble(executedAmount.getTotal());
+
+            if (COIN_RATE <= 0) {
+                throw new Exception("Invalid coin rate.");
+            }
+
+            double coinAmount = paymentAmount * COIN_RATE;
+
+            // Tìm người dùng
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isEmpty()) {
+                throw new Exception("User not found.");
+            }
+
+            User user = userOpt.get();
+            user.setCoin(user.getCoin() + coinAmount);
+            userRepository.save(user);
+
+            // Lưu giao dịch
+            PaymentTransaction transaction = new PaymentTransaction();
+            transaction.setUser(user);
+            transaction.setAmount(paymentAmount);
+            transaction.setCoinAmount(coinAmount);
+            transaction.setStatus(PaymentTransactionStatus.COMPLETED);
+            paymentTransactionRepository.save(transaction);
+
+            APIResponse response = new APIResponse();
+            response.setStatusCode(200L);
+            response.setMessage("Payment Success and Coins Added");
+            response.setData(executedPayment);
+            response.setTimestamp(LocalDateTime.now());
+            return response;
+
         } catch (PayPalRESTException e) {
-            throw new Exception("PayPal Payment Execution failed: " + e.getMessage(), e);
+            e.printStackTrace();
+            throw new Exception("PayPal Payment Execution failed: " + e.getDetails(), e);
         } catch (Exception e) {
-            // Xử lý các ngoại lệ khác
+            e.printStackTrace();
             throw new Exception("An error occurred while processing the payment: " + e.getMessage(), e);
         }
     }
