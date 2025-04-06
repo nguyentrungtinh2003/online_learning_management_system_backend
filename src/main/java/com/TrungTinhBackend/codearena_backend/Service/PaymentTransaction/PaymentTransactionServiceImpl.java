@@ -39,48 +39,15 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         this.userRepository = userRepository;
     }
 
+
     @Override
-    public APIResponse handlePayment(APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
-        APIResponse apiResponse = new APIResponse();
-            // Tạo thanh toán
-            Payment payment = createPayment(apiRequestPaymentTransaction.getAmount());
-
-// Xử lý thanh toán sau khi người dùng thanh toán qua PayPal
-            if (payment.getState().equals("approved")) {
-                double paymentAmount = Double.parseDouble(payment.getTransactions().get(0).getAmount().getTotal());
-                Double coinAmount = (paymentAmount * COIN_RATE);
-
-// Cập nhật số dư coin cho người dùng
-                Optional<User> userOpt = userRepository.findById(apiRequestPaymentTransaction.getUserId());
-                if (userOpt.isPresent()) {
-                    User user = userOpt.get();
-                    user.setCoin(user.getCoin() + coinAmount);
-                    userRepository.save(user);
-
-// Lưu thông tin giao dịch
-                    PaymentTransaction transaction = new PaymentTransaction();
-                    transaction.setUser(user);
-                    transaction.setAmount(paymentAmount);
-                    transaction.setCoinAmount(coinAmount);
-                    transaction.setStatus(PaymentTransactionStatus.COMPLETED);
-                    paymentTransactionRepository.save(transaction);
-                }
-            }
-            apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("Payment success !");
-            apiResponse.setData(payment);
-            apiResponse.setTimestamp(LocalDateTime.now());
-
-            return apiResponse;
-    }
-
-    private Payment createPayment(Double total) throws PayPalRESTException {
+    public APIResponse createPayment(APIRequestPaymentTransaction request) throws Exception {
         Amount amount = new Amount();
         amount.setCurrency("USD");
-        amount.setTotal(String.format("%.2f", total));
+        amount.setTotal(String.format("%.2f",request.getAmount()));
 
         Transaction transaction = new Transaction();
-        transaction.setDescription("Nạp tiền vào tài khoản");
+        transaction.setDescription("Nạp tiền vào tài khoản CodeArena");
         transaction.setAmount(amount);
 
         Payer payer = new Payer();
@@ -92,10 +59,62 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         payment.setTransactions(Collections.singletonList(transaction));
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("https://codearena-frontend-dev.vercel.app/");
-        redirectUrls.setReturnUrl("https://codearena-frontend-dev.vercel.app/");
+        redirectUrls.setCancelUrl("https://codearena-frontend-dev.vercel.app/payment-cancel");
+        redirectUrls.setReturnUrl("https://codearena-frontend-dev.vercel.app/payment-success?userId=" + request.getUserId());
         payment.setRedirectUrls(redirectUrls);
 
-        return payment.create(apiContext);
+        Payment createdPayment = payment.create(apiContext);
+
+        String approvalLink = createdPayment.getLinks().stream()
+                .filter(link -> link.getRel().equalsIgnoreCase("approval_url"))
+                .findFirst().map(Links::getHref).orElse(null);
+
+        APIResponse response = new APIResponse();
+        response.setStatusCode(200L);
+        response.setMessage("Redirect to PayPal");
+        response.setData(approvalLink);
+        response.setTimestamp(LocalDateTime.now());
+
+        return response;
+    }
+
+    @Override
+    public APIResponse executePayment(String paymentId, String payerId, Long userId) throws Exception {
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+
+        PaymentExecution paymentExecution = new PaymentExecution();
+        paymentExecution.setPayerId(payerId);
+
+        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+
+        if (executedPayment.getState().equals("approved")) {
+            double paymentAmount = Double.parseDouble(executedPayment.getTransactions().get(0).getAmount().getTotal());
+            double coinAmount = paymentAmount * COIN_RATE;
+
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                user.setCoin(user.getCoin() + coinAmount);
+                userRepository.save(user);
+
+                PaymentTransaction transaction = new PaymentTransaction();
+                transaction.setUser(user);
+                transaction.setAmount(paymentAmount);
+                transaction.setCoinAmount(coinAmount);
+                transaction.setStatus(PaymentTransactionStatus.COMPLETED);
+                paymentTransactionRepository.save(transaction);
+            }
+
+            APIResponse response = new APIResponse();
+            response.setStatusCode(200L);
+            response.setMessage("Payment Success and Coins Added");
+            response.setData(executedPayment);
+            response.setTimestamp(LocalDateTime.now());
+
+            return response;
+        } else {
+            throw new Exception("Payment not approved.");
+        }
     }
 }

@@ -17,8 +17,16 @@ public class PaymentTransactionController {
     @Autowired
     private PaymentTransactionService paymentTransactionService;
 
-    @PostMapping("/add")
-    public ResponseEntity<APIResponse> addPayment(@Valid @RequestBody APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
-        return ResponseEntity.ok(paymentTransactionService.handlePayment(apiRequestPaymentTransaction));
+    @PostMapping("/create")
+    public ResponseEntity<APIResponse> createPayment(@Valid @RequestBody APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.createPayment(apiRequestPaymentTransaction));
+    }
+
+    @GetMapping("/execute")
+    public ResponseEntity<APIResponse> executePayment(
+            @RequestParam("paymentId") String paymentId,
+            @RequestParam("PayerID") String payerId,
+            @RequestParam("userId") Long userId) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.executePayment(paymentId, payerId, userId));
     }
 }
