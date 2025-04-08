@@ -317,7 +317,7 @@ public class UserServiceImpl implements UserService{
     public APIResponse getUserByPage(int page, int size) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "date"));
+            Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
             Page<User> page1 = userRepository.findAllByIsDeletedFalse(pageable);
 
             apiResponse.setStatusCode(200L);
