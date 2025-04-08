@@ -15,4 +15,5 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson,Long>, JpaSpecificationExecutor<Lesson> {
     List<Lesson> findByIsDeletedFalse();
     Page<Lesson> findByIsDeletedFalse(Pageable pageable);
+    Page<Lesson> findByCourseIdAndIsDeletedFalse(Long courseId, Pageable pageable);
 }

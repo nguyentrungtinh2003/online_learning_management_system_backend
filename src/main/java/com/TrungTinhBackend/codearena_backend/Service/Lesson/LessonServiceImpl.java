@@ -218,4 +218,19 @@ public class LessonServiceImpl implements LessonService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getLessonByCourseIdAndByPage(Long courseId, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Lesson> lessons = lessonRepository.findByCourseIdAndIsDeletedFalse(courseId,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get lesson by course id success !");
+        apiResponse.setData(lessons);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

@@ -12,4 +12,5 @@ public interface LessonService {
     public APIResponse deleteLesson(Long id) throws Exception;
     public APIResponse searchLesson(String keyword, int page, int size);
     public APIResponse getLessonByPage(int page, int size);
+    public APIResponse getLessonByCourseIdAndByPage(Long courseId,int page, int size);
 }
