@@ -35,7 +35,7 @@ public class Lesson {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonIgnore
+    @JsonIgnore()
     private Course course;
 
     @OneToMany(mappedBy = "lesson")

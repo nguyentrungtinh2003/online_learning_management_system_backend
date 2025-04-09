@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
 import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,7 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "lesson_id")
+    @JsonIgnore()
     private Lesson lesson;
 
     @OneToMany(mappedBy = "quiz")
