@@ -48,7 +48,7 @@ public class QuizController {
 
     @PutMapping("teacher/quizzes/update/{id}")
     public ResponseEntity<APIResponse> updateQuiz(@PathVariable Long id, @Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
-                                               @RequestPart(value = "img") MultipartFile img) throws Exception {
+                                               @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(quizService.updateQuiz(id, apiRequestQuiz, img));
     }
 
