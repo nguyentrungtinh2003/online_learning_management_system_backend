@@ -25,7 +25,7 @@ public class PaymentTransactionController {
     @GetMapping("/execute")
     public ResponseEntity<APIResponse> executePayment(
             @RequestParam("paymentId") String paymentId,
-            @RequestParam("PayerID") String payerId,
+            @RequestParam("payerId") String payerId,
             @RequestParam("userId") Long userId) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.executePayment(paymentId, payerId, userId));
     }
