@@ -7,6 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Enum.PaymentTransactionStatus;
 import com.TrungTinhBackend.codearena_backend.Repository.PaymentTransactionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestPaymentTransaction;
+import com.TrungTinhBackend.codearena_backend.Request.PayPalPaymentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -132,10 +133,16 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
             transaction.setStatus(PaymentTransactionStatus.COMPLETED);
             paymentTransactionRepository.save(transaction);
 
+            //Map DTO payment
+            PayPalPaymentDTO payPalPaymentDTO = new PayPalPaymentDTO();
+            payPalPaymentDTO.setId(executedPayment.getId());
+            payPalPaymentDTO.setState(executedPayment.getState());
+            payPalPaymentDTO.setCreateTime(executedPayment.getCreateTime());
+
             APIResponse response = new APIResponse();
             response.setStatusCode(200L);
             response.setMessage("Payment Success and Coins Added");
-            response.setData(executedPayment);
+            response.setData(payPalPaymentDTO);
             response.setTimestamp(LocalDateTime.now());
             return response;
 
