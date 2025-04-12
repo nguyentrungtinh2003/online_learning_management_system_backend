@@ -133,6 +133,8 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
             transaction.setAmount(paymentAmount);
             transaction.setCoinAmount(coinAmount);
             transaction.setStatus(PaymentTransactionStatus.COMPLETED);
+            transaction.setDate(LocalDateTime.now());
+            transaction.setDeleted(false);
             paymentTransactionRepository.save(transaction);
 
             //Map DTO payment
