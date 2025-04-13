@@ -21,4 +21,6 @@ public class APIRequestPaymentTransaction {
     @DecimalMax(value = "1000000000", message = "Price must be less than 1 billion!")
     @Digits(integer = 10, fraction = 2, message = "Price must be a valid number with up to 2 decimal places!")
     private Double amount;
+
+    private String method;
 }

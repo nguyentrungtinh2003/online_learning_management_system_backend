@@ -70,6 +70,10 @@ public class CodearenaBackendApplication {
 		System.setProperty("PAYPAL_CLIENT_SECRET", System.getenv("PAYPAL_CLIENT_SECRET"));
 		System.setProperty("PAYPAL_MODE", System.getenv("PAYPAL_MODE"));
 
+		System.setProperty("vnp_TmnCode", System.getenv("vnp_TmnCode"));
+		System.setProperty("vnp_HashSecret", System.getenv("vnp_HashSecret"));
+		System.setProperty("vnp_Url", System.getenv("vnp_Url"));
+
 
 		SpringApplication.run(CodearenaBackendApplication.class, args);
 	}

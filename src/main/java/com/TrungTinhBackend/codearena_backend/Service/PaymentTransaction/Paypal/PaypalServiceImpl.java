@@ -1,6 +1,5 @@
-package com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction;
+package com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.PaymentTransaction;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.PaymentTransactionStatus;
@@ -9,11 +8,11 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestPaymentTransaction;
 import com.TrungTinhBackend.codearena_backend.Request.PayPalPaymentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal.PaypalService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PaymentTransactionServiceImpl implements PaymentTransactionService{
+public class PaypalServiceImpl implements PaypalService {
 
     @Autowired
     private APIContext apiContext;
@@ -36,7 +35,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
 
     private static final double COIN_RATE = 10.0; // 1 USD = 10 Coin
 
-    public PaymentTransactionServiceImpl(APIContext apiContext, PaymentTransactionRepository paymentTransactionRepository, UserRepository userRepository) {
+    public PaypalServiceImpl(APIContext apiContext, PaymentTransactionRepository paymentTransactionRepository, UserRepository userRepository) {
         this.apiContext = apiContext;
         this.paymentTransactionRepository = paymentTransactionRepository;
         this.userRepository = userRepository;
