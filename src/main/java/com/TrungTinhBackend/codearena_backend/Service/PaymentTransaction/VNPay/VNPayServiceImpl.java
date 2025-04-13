@@ -31,7 +31,7 @@ public class VNPayServiceImpl implements VNPayService{
     @Value("${vnp_Url}")
     private String VNP_URL;
 
-    private String VNP_RETURN_URL="https://codearena-backend-dev.onrender.com";
+    private String VNP_RETURN_URL="https://codearena-frontend-dev.vercel.app/";
 
     @Value("${vnp_TmnCode}")
     private String VNP_TMNCODE;
