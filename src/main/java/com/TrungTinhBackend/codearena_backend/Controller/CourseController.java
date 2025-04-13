@@ -30,7 +30,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
-    @GetMapping("admin/courses/all")
+    @GetMapping("/courses/all")
     public ResponseEntity<APIResponse> getAllCourse() {
         return ResponseEntity.ok(courseService.getAllCourse());
     }
