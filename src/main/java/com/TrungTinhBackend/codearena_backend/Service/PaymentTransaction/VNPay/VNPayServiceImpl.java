@@ -41,14 +41,6 @@ public class VNPayServiceImpl implements VNPayService{
 
     private static final double COIN_RATE = 10.0;
 
-    public VNPayServiceImpl(UserRepository userRepository, PaymentTransactionRepository paymentTransactionRepository, String vnpUrl, String vnpTmncode, String vnpHashSecret) {
-        this.userRepository = userRepository;
-        this.paymentTransactionRepository = paymentTransactionRepository;
-        VNP_URL = vnpUrl;
-        VNP_TMNCODE = vnpTmncode;
-        VNP_HASH_SECRET = vnpHashSecret;
-    }
-
     //hash
     public String hmacSHA512(String key, String data) throws Exception {
         Mac hmac512 = Mac.getInstance("HmacSHA512");
