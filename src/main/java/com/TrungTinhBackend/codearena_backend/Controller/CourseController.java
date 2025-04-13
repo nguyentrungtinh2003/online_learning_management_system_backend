@@ -30,6 +30,12 @@ public class CourseController {
         return ResponseEntity.ok(courseService.addCourse(apiRequestCourse, img));
     }
 
+    @PostMapping("/courses/buy/{userId}/{courseId}")
+    public ResponseEntity<APIResponse> buyCourse(@PathVariable Long userId,
+                                                 @PathVariable Long courseId) throws Exception {
+        return ResponseEntity.ok(courseService.buyCourse(userId, courseId));
+    }
+
     @GetMapping("/courses/all")
     public ResponseEntity<APIResponse> getAllCourse() {
         return ResponseEntity.ok(courseService.getAllCourse());

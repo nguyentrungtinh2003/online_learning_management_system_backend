@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface CourseService {
     public APIResponse addCourse(APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception;
+    public APIResponse buyCourse(Long userId,Long courseId);
     public APIResponse getAllCourse();
     public APIResponse getCourseById(Long id);
     public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception;

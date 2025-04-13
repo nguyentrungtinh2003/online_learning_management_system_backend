@@ -7,6 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.Enrollment.EnrollmentService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
@@ -37,11 +38,15 @@ public class CourseServiceImpl implements CourseService{
     private UserRepository userRepository;
 
     @Autowired
+    private EnrollmentService enrollmentService;
+
+    @Autowired
     private ImgService imgService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, ImgService imgService) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+        this.enrollmentService = enrollmentService;
         this.imgService = imgService;
     }
 
@@ -73,6 +78,46 @@ public class CourseServiceImpl implements CourseService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
+    }
+
+    @Override
+    public APIResponse buyCourse(Long userId, Long courseId) {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found by id " + userId)
+        );
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("Course not found by id " + courseId)
+        );
+
+        if(course.getPrice() > 0) {
+            if(user.getCoin() < course.getPrice()) {
+                apiResponse.setStatusCode(500L);
+                apiResponse.setMessage("Bạn không đủ coin để mua !");
+                apiResponse.setTimestamp(LocalDateTime.now());
+
+                return apiResponse;
+            }
+            user.setCoin(user.getCoin() - course.getPrice());
+            userRepository.save(user);
+            enrollmentService.enrollUser(userId,courseId);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("User enroll course success !");
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+        }
+
+        enrollmentService.enrollUser(userId,courseId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("User enroll course success !");
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
     }
 
     @Override
