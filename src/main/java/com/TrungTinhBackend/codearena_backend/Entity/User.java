@@ -3,7 +3,9 @@ package com.TrungTinhBackend.codearena_backend.Entity;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,6 +70,7 @@ public class User implements UserDetails {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Enrollment> enrollments;
 
     @ManyToMany
