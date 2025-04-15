@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
 import com.TrungTinhBackend.codearena_backend.Enum.EnrollmentStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Enrollment {
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonBackReference()
     private Course course;
 
     @Column(name = "enrolled_date", nullable = false, updatable = false)
