@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
 import com.TrungTinhBackend.codearena_backend.Enum.CourseEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -43,6 +44,7 @@ public class Course {
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "course")
