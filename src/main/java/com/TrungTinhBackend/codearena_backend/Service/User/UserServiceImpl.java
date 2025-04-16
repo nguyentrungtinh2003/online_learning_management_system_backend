@@ -103,9 +103,9 @@ public class UserServiceImpl implements UserService{
             ResponseCookie jwtCookie = ResponseCookie.from("authToken", jwt)
                     .httpOnly(true)
                     .secure(true)// Cookie không thể truy cập từ JavaScript để bảo mật
-                    .maxAge(60 * 60)// Cookie hết hạn sau 24 giờ
                     .sameSite("None")
                     .path("/") // Có hiệu lực trên toàn bộ ứng dụng
+                    .maxAge(7 * 24 * 60 * 60)
                     .build();// Thêm cookie vào phản hồi
 
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
