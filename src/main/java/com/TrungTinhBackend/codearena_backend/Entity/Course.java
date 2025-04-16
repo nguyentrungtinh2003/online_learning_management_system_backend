@@ -38,7 +38,6 @@ public class Course {
     private boolean isDeleted;
     
     @OneToMany(mappedBy = "course")
-    @JsonManagedReference
     private List<Enrollment> enrollments;
 
     @ManyToOne()
