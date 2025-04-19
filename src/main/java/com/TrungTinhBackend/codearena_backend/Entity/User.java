@@ -70,7 +70,7 @@ public class User implements UserDetails {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @JsonIgnore()
     private List<Enrollment> enrollments;
 
     @ManyToMany

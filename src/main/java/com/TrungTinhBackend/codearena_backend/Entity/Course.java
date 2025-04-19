@@ -39,7 +39,7 @@ public class Course {
     private boolean isDeleted;
     
     @OneToMany(mappedBy = "course")
-    @JsonManagedReference
+    @JsonIgnore()
     private List<Enrollment> enrollments;
 
     @ManyToOne()
