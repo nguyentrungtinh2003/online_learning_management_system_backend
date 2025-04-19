@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService{
@@ -64,6 +65,19 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User enroll success !");
         apiResponse.setData(enrollment);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getEnrollByUserId(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Enrollment> enrollments = enrollmentRepository.findByUserId(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get user enroll course success !");
+        apiResponse.setData(enrollments);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
