@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +46,7 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference()
     private User user;
 
     @OneToMany(mappedBy = "blog")

@@ -88,6 +88,7 @@ public class User implements UserDetails {
     private Set<Blog> likedBlogs;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference()
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
