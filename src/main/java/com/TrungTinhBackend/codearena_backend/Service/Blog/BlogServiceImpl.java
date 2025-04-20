@@ -5,6 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogRepository;
+import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Request.APIRequestBlog;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
@@ -34,15 +35,23 @@ public class BlogServiceImpl implements BlogService{
     @Autowired
     private VideoService videoService;
 
-    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository) {
         this.blogRepository = blogRepository;
         this.imgService = imgService;
         this.videoService = videoService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public APIResponse addBlog(APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
        APIResponse apiResponse = new APIResponse();
+
+       User user = userRepository.findById(apiRequestBlog.getUser().getId()).orElseThrow(
+               () -> new NotFoundException("User not found !")
+       );
             Blog blog = new Blog();
 
             blog.setBlogName(apiRequestBlog.getBlogName());
@@ -57,6 +66,7 @@ public class BlogServiceImpl implements BlogService{
             blog.setDeleted(false);
             blog.setLikeCount(0L);
             blog.setView(0L);
+            blog.setUser(user);
 
             blogRepository.save(blog);
 

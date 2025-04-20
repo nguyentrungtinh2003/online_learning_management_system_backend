@@ -23,18 +23,20 @@ public class APIRequestBlog {
     @Size(min = 2, max = 255, message = "Description must be between 2 and 255 characters!")
     private String description;
 
-    @NotBlank(message = "Image URL is required!")
-    @Pattern(
-            regexp = "^(https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp))$",
-            message = "Invalid image URL! Must be a valid link ending with png, jpg, jpeg, gif, bmp, or webp."
-    )
-    private String img;
+    private User user;
 
-    @NotBlank(message = "Video URL is required!")
-    @Pattern(
-            regexp = "^(https?:\\/\\/.*\\.(?:mp4|mkv|avi|mov|wmv|flv|webm))$\n",
-            message = "Invalid video URL! Must be a valid link ending with mp4, mkv, avi, mov, wmv, fly or webm."
-    )
-    private String video;
+//    @NotBlank(message = "Image URL is required!")
+//    @Pattern(
+//            regexp = "^(https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp))$",
+//            message = "Invalid image URL! Must be a valid link ending with png, jpg, jpeg, gif, bmp, or webp."
+//    )
+//    private String img;
+
+//    @NotBlank(message = "Video URL is required!")
+//    @Pattern(
+//            regexp = "^(https?:\\/\\/.*\\.(?:mp4|mkv|avi|mov|wmv|flv|webm))$\n",
+//            message = "Invalid video URL! Must be a valid link ending with mp4, mkv, avi, mov, wmv, fly or webm."
+//    )
+//    private String video;
 
 }
