@@ -13,4 +13,6 @@ public interface BlogService {
     public APIResponse getAllBlog();
     public APIResponse getBlogById(Long id);
     public APIResponse getBlogByUserId(Long userId);
+    public APIResponse likeBlog(Long userId, Long blogId);
+    public APIResponse unLikeBlog(Long userId, Long blogId);
 }

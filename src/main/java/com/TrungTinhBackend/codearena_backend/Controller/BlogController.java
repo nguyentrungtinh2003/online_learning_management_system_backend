@@ -38,6 +38,17 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogByUserId(userId));
     }
 
+    @PostMapping("/like/{blogId}/{userId}")
+    public ResponseEntity<APIResponse> likeBlog(@PathVariable Long blogId,
+                                                @PathVariable Long userId) {
+        return ResponseEntity.ok(blogService.likeBlog(blogId,userId));
+    }
+
+    @PostMapping("/unlike/{blogId}/{userId}")
+    public ResponseEntity<APIResponse> unLikeBlog(@PathVariable Long blogId,
+                                                @PathVariable Long userId) {
+        return ResponseEntity.ok(blogService.unLikeBlog(blogId,userId));
+    }
 
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,

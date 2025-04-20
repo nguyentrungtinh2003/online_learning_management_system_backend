@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BlogServiceImpl implements BlogService{
@@ -179,6 +180,9 @@ public class BlogServiceImpl implements BlogService{
                 () -> new NotFoundException("Blog not found !")
         );
 
+        blog.setView(blog.getView() + 1);
+        blogRepository.save(blog);
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get blog by id success !");
         apiResponse.setData(blog);
@@ -196,6 +200,60 @@ public class BlogServiceImpl implements BlogService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get blog by userId success !");
         apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse likeBlog(Long userId, Long blogId) {
+        APIResponse apiResponse = new APIResponse();
+
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                () -> new NotFoundException("Blog not found !")
+        );
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
+        if(!blog.getLikedUsers().contains(user)) {
+            blog.setLikeCount(blog.getLikeCount() + 1);
+            Set<User> likedUsers = blog.getLikedUsers();
+            likedUsers.add(user);
+
+            blogRepository.save(blog);
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("User like blog success !");
+        apiResponse.setData(blog);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse unLikeBlog(Long userId, Long blogId) {
+        APIResponse apiResponse = new APIResponse();
+
+        Blog blog = blogRepository.findById(blogId).orElseThrow(
+                () -> new NotFoundException("Blog not found !")
+        );
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+if(!blog.getLikedUsers().contains(user)) {
+    blog.setLikeCount(blog.getLikeCount() - 1);
+    Set<User> likedUsers = blog.getLikedUsers();
+    likedUsers.remove(user);
+
+    blogRepository.save(blog);
+}
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("User un like blog success !");
+        apiResponse.setData(blog);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

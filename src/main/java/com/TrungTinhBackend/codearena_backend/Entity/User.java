@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -85,7 +86,8 @@ public class User implements UserDetails {
     private List<Chat> chats;
 
     @ManyToMany(mappedBy = "likedUsers")
-    private Set<Blog> likedBlogs;
+    @JsonBackReference()
+    private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     @JsonBackReference()
