@@ -38,7 +38,6 @@ public class Blog {
     private Long view;
 
     @ManyToMany
-    @JsonManagedReference()
     @JoinTable(
             name = "blog_like",
             joinColumns = @JoinColumn(name = "blog_id"),

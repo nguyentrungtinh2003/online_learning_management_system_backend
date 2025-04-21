@@ -244,7 +244,7 @@ public class BlogServiceImpl implements BlogService{
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
-if(!blog.getLikedUsers().contains(user)) {
+if(blog.getLikedUsers().contains(user)) {
     blog.setLikeCount(blog.getLikeCount() - 1);
     Set<User> likedUsers = blog.getLikedUsers();
     likedUsers.remove(user);
