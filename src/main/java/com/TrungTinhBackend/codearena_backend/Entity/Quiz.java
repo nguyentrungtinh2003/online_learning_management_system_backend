@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Entity;
 
 import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +43,6 @@ public class Quiz {
     private Lesson lesson;
 
     @OneToMany(mappedBy = "quiz")
+    @JsonManagedReference()
     private List<Question> questions;
 }
