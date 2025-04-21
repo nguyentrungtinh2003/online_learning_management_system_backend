@@ -218,13 +218,14 @@ public class BlogServiceImpl implements BlogService{
                 () -> new NotFoundException("User not found !")
         );
 
-        if(!blog.getLikedUsers().contains(user)) {
+        if (!blog.getLikedUsers().contains(user)) {
             blog.setLikeCount(blog.getLikeCount() + 1);
-            Set<User> likedUsers = blog.getLikedUsers();
-            likedUsers.add(user);
+            blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
+            user.getLikedBlogs().add(blog);     // thêm blog vào danh sách likedBlogs
 
-            blogRepository.save(blog);
+            blogRepository.save(blog);          // lưu lại blog
         }
+
         List<Long> likedUserIds = blog.getLikedUsers()
                 .stream()
                 .map(User::getId)
@@ -237,6 +238,7 @@ public class BlogServiceImpl implements BlogService{
 
         return apiResponse;
     }
+
 
     @Override
     public APIResponse unLikeBlog(Long userId, Long blogId) {
@@ -251,8 +253,8 @@ public class BlogServiceImpl implements BlogService{
         );
 if(blog.getLikedUsers().contains(user)) {
     blog.setLikeCount(blog.getLikeCount() - 1);
-    Set<User> likedUsers = blog.getLikedUsers();
-    likedUsers.remove(user);
+    blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
+    user.getLikedBlogs().add(blog);
 
     blogRepository.save(blog);
 }
