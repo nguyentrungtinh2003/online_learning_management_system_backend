@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,7 @@ public class Blog {
             joinColumns = @JoinColumn(name = "blog_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore()
     private Set<User> likedUsers = new HashSet<>();
 
     @ManyToOne
