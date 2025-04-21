@@ -253,8 +253,8 @@ public class BlogServiceImpl implements BlogService{
         );
 if(blog.getLikedUsers().contains(user)) {
     blog.setLikeCount(blog.getLikeCount() - 1);
-    blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
-    user.getLikedBlogs().add(blog);
+    blog.getLikedUsers().remove(user);     // thêm user vào danh sách likedUsers
+    user.getLikedBlogs().remove(blog);
 
     blogRepository.save(blog);
 }
