@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogServiceImpl implements BlogService{
@@ -224,10 +225,14 @@ public class BlogServiceImpl implements BlogService{
 
             blogRepository.save(blog);
         }
+        List<Long> likedUserIds = blog.getLikedUsers()
+                .stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User like blog success !");
-        apiResponse.setData(blog);
+        apiResponse.setData(likedUserIds);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
@@ -251,9 +256,14 @@ if(blog.getLikedUsers().contains(user)) {
 
     blogRepository.save(blog);
 }
+        List<Long> likedUserIds = blog.getLikedUsers()
+                .stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User un like blog success !");
-        apiResponse.setData(blog);
+        apiResponse.setData(likedUserIds);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
