@@ -22,12 +22,12 @@ public class APIRequestCourse {
     @Size(min = 2, max = 255, message = "Description must be between 2 and 255 characters!")
     private String description;
 
-    @NotBlank(message = "Image URL is required!")
-    @Pattern(
-            regexp = "^(https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp))$",
-            message = "Invalid image URL! Must be a valid link ending with png, jpg, jpeg, gif, bmp, or webp."
-    )
-    private String img;
+//    @NotBlank(message = "Image URL is required!")
+//    @Pattern(
+//            regexp = "^(https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp))$",
+//            message = "Invalid image URL! Must be a valid link ending with png, jpg, jpeg, gif, bmp, or webp."
+//    )
+//    private String img;
 
     @NotNull(message = "Price is required!")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0!")
@@ -37,9 +37,9 @@ public class APIRequestCourse {
 
     private CourseEnum courseEnum;
 
-    private List<User> users;
+//    private List<User> users;
 
     private User user;
 
-    private List<Lesson> lessons;
+//    private List<Lesson> lessons;
 }
