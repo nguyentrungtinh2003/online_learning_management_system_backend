@@ -226,14 +226,14 @@ public class BlogServiceImpl implements BlogService{
             blogRepository.save(blog);          // lưu lại blog
         }
 
-        List<Long> likedBlogIds = user.getLikedBlogs()
+        List<Long> likedUserIds = blog.getLikedUsers()
                 .stream()
-                .map(Blog::getId)
+                .map(User::getId)
                 .collect(Collectors.toList());
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User like blog success !");
-        apiResponse.setData(likedBlogIds);
+        apiResponse.setData(likedUserIds);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
@@ -258,14 +258,14 @@ if(blog.getLikedUsers().contains(user)) {
 
     blogRepository.save(blog);
 }
-        List<Long> likedBlogIds = user.getLikedBlogs()
+        List<Long> likedUserIds = blog.getLikedUsers()
                 .stream()
-                .map(Blog::getId)
+                .map(User::getId)
                 .collect(Collectors.toList());
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User un like blog success !");
-        apiResponse.setData(likedBlogIds);
+        apiResponse.setData(likedUserIds);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

@@ -44,7 +44,7 @@ public class Blog {
             joinColumns = @JoinColumn(name = "blog_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @JsonIgnore()
+    @JsonManagedReference
     private Set<User> likedUsers = new HashSet<>();
 
     @ManyToOne

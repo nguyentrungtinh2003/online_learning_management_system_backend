@@ -86,6 +86,7 @@ public class User implements UserDetails {
     private List<Chat> chats;
 
     @ManyToMany(mappedBy = "likedUsers")
+    @JsonBackReference
     private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
