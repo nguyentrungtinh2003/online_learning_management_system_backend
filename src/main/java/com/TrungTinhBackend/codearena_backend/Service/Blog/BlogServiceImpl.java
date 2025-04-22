@@ -207,7 +207,7 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse likeBlog(Long userId, Long blogId) {
+    public APIResponse likeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
         Blog blog = blogRepository.findById(blogId).orElseThrow(
@@ -241,7 +241,7 @@ public class BlogServiceImpl implements BlogService{
 
 
     @Override
-    public APIResponse unLikeBlog(Long userId, Long blogId) {
+    public APIResponse unLikeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
         Blog blog = blogRepository.findById(blogId).orElseThrow(
