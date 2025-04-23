@@ -14,4 +14,7 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog,Long>, JpaSpecificationExecutor<Blog> {
     List<Blog> findByUserId(Long userId);
+
+    @Query("SELECT b FROM Blog b JOIN b.likedUsers u WHERE u.id = :userId")
+    List<Blog> findBlogsLikedByUser(@Param("userId") Long userId);
 }

@@ -50,6 +50,11 @@ public class BlogController {
         return ResponseEntity.ok(blogService.unLikeBlog(blogId,userId));
     }
 
+    @GetMapping("/userLiked/{userId}/")
+    public ResponseEntity<APIResponse> getBlogLikedByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(blogService.getBlogsLikedByUser(userId));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,

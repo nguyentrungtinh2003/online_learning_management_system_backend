@@ -271,4 +271,18 @@ if(blog.getLikedUsers().contains(user)) {
         return apiResponse;
     }
 
+    @Override
+    public APIResponse getBlogsLikedByUser(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Blog> blogs = blogRepository.findBlogsLikedByUser(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blogs liked by user id success !");
+        apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }
