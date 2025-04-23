@@ -50,7 +50,7 @@ public class BlogController {
         return ResponseEntity.ok(blogService.unLikeBlog(blogId,userId));
     }
 
-    @GetMapping("/userLiked/{userId}/")
+    @GetMapping("/userLiked/{userId}")
     public ResponseEntity<APIResponse> getBlogLikedByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(blogService.getBlogsLikedByUser(userId));
     }
