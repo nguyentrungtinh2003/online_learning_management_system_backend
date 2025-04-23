@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @RequestMapping("api/")
 public class CourseController {
 
-
     private final CourseService courseService;
 
     @Autowired
