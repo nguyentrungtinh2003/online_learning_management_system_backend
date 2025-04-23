@@ -110,7 +110,7 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse deleteBlog(Long id) throws Exception {
+    public APIResponse deleteBlog(Long id) {
         APIResponse apiResponse = new APIResponse();
 
             Blog blog = blogRepository.findById(id).orElseThrow(
