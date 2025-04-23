@@ -11,6 +11,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -207,6 +208,7 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
+    @Transactional
     public APIResponse likeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
@@ -242,6 +244,7 @@ public class BlogServiceImpl implements BlogService{
 
 
     @Override
+    @Transactional
     public APIResponse unLikeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
