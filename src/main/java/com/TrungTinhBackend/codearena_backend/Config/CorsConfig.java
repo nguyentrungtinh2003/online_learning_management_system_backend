@@ -14,6 +14,7 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                System.out.println("CORS Config Loaded");
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:3000",
@@ -21,9 +22,10 @@ public class CorsConfig {
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type", "Cookie")
-                        .exposedHeaders("Set-Cookie") // Cho React đọc cookie
+                        .exposedHeaders("Set-Cookie")
                         .allowCredentials(true);
             }
+
         };
     }
 }
