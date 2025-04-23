@@ -18,11 +18,13 @@ import java.time.LocalDateTime;
 @RequestMapping("api/")
 public class CourseController {
 
-    @Autowired
-    private CourseService courseService;
+
+    private final CourseService courseService;
 
     @Autowired
-    private CourseRepository courseRepository;
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
+    }
 
     @PostMapping("teacher/courses/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") APIRequestCourse apiRequestCourse,
