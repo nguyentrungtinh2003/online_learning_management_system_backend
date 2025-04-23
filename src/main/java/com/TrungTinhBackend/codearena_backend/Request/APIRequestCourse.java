@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Request;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.CourseEnum;
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.*;
@@ -29,8 +30,7 @@ public class APIRequestCourse {
 //    )
 //    private String img;
 
-    @NotNull(message = "Price is required!")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0!")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Price must be greater than or equal to 0!")
     @DecimalMax(value = "1000000000", message = "Price must be less than 1 billion!")
     @Digits(integer = 10, fraction = 2, message = "Price must be a valid number with up to 2 decimal places!")
     private Double price;

@@ -219,6 +219,7 @@ public class BlogServiceImpl implements BlogService{
         );
 
         if (!blog.getLikedUsers().contains(user)) {
+            if (blog.getLikeCount() == null) blog.setLikeCount(0L);
             blog.setLikeCount(blog.getLikeCount() + 1);
             blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
             user.getLikedBlogs().add(blog);     // thêm blog vào danh sách likedBlogs
@@ -252,7 +253,10 @@ public class BlogServiceImpl implements BlogService{
                 () -> new NotFoundException("User not found !")
         );
 if(blog.getLikedUsers().contains(user)) {
-    blog.setLikeCount(blog.getLikeCount() - 1);
+    if (blog.getLikeCount() == null) blog.setLikeCount(0L);
+    if (blog.getLikeCount() > 0) {
+        blog.setLikeCount(blog.getLikeCount() - 1);
+    }
     blog.getLikedUsers().remove(user);     // thêm user vào danh sách likedUsers
     user.getLikedBlogs().remove(blog);
 
