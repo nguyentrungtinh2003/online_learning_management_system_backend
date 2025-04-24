@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,15 +158,34 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
+    public BlogDTO convertToDTO(Blog blog) {
+        BlogDTO dto = new BlogDTO();
+        dto.setId(blog.getId());
+        dto.setBlogName(blog.getBlogName());
+        dto.setDescription(blog.getDescription());
+        dto.setUser(blog.getUser());
+        dto.setImg(blog.getImg());
+        dto.setVideo(blog.getVideo());
+
+        Set<String> likedUsersName = blog.getLikedUsers().stream().map(User::getUsername).collect(Collectors.toSet());
+        dto.setLikedUsers(likedUsersName);
+        return dto;
+    }
+
+
     @Override
     public APIResponse getAllBlog() {
         APIResponse apiResponse = new APIResponse();
 
         List<Blog> blogs = blogRepository.findAll();
 
+        List<BlogDTO> blogDTOs = blogs.stream()
+                .map(this::convertToDTO)
+                .toList();
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get all blog success !");
-        apiResponse.setData(blogs);
+        apiResponse.setData(blogDTOs);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
