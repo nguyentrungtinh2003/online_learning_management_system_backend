@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -167,8 +168,16 @@ public class BlogServiceImpl implements BlogService{
         dto.setImg(blog.getImg());
         dto.setVideo(blog.getVideo());
 
-        Set<String> likedUsersName = blog.getLikedUsers().stream().map(User::getUsername).collect(Collectors.toSet());
-        dto.setLikedUsers(likedUsersName);
+        if (blog.getLikedUsers() != null) {
+            Set<String> likedUsernames = blog.getLikedUsers()
+                    .stream()
+                    .map(User::getUsername)
+                    .collect(Collectors.toSet());
+            dto.setLikedUsers(likedUsernames);
+        } else {
+            dto.setLikedUsers(new HashSet<>());
+        }
+
         return dto;
     }
 
