@@ -5,7 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonCommentRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestLessonComment;
+import com.TrungTinhBackend.codearena_backend.DTO.LessonCommentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
@@ -47,19 +47,19 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
 
     @Override
-    public APIResponse addLessonComment(APIRequestLessonComment apiRequestLessonComment, MultipartFile img, MultipartFile video) throws IOException {
+    public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO, MultipartFile img, MultipartFile video) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(apiRequestLessonComment.getUser().getId()).orElseThrow(
+        User user = userRepository.findById(lessonCommentDTO.getUser().getId()).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
 
-        Lesson lesson = lessonRepository.findById(apiRequestLessonComment.getLesson().getId()).orElseThrow(
+        Lesson lesson = lessonRepository.findById(lessonCommentDTO.getLesson().getId()).orElseThrow(
                 () -> new NotFoundException("Lesson not found !")
         );
 
         LessonComment lessonComment = new LessonComment();
-        lessonComment.setContent(apiRequestLessonComment.getContent());
+        lessonComment.setContent(lessonCommentDTO.getContent());
         lessonComment.setLesson(lesson);
         lessonComment.setUser(user);
         if(img != null) {

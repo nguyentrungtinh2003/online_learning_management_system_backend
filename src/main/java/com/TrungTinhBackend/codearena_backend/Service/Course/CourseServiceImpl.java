@@ -5,28 +5,21 @@ import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
+import com.TrungTinhBackend.codearena_backend.DTO.CourseDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Enrollment.EnrollmentService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
-import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
-import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService{
@@ -51,19 +44,19 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public APIResponse addCourse(APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
+    public APIResponse addCourse(CourseDTO courseDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User lecturer = userRepository.findById(apiRequestCourse.getUser().getId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + apiRequestCourse.getUser().getId())
+            User lecturer = userRepository.findById(courseDTO.getUser().getId()).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + courseDTO.getUser().getId())
             );
 
             Course course = new Course();
 
-            course.setCourseName(apiRequestCourse.getCourseName());
-            course.setDescription(apiRequestCourse.getDescription());
-            course.setPrice(apiRequestCourse.getPrice());
-            course.setCourseEnum(apiRequestCourse.getCourseEnum());
+            course.setCourseName(courseDTO.getCourseName());
+            course.setDescription(courseDTO.getDescription());
+            course.setPrice(courseDTO.getPrice());
+            course.setCourseEnum(courseDTO.getCourseEnum());
             course.setDate(LocalDateTime.now());
             course.setDeleted(false);
 
@@ -151,28 +144,28 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public APIResponse updateCourse(Long id, APIRequestCourse apiRequestCourse, MultipartFile img) throws Exception {
+    public APIResponse updateCourse(Long id, CourseDTO courseDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User lecturer = userRepository.findById(apiRequestCourse.getUser().getId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + apiRequestCourse.getUser().getId())
+            User lecturer = userRepository.findById(courseDTO.getUser().getId()).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + courseDTO.getUser().getId())
             );
 
             Course course = courseRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Course not found by id " + id)
             );
 
-            if(apiRequestCourse.getCourseName() != null && !apiRequestCourse.getCourseName().isEmpty()) {
-                course.setCourseName(apiRequestCourse.getCourseName());
+            if(courseDTO.getCourseName() != null && !courseDTO.getCourseName().isEmpty()) {
+                course.setCourseName(courseDTO.getCourseName());
             }
-            if(apiRequestCourse.getDescription() != null && !apiRequestCourse.getDescription().isEmpty()) {
-                course.setDescription(apiRequestCourse.getDescription());
+            if(courseDTO.getDescription() != null && !courseDTO.getDescription().isEmpty()) {
+                course.setDescription(courseDTO.getDescription());
             }
-            if(apiRequestCourse.getPrice() != null && !apiRequestCourse.getPrice().isInfinite()) {
-                course.setPrice(apiRequestCourse.getPrice());
+            if(courseDTO.getPrice() != null && !courseDTO.getPrice().isInfinite()) {
+                course.setPrice(courseDTO.getPrice());
             }
-            if(apiRequestCourse.getCourseEnum() != null) {
-                course.setCourseEnum(apiRequestCourse.getCourseEnum());
+            if(courseDTO.getCourseEnum() != null) {
+                course.setCourseEnum(courseDTO.getCourseEnum());
             }
             if(img != null && !img.isEmpty()) {
                 course.setImg(imgService.updateImg(course.getImg(),img));

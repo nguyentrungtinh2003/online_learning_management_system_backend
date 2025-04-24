@@ -1,11 +1,11 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class APIRequestUserLogin {
+public class UserLoginDTO {
 
     @NotBlank(message = "Username is required !")
     @Size(min = 1, max = 255, message = "Username must be between 1 and 255 characters!")

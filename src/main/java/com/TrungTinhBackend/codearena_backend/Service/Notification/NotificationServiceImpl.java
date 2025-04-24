@@ -5,7 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.*;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestNotification;
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,20 +51,20 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public APIResponse addNotification(APIRequestNotification apiRequestNotification) {
+    public APIResponse addNotification(NotificationDTO notificationDTO) {
         APIResponse apiResponse = new APIResponse();
         Notification notification = new Notification();
         List<Long> allUserIds = userRepository.getAllUserIds();  // Lấy tất cả user ID
 
         for (Long userId : allUserIds) {
-            notification.setMessage(apiRequestNotification.getMessage());
-            notification.setReceiver(userRepository.findById(apiRequestNotification.getReceiver().getId()).orElseThrow(
+            notification.setMessage(notificationDTO.getMessage());
+            notification.setReceiver(userRepository.findById(notificationDTO.getReceiver().getId()).orElseThrow(
                     () -> new NotFoundException("User not found !")
             ));
             notification.setCreatedAt(LocalDateTime.now());
             notification.setStatus(NotificationStatus.UNREAD);
-            notification.setType(apiRequestNotification.getType());
-            notification.setRelatedId(apiRequestNotification.getRelatedId()); // Clone object
+            notification.setType(notificationDTO.getType());
+            notification.setRelatedId(notificationDTO.getRelatedId()); // Clone object
             notificationRepository.save(notification);
 
             // Gửi WebSocket cho từng user

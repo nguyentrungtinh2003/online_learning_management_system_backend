@@ -5,10 +5,9 @@ import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.PaymentTransactionStatus;
 import com.TrungTinhBackend.codearena_backend.Repository.PaymentTransactionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestPaymentTransaction;
-import com.TrungTinhBackend.codearena_backend.Request.PayPalPaymentDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.PaymentTransactionDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.PayPalPaymentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
-import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal.PaypalService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -43,7 +42,7 @@ public class PaypalServiceImpl implements PaypalService {
 
 
     @Override
-    public APIResponse createPayment(APIRequestPaymentTransaction request) throws Exception {
+    public APIResponse createPayment(PaymentTransactionDTO request) throws Exception {
         Amount amount = new Amount();
         amount.setCurrency("USD");
         amount.setTotal(String.format("%.2f",request.getAmount()));

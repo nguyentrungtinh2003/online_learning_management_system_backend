@@ -1,18 +1,15 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
-public class APIRequestAdminRegisterUser {
+public class UserUpdateDTO {
 
     @NotBlank(message = "Username is required !")
     @Size(min = 1, max = 255, message = "Username must be between 1 and 255 characters!")
@@ -26,7 +23,7 @@ public class APIRequestAdminRegisterUser {
     )
     private String password;
 
-    @NotBlank(message = "Email is required!")
+    @NotBlank(message = "Email is required !")
     @Email(message = "Invalid email format!")
     @Pattern(
             regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
@@ -56,7 +53,19 @@ public class APIRequestAdminRegisterUser {
     @Size(min = 4, max = 255, message = "Address must be between 4 and 255 characters!")
     private String address;
 
-    @NotNull(message = "Role is required !")
-    @Enumerated(EnumType.STRING)
+    private Long point;
+
+    @NotNull(message = "Price is required!")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0!")
+    @DecimalMax(value = "1000000000", message = "Price must be less than 1 billion!")
+    @Digits(integer = 10, fraction = 2, message = "Price must be a valid number with up to 2 decimal places!")
+    private Double coin;
+
+    private RankEnum rankEnum;
+
     private RoleEnum roleEnum;
+
+    private StatusUserEnum statusUserEnum;
+
+    private boolean enabled;
 }

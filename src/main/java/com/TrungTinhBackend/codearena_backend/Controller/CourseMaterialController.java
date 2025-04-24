@@ -1,7 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourseMaterial;
+import com.TrungTinhBackend.codearena_backend.DTO.CourseMaterialDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.CourseMaterial.CourseMaterialService;
 import jakarta.validation.Valid;
@@ -20,9 +19,9 @@ public class CourseMaterialController {
     private CourseMaterialService courseMaterialService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addCourseMaterial(@Valid @RequestPart(value = "course-material") APIRequestCourseMaterial apiRequestCourseMaterial,
+    public ResponseEntity<APIResponse> addCourseMaterial(@Valid @RequestPart(value = "course-material") CourseMaterialDTO courseMaterialDTO,
                                                  @RequestPart(value = "file",required = false) MultipartFile file) throws IOException {
-        return ResponseEntity.ok(courseMaterialService.addCourseMaterial(apiRequestCourseMaterial, file));
+        return ResponseEntity.ok(courseMaterialService.addCourseMaterial(courseMaterialDTO, file));
     }
 
     @GetMapping("/all")
@@ -49,9 +48,9 @@ public class CourseMaterialController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<APIResponse> updateCourseMaterial(@PathVariable Long id, @Valid @RequestPart(value = "course-material") APIRequestCourseMaterial apiRequestCourseMaterial,
+    public ResponseEntity<APIResponse> updateCourseMaterial(@PathVariable Long id, @Valid @RequestPart(value = "course-material") CourseMaterialDTO courseMaterialDTO,
                                                          @RequestPart(value = "file",required = false) MultipartFile file) throws IOException {
-        return ResponseEntity.ok(courseMaterialService.updateCourseMaterial(id,apiRequestCourseMaterial, file));
+        return ResponseEntity.ok(courseMaterialService.updateCourseMaterial(id,courseMaterialDTO, file));
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,4 +1,4 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -7,10 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class APIRequestBlogComment {
+public class BlogCommentDTO {
 
     @NotBlank(message = "Content is required !")
     @Size(min = 0, max = 255, message = "Content must be between 0 and 255 characters!")

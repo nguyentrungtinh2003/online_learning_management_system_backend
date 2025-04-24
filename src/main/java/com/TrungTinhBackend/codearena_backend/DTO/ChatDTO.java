@@ -1,26 +1,22 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
-import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
-import jakarta.persistence.*;
+import com.TrungTinhBackend.codearena_backend.Entity.ChatRoom;
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Data
-public class APIRequestLesson {
+public class ChatDTO {
 
-    @NotBlank(message = "Lesson name is required !")
-    @Size(min = 2, max = 255, message = "Lesson name must be between 2 and 255 characters!")
-    private String lessonName;
+    private ChatRoom chatRoom;
 
-    @NotBlank(message = "Description is required !")
-    @Size(min = 2, max = 255, message = "Description must be between 2 and 255 characters!")
-    private String description;
+    private User sender;
+
+    @NotBlank(message = "Message is required !")
+    @Size(min = 0, max = 255, message = "Message must be between 0 and 255 characters!")
+    private String message;
 
     @NotBlank(message = "Image URL is required!")
     @Pattern(
@@ -36,7 +32,4 @@ public class APIRequestLesson {
     )
     private String videoURL;
 
-    private Course course;
-
-    private List<Quiz> quizzes;
 }

@@ -2,13 +2,12 @@ package com.TrungTinhBackend.codearena_backend.Service.Chat;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Chat;
 import com.TrungTinhBackend.codearena_backend.Entity.ChatRoom;
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.ChatRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestChat;
+import com.TrungTinhBackend.codearena_backend.DTO.ChatDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,15 +53,15 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
-    public APIResponse addChat(APIRequestChat apiRequestChat, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse addChat(ChatDTO chatDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findById(apiRequestChat.getSender().getId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + apiRequestChat.getSender().getId())
+            User user = userRepository.findById(chatDTO.getSender().getId()).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + chatDTO.getSender().getId())
             );
 
-            ChatRoom chatRoom = chatRoomRepository.findById(apiRequestChat.getChatRoom().getId()).orElseThrow(
-                    () -> new NotFoundException("Chat Room not found by id " + apiRequestChat.getChatRoom().getId())
+            ChatRoom chatRoom = chatRoomRepository.findById(chatDTO.getChatRoom().getId()).orElseThrow(
+                    () -> new NotFoundException("Chat Room not found by id " + chatDTO.getChatRoom().getId())
             );
 
             Chat chat = new Chat();
@@ -76,7 +74,7 @@ public class ChatServiceImpl implements ChatService{
             if(video != null && !video.isEmpty()) {
                 chat.setVideoURL(videoService.uploadVideo(video));
             }
-            chat.setMessage(apiRequestChat.getMessage());
+            chat.setMessage(chatDTO.getMessage());
             chat.setDeleted(false);
             chat.setTimestamp(LocalDateTime.now());
 

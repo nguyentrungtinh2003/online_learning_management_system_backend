@@ -1,10 +1,8 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.Entity.RefreshToken;
-import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
-import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestRefreshToken;
+import com.TrungTinhBackend.codearena_backend.DTO.RefreshTokenDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
@@ -28,10 +26,10 @@ public class RefreshTokenController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/refresh")
-    public APIResponse refreshToken(@Valid @RequestBody APIRequestRefreshToken apiRequestRefreshToken) {
-        String refreshToken1 = apiRequestRefreshToken.getToken();
+    public APIResponse refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
+        String refreshToken1 = refreshTokenDTO.getToken();
 
-        RefreshToken refreshToken2 = refreshTokenService.findByToken(apiRequestRefreshToken.getToken()).orElseThrow(
+        RefreshToken refreshToken2 = refreshTokenService.findByToken(refreshTokenDTO.getToken()).orElseThrow(
                 () -> new NotFoundException("Refresh token not found !")
         );
 

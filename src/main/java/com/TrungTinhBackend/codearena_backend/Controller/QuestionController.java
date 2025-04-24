@@ -1,8 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuestion;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuiz;
+import com.TrungTinhBackend.codearena_backend.DTO.QuestionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Question.QuestionService;
 import jakarta.validation.Valid;
@@ -19,9 +17,9 @@ public class QuestionController {
     private QuestionService questionService;
 
     @PostMapping("teacher/questions/add")
-    public ResponseEntity<APIResponse> addQuestion(@Valid @RequestPart(value = "question") APIRequestQuestion apiRequestQuestion,
+    public ResponseEntity<APIResponse> addQuestion(@Valid @RequestPart(value = "question") QuestionDTO questionDTO,
                                                @RequestPart(value = "img") MultipartFile img) throws Exception {
-        return ResponseEntity.ok(questionService.addQuestion(apiRequestQuestion, img));
+        return ResponseEntity.ok(questionService.addQuestion(questionDTO, img));
     }
 
     @GetMapping("teacher/questions/all")
@@ -48,9 +46,9 @@ public class QuestionController {
     }
 
     @PutMapping("teacher/questions/update/{id}")
-    public ResponseEntity<APIResponse> updateQuestion(@PathVariable Long id,@Valid @RequestPart(value = "question") APIRequestQuestion apiRequestQuestion,
+    public ResponseEntity<APIResponse> updateQuestion(@PathVariable Long id,@Valid @RequestPart(value = "question") QuestionDTO questionDTO,
                                                     @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
-        return ResponseEntity.ok(questionService.updateQuestion(id,apiRequestQuestion, img));
+        return ResponseEntity.ok(questionService.updateQuestion(id,questionDTO, img));
     }
 
     @DeleteMapping("teacher/questions/delete/{id}")

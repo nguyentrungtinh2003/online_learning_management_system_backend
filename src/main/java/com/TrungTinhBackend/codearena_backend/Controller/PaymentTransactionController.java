@@ -1,6 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestPaymentTransaction;
+import com.TrungTinhBackend.codearena_backend.DTO.PaymentTransactionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal.PaypalService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.VNPay.VNPayService;
@@ -23,12 +23,12 @@ public class PaymentTransactionController {
     private VNPayService vnPayService;
 
     @PostMapping("/create")
-    public ResponseEntity<APIResponse> createPayment(HttpServletRequest request,@Valid @RequestBody APIRequestPaymentTransaction apiRequestPaymentTransaction) throws Exception {
-        if("PayPal".equalsIgnoreCase(apiRequestPaymentTransaction.getMethod())) {
-            return ResponseEntity.ok(paypalService.createPayment(apiRequestPaymentTransaction));
+    public ResponseEntity<APIResponse> createPayment(HttpServletRequest request,@Valid @RequestBody PaymentTransactionDTO paymentTransactionDTO) throws Exception {
+        if("PayPal".equalsIgnoreCase(paymentTransactionDTO.getMethod())) {
+            return ResponseEntity.ok(paypalService.createPayment(paymentTransactionDTO));
         }
-        if("VNPay".equalsIgnoreCase(apiRequestPaymentTransaction.getMethod())) {
-            return ResponseEntity.ok(vnPayService.createPayment( request,apiRequestPaymentTransaction));
+        if("VNPay".equalsIgnoreCase(paymentTransactionDTO.getMethod())) {
+            return ResponseEntity.ok(vnPayService.createPayment( request,paymentTransactionDTO));
         }
         return ResponseEntity.internalServerError().body(new APIResponse(500L,"Phương thức thanh toán không hợp lệ",null,LocalDateTime.now()));
     }

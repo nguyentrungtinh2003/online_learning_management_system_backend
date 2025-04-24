@@ -6,13 +6,12 @@ import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestSearchAllResult;
+import com.TrungTinhBackend.codearena_backend.DTO.SearchAllResultDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +48,7 @@ public class SearchAllServiceImpl implements SearchAllService{
         List<Course> courses = courseRepository.findAll(courseSpecification);
         List<Blog> blogs = blogRepository.findAll(blogSpecification);
 
-        APIRequestSearchAllResult apiRequestSearchAllResult = new APIRequestSearchAllResult();
+        SearchAllResultDTO apiRequestSearchAllResult = new SearchAllResultDTO();
         apiRequestSearchAllResult.setUsers(users);
         apiRequestSearchAllResult.setCourses(courses);
         apiRequestSearchAllResult.setBlogs(blogs);

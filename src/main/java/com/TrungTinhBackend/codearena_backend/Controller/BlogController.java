@@ -1,6 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestBlog;
+import com.TrungTinhBackend.codearena_backend.DTO.BlogDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Blog.BlogService;
 import jakarta.validation.Valid;
@@ -17,10 +17,10 @@ public class BlogController {
     private BlogService blogService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addBlog(@Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
+    public ResponseEntity<APIResponse> addBlog(@Valid @RequestPart(value = "blog") BlogDTO blogDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(blogService.addBlog(apiRequestBlog, img, video));
+        return ResponseEntity.ok(blogService.addBlog(blogDTO, img, video));
     }
 
     @GetMapping("/all")
@@ -69,10 +69,10 @@ public class BlogController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") APIRequestBlog apiRequestBlog,
+    public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") BlogDTO blogDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(blogService.updateBlog(id, apiRequestBlog, img, video));
+        return ResponseEntity.ok(blogService.updateBlog(id, blogDTO, img, video));
     }
 
     @DeleteMapping("/delete/{id}")

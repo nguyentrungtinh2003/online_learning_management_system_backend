@@ -1,15 +1,11 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class APIRequestLessonComment {
+public class LessonCommentDTO {
 
     private String content;
 

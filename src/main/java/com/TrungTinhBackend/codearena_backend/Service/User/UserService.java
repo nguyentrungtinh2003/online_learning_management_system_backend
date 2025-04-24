@@ -1,22 +1,21 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
-import com.TrungTinhBackend.codearena_backend.Request.*;
+import com.TrungTinhBackend.codearena_backend.DTO.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    public APIResponse login(APIRequestUserLogin apiRequestUserLogin,
+    public APIResponse login(UserLoginDTO userLoginDTO,
                              HttpServletResponse response) throws Exception;
 
-    public APIResponse userRegister(APIRequestUserRegister apiRequestUserRegister) throws Exception;
+    public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception;
 
-    public APIResponse adminRegisterUser(APIRequestAdminRegisterUser apiRequestAdminRegisterUser, MultipartFile img) throws Exception;
+    public APIResponse adminRegisterUser(AdminRegisterUserDTO adminRegisterUserDTO, MultipartFile img) throws Exception;
 
-    public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) throws Exception;
+    public APIResponse updateUser(Long id, UserUpdateDTO userUpdateDTO, MultipartFile img) throws Exception;
 
     public APIResponse deleteUser(Long id) throws Exception;
 
@@ -35,7 +34,7 @@ public interface UserService {
 
     public APIResponse sendOtpToEmail(String email) throws Exception;
 
-    public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception;
+    public APIResponse verifyOtpAndChangePassword(UserResetPasswordDTO userResetPasswordDTO) throws Exception;
 
     public APIResponse logout(String username);
 }

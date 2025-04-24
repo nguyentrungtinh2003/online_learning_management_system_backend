@@ -1,7 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestLesson;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestLessonComment;
+import com.TrungTinhBackend.codearena_backend.DTO.LessonCommentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.LessonComment.LessonCommentService;
 import jakarta.validation.Valid;
@@ -18,10 +17,10 @@ public class LessonCommentController {
     private LessonCommentService lessonCommentService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") APIRequestLessonComment apiRequestLessonComment,
+    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") LessonCommentDTO lessonCommentDTO,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(lessonCommentService.addLessonComment(apiRequestLessonComment, img, video));
+        return ResponseEntity.ok(lessonCommentService.addLessonComment(lessonCommentDTO, img, video));
     }
 
     @GetMapping("/all")

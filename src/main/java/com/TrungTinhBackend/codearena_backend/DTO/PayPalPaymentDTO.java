@@ -1,4 +1,4 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import lombok.Data;
 

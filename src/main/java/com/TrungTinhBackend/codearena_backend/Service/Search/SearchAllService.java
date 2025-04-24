@@ -1,6 +1,5 @@
 package com.TrungTinhBackend.codearena_backend.Service.Search;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestSearchAllResult;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 
 public interface SearchAllService {

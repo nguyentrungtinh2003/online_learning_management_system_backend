@@ -1,8 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestLesson;
+import com.TrungTinhBackend.codearena_backend.DTO.LessonDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Lesson.LessonService;
 import jakarta.validation.Valid;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("api/")
@@ -24,10 +21,10 @@ public class LessonController {
     private LessonRepository lessonRepository;
 
     @PostMapping("teacher/lessons/add")
-    public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
+    public ResponseEntity<APIResponse> addLesson(@Valid @RequestPart(value = "lesson") LessonDTO lessonDTO,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(lessonService.addLesson(apiRequestLesson, img, video));
+        return ResponseEntity.ok(lessonService.addLesson(lessonDTO, img, video));
     }
 
     @GetMapping("teacher/lessons/all")
@@ -60,10 +57,10 @@ public class LessonController {
     }
 
     @PutMapping("teacher/lessons/update/{id}")
-    public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") APIRequestLesson apiRequestLesson,
+    public ResponseEntity<APIResponse> updateLesson(@PathVariable Long id, @Valid @RequestPart(value = "lesson") LessonDTO lessonDTO,
                                                  @RequestPart(value = "img",required = false) MultipartFile img,
                                                  @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(lessonService.updateLesson(id,apiRequestLesson, img, video));
+        return ResponseEntity.ok(lessonService.updateLesson(id,lessonDTO, img, video));
     }
 
     @DeleteMapping("teacher/lessons/delete/{id}")

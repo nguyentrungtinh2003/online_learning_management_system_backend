@@ -1,6 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.*;
+import com.TrungTinhBackend.codearena_backend.DTO.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,19 +22,19 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("register")
-    public ResponseEntity<APIResponse> userRegister(@Valid @RequestBody APIRequestUserRegister apiRequestUserRegister) throws Exception {
-        return ResponseEntity.ok(userService.userRegister(apiRequestUserRegister));
+    public ResponseEntity<APIResponse> userRegister(@Valid @RequestBody UserRegisterDTO userRegisterDTO) throws Exception {
+        return ResponseEntity.ok(userService.userRegister(userRegisterDTO));
     }
 
     @PostMapping("admin/register/user")
-    public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart(value = "user") APIRequestAdminRegisterUser apiRequestAdminRegisterUser,
+    public ResponseEntity<APIResponse> adminRegisterUser(@Valid @RequestPart(value = "user") AdminRegisterUserDTO adminRegisterUserDTO,
                                                          @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
-        return ResponseEntity.ok(userService.adminRegisterUser(apiRequestAdminRegisterUser,img));
+        return ResponseEntity.ok(userService.adminRegisterUser(adminRegisterUserDTO,img));
     }
 
     @PostMapping("login")
-    public ResponseEntity<APIResponse> login(@Valid @RequestBody APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
-        return ResponseEntity.ok(userService.login(apiRequestUserLogin,response));
+    public ResponseEntity<APIResponse> login(@Valid @RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response) throws Exception {
+        return ResponseEntity.ok(userService.login(userLoginDTO,response));
     }
     //--google ----
     @GetMapping("user-google")
@@ -76,8 +76,8 @@ public class UserController {
     }
 
     @PutMapping("user/update/{id}")
-    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id,@Valid @RequestPart(value = "user") APIRequestUserUpdate apiRequestUserUpdate,@RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
-        return ResponseEntity.ok(userService.updateUser(id,apiRequestUserUpdate,img));
+    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id, @Valid @RequestPart(value = "user") UserUpdateDTO userUpdateDTO, @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
+        return ResponseEntity.ok(userService.updateUser(id,userUpdateDTO,img));
     }
 
     @DeleteMapping("admin/user/delete/{id}")
@@ -99,7 +99,7 @@ public class UserController {
 
     // API xác nhận OTP và thay đổi mật khẩu
     @PostMapping("reset-password")
-    public ResponseEntity<APIResponse> resetPassword(@RequestBody APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception {
-        return ResponseEntity.ok(userService.verifyOtpAndChangePassword(apiRequestUserResetPassword));
+    public ResponseEntity<APIResponse> resetPassword(@RequestBody UserResetPasswordDTO userResetPasswordDTO) throws Exception {
+        return ResponseEntity.ok(userService.verifyOtpAndChangePassword(userResetPasswordDTO));
     }
 }

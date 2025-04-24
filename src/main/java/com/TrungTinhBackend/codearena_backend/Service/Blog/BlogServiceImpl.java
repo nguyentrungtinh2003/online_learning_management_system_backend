@@ -1,12 +1,11 @@
 package com.TrungTinhBackend.codearena_backend.Service.Blog;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.BlogRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestBlog;
+import com.TrungTinhBackend.codearena_backend.DTO.BlogDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
@@ -17,14 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,16 +46,16 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse addBlog(APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse addBlog(BlogDTO blogDTO, MultipartFile img, MultipartFile video) throws Exception {
        APIResponse apiResponse = new APIResponse();
 
-       User user = userRepository.findById(apiRequestBlog.getUser().getId()).orElseThrow(
+       User user = userRepository.findById(blogDTO.getUser().getId()).orElseThrow(
                () -> new NotFoundException("User not found !")
        );
             Blog blog = new Blog();
 
-            blog.setBlogName(apiRequestBlog.getBlogName());
-            blog.setDescription(apiRequestBlog.getDescription());
+            blog.setBlogName(blogDTO.getBlogName());
+            blog.setDescription(blogDTO.getDescription());
             if(img != null && !img.isEmpty()) {
                 blog.setImg(imgService.uploadImg(img));
             }
@@ -84,15 +80,15 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse updateBlog(Long id, APIRequestBlog apiRequestBlog, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse updateBlog(Long id, BlogDTO blogDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
             Blog blog = blogRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Blog not found by id " + id)
             );
 
-            blog.setBlogName(apiRequestBlog.getBlogName());
-            blog.setDescription(apiRequestBlog.getDescription());
+            blog.setBlogName(blogDTO.getBlogName());
+            blog.setDescription(blogDTO.getDescription());
             if(img != null && !img.isEmpty()) {
                 blog.setImg(imgService.updateImg(blog.getImg(),img));
             }

@@ -1,4 +1,4 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class APIRequestSearchAllResult {
+public class SearchAllResultDTO {
 
     private List<Course> courses;
 

@@ -1,7 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourse;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuiz;
+import com.TrungTinhBackend.codearena_backend.DTO.QuizDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Quiz.QuizService;
 import jakarta.validation.Valid;
@@ -18,9 +17,9 @@ public class QuizController {
     private QuizService quizService;
 
     @PostMapping("teacher/quizzes/add")
-    public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
+    public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") QuizDTO quizDTO,
                                                  @RequestPart(value = "img") MultipartFile img) throws Exception {
-        return ResponseEntity.ok(quizService.addQuiz(apiRequestQuiz, img));
+        return ResponseEntity.ok(quizService.addQuiz(quizDTO, img));
     }
 
     @GetMapping("teacher/quizzes/all")
@@ -47,9 +46,9 @@ public class QuizController {
     }
 
     @PutMapping("teacher/quizzes/update/{id}")
-    public ResponseEntity<APIResponse> updateQuiz(@PathVariable Long id, @Valid @RequestPart(value = "quiz") APIRequestQuiz apiRequestQuiz,
+    public ResponseEntity<APIResponse> updateQuiz(@PathVariable Long id, @Valid @RequestPart(value = "quiz") QuizDTO quizDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
-        return ResponseEntity.ok(quizService.updateQuiz(id, apiRequestQuiz, img));
+        return ResponseEntity.ok(quizService.updateQuiz(id, quizDTO, img));
     }
 
     @DeleteMapping("teacher/quizzes/delete/{id}")

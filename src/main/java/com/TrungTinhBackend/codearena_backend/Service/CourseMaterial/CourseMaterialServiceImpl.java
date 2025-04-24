@@ -1,16 +1,14 @@
 package com.TrungTinhBackend.codearena_backend.Service.CourseMaterial;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.CourseMaterial;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseMaterialRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestCourseMaterial;
+import com.TrungTinhBackend.codearena_backend.DTO.CourseMaterialDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.File.FileService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseMaterialSpecification;
-import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,23 +44,23 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
     }
 
     @Override
-    public APIResponse addCourseMaterial(APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) throws IOException {
+    public APIResponse addCourseMaterial(CourseMaterialDTO courseMaterialDTO, MultipartFile file) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
         CourseMaterial courseMaterial = new CourseMaterial();
-        courseMaterial.setTitle(apiRequestCourseMaterial.getTitle());
-        courseMaterial.setDescription(apiRequestCourseMaterial.getDescription());
+        courseMaterial.setTitle(courseMaterialDTO.getTitle());
+        courseMaterial.setDescription(courseMaterialDTO.getDescription());
         courseMaterial.setDeleted(false);
         courseMaterial.setUploadDate(LocalDateTime.now());
         if(file != null || file.isEmpty()) {
             courseMaterial.setFile(fileService.uploadFile(file));
         }
 
-        courseMaterial.setCourse(courseRepository.findById(apiRequestCourseMaterial.getCourse().getId()).orElseThrow(
+        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourse().getId()).orElseThrow(
                 () -> new NotFoundException("Course not found !")
         ));
 
-        courseMaterial.setLecturer(userRepository.findById(apiRequestCourseMaterial.getLecturer().getId()).orElseThrow(
+        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturer().getId()).orElseThrow(
                 () -> new NotFoundException("Lecturer not found !")
         ));
 
@@ -103,25 +101,25 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
     }
 
     @Override
-    public APIResponse updateCourseMaterial(Long id, APIRequestCourseMaterial apiRequestCourseMaterial, MultipartFile file) throws IOException {
+    public APIResponse updateCourseMaterial(Long id, CourseMaterialDTO courseMaterialDTO, MultipartFile file) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
         CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Course material not found !")
         );
-        courseMaterial.setTitle(apiRequestCourseMaterial.getTitle());
-        courseMaterial.setDescription(apiRequestCourseMaterial.getDescription());
+        courseMaterial.setTitle(courseMaterialDTO.getTitle());
+        courseMaterial.setDescription(courseMaterialDTO.getDescription());
         courseMaterial.setDeleted(false);
         courseMaterial.setUploadDate(LocalDateTime.now());
         if(file != null || file.isEmpty()) {
             courseMaterial.setFile(fileService.uploadFile(file));
         }
 
-        courseMaterial.setCourse(courseRepository.findById(apiRequestCourseMaterial.getCourse().getId()).orElseThrow(
+        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourse().getId()).orElseThrow(
                 () -> new NotFoundException("Course not found !")
         ));
 
-        courseMaterial.setLecturer(userRepository.findById(apiRequestCourseMaterial.getLecturer().getId()).orElseThrow(
+        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturer().getId()).orElseThrow(
                 () -> new NotFoundException("Lecturer not found !")
         ));
 

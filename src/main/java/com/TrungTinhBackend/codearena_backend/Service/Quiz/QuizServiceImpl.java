@@ -1,6 +1,5 @@
 package com.TrungTinhBackend.codearena_backend.Service.Quiz;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
@@ -8,7 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuestionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuiz;
+import com.TrungTinhBackend.codearena_backend.DTO.QuizDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,19 +46,19 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public APIResponse addQuiz(APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception {
+    public APIResponse addQuiz(QuizDTO quizDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Lesson lesson = lessonRepository.findById(apiRequestQuiz.getLesson().getId()).orElseThrow(
-                    () -> new NotFoundException("Lesson not found by id " + apiRequestQuiz.getLesson().getId())
+            Lesson lesson = lessonRepository.findById(quizDTO.getLesson().getId()).orElseThrow(
+                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLesson().getId())
             );
 
             Quiz quiz = new Quiz();
 
-            quiz.setQuizName(apiRequestQuiz.getQuizName());
-            quiz.setDescription(apiRequestQuiz.getDescription());
-            quiz.setPrice(apiRequestQuiz.getPrice());
-            quiz.setQuizEnum(apiRequestQuiz.getQuizEnum());
+            quiz.setQuizName(quizDTO.getQuizName());
+            quiz.setDescription(quizDTO.getDescription());
+            quiz.setPrice(quizDTO.getPrice());
+            quiz.setQuizEnum(quizDTO.getQuizEnum());
             quiz.setDeleted(false);
             quiz.setDate(LocalDateTime.now());
 
@@ -81,27 +79,27 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public APIResponse updateQuiz(Long id, APIRequestQuiz apiRequestQuiz, MultipartFile img) throws Exception {
+    public APIResponse updateQuiz(Long id, QuizDTO quizDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Lesson lesson = lessonRepository.findById(apiRequestQuiz.getLesson().getId()).orElseThrow(
-                    () -> new NotFoundException("Lesson not found by id " + apiRequestQuiz.getLesson().getId())
+            Lesson lesson = lessonRepository.findById(quizDTO.getLesson().getId()).orElseThrow(
+                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLesson().getId())
             );
 
             Quiz quiz = quizRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Quiz not found by id " + id)
             );
-            if(apiRequestQuiz.getQuizName() != null && !apiRequestQuiz.getQuizName().isEmpty()) {
-                quiz.setQuizName(apiRequestQuiz.getQuizName());
+            if(quizDTO.getQuizName() != null && !quizDTO.getQuizName().isEmpty()) {
+                quiz.setQuizName(quizDTO.getQuizName());
             }
-            if(apiRequestQuiz.getDescription() != null && !apiRequestQuiz.getDescription().isEmpty()) {
-                quiz.setDescription(apiRequestQuiz.getDescription());
+            if(quizDTO.getDescription() != null && !quizDTO.getDescription().isEmpty()) {
+                quiz.setDescription(quizDTO.getDescription());
             }
-            if(apiRequestQuiz.getPrice() != null && !apiRequestQuiz.getPrice().isInfinite()) {
-                quiz.setPrice(apiRequestQuiz.getPrice());
+            if(quizDTO.getPrice() != null && !quizDTO.getPrice().isInfinite()) {
+                quiz.setPrice(quizDTO.getPrice());
             }
-            if(apiRequestQuiz.getQuizEnum() != null ) {
-                quiz.setQuizEnum(apiRequestQuiz.getQuizEnum());
+            if(quizDTO.getQuizEnum() != null ) {
+                quiz.setQuizEnum(quizDTO.getQuizEnum());
             }
             if(img != null) {
                 quiz.setImg(imgService.updateImg(quiz.getImg(),img));
@@ -109,12 +107,12 @@ public class QuizServiceImpl implements QuizService{
             if(lesson != null) {
                 quiz.setLesson(lesson);
             }
-            if (apiRequestQuiz.getQuestions() != null && !apiRequestQuiz.getQuestions().isEmpty()) {
+            if (quizDTO.getQuestions() != null && !quizDTO.getQuestions().isEmpty()) {
                 List<Question> questionList = questionRepository.findAllById(
-                        apiRequestQuiz.getQuestions().stream().map(Question::getId).toList()
+                        quizDTO.getQuestions().stream().map(Question::getId).toList()
                 );
 
-                if (questionList.size() != apiRequestQuiz.getQuestions().size()) {
+                if (questionList.size() != quizDTO.getQuestions().size()) {
                     throw new NotFoundException("One or more questions not found !");
                 }
 

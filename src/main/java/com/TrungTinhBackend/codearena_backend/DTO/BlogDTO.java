@@ -1,19 +1,12 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Entity.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
 @Data
-public class APIRequestBlog {
+public class BlogDTO {
 
     @NotBlank(message = "Blog name is required !")
     @Size(min = 2, max = 255, message = "Blog name must be between 2 and 255 characters!")

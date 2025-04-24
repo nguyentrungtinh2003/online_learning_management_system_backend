@@ -6,7 +6,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestLesson;
+import com.TrungTinhBackend.codearena_backend.DTO.LessonDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.LessonSpecification;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,23 +54,23 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
-    public APIResponse addLesson(APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse addLesson(LessonDTO lessonDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Course course = courseRepository.findById(apiRequestLesson.getCourse().getId()).orElseThrow(
-                    () -> new NotFoundException("Course not found by id " + apiRequestLesson.getCourse().getId())
+            Course course = courseRepository.findById(lessonDTO.getCourse().getId()).orElseThrow(
+                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourse().getId())
             );
 
             ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setChatRoomName("Phòng chat " + apiRequestLesson.getLessonName());
+            chatRoom.setChatRoomName("Phòng chat " + lessonDTO.getLessonName());
             chatRoom.setDeleted(false);
 
             chatRoomRepository.save(chatRoom);
 
             Lesson lesson = new Lesson();
 
-            lesson.setLessonName(apiRequestLesson.getLessonName());
-            lesson.setDescription(apiRequestLesson.getDescription());
+            lesson.setLessonName(lessonDTO.getLessonName());
+            lesson.setDescription(lessonDTO.getDescription());
             lesson.setDate(LocalDateTime.now());
             lesson.setImg(imgService.uploadImg(img));
             lesson.setVideoURL(videoService.uploadVideo(video));
@@ -121,22 +120,22 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
-    public APIResponse updateLesson(Long id, APIRequestLesson apiRequestLesson, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse updateLesson(Long id, LessonDTO lessonDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Course course = courseRepository.findById(apiRequestLesson.getCourse().getId()).orElseThrow(
-                    () -> new NotFoundException("Course not found by id " + apiRequestLesson.getCourse().getId())
+            Course course = courseRepository.findById(lessonDTO.getCourse().getId()).orElseThrow(
+                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourse().getId())
             );
 
             Lesson lesson = lessonRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Lesson not found by id " + id)
             );
 
-            if(apiRequestLesson.getLessonName() != null && !apiRequestLesson.getLessonName().isEmpty()) {
-                lesson.setLessonName(apiRequestLesson.getLessonName());
+            if(lessonDTO.getLessonName() != null && !lessonDTO.getLessonName().isEmpty()) {
+                lesson.setLessonName(lessonDTO.getLessonName());
             }
-            if(apiRequestLesson.getDescription() != null && !apiRequestLesson.getDescription().isEmpty()) {
-                lesson.setDescription(apiRequestLesson.getDescription());
+            if(lessonDTO.getDescription() != null && !lessonDTO.getDescription().isEmpty()) {
+                lesson.setDescription(lessonDTO.getDescription());
             }
             if(img != null && !img.isEmpty()) {
                 lesson.setImg(imgService.updateImg(lesson.getImg(),img));
@@ -144,15 +143,15 @@ public class LessonServiceImpl implements LessonService{
             if(video != null && !video.isEmpty()) {
                 lesson.setVideoURL(videoService.updateVideo(lesson.getVideoURL(),video));
             }
-            if(apiRequestLesson.getCourse() != null) {
+            if(lessonDTO.getCourse() != null) {
                 lesson.setCourse(course);
             }
-            if (apiRequestLesson.getQuizzes() != null && !apiRequestLesson.getQuizzes().isEmpty()) {
+            if (lessonDTO.getQuizzes() != null && !lessonDTO.getQuizzes().isEmpty()) {
                 List<Quiz> quizList = quizRepository.findAllById(
-                        apiRequestLesson.getQuizzes().stream().map(Quiz::getId).toList()
+                        lessonDTO.getQuizzes().stream().map(Quiz::getId).toList()
                 );
 
-                if (quizList.size() != apiRequestLesson.getQuizzes().size()) {
+                if (quizList.size() != lessonDTO.getQuizzes().size()) {
                     throw new NotFoundException("One or more quizzes not found !");
                 }
 

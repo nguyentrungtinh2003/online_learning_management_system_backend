@@ -8,16 +8,13 @@ import com.TrungTinhBackend.codearena_backend.Enum.StatusUserEnum;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.RefreshTokenRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.*;
+import com.TrungTinhBackend.codearena_backend.DTO.*;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,14 +81,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse login(APIRequestUserLogin apiRequestUserLogin, HttpServletResponse response) throws Exception {
+    public APIResponse login(UserLoginDTO userLoginDTO, HttpServletResponse response) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(apiRequestUserLogin.getUsername(), apiRequestUserLogin.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword()));
 
-            var user = userRepository.findByUsername(apiRequestUserLogin.getUsername());
+            var user = userRepository.findByUsername(userLoginDTO.getUsername());
             if (user == null) {
-                throw new NotFoundException("User not found by username " + apiRequestUserLogin.getUsername());
+                throw new NotFoundException("User not found by username " + userLoginDTO.getUsername());
             }
 
             var jwt = jwtUtils.generateToken(user);
@@ -120,17 +117,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse userRegister(APIRequestUserRegister apiRequestUserRegister) throws Exception {
+    public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findByEmail(apiRequestUserRegister.getEmail());
+            User user = userRepository.findByEmail(userRegisterDTO.getEmail());
             if(user != null) {
                 throw new RuntimeException("Email already exists !");
             }
             User user1 = new User();
-            user1.setUsername(apiRequestUserRegister.getUsername());
-            user1.setPassword(passwordEncoder.encode(apiRequestUserRegister.getPassword()));
-            user1.setEmail(apiRequestUserRegister.getEmail());
+            user1.setUsername(userRegisterDTO.getUsername());
+            user1.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
+            user1.setEmail(userRegisterDTO.getEmail());
             user1.setEnabled(true);
             user1.setCoin(0.0);
             user1.setPoint(10L);
@@ -158,10 +155,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse adminRegisterUser(APIRequestAdminRegisterUser apiRequestAdminRegisterUser, MultipartFile img) throws Exception {
+    public APIResponse adminRegisterUser(AdminRegisterUserDTO adminRegisterUserDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findByEmail(apiRequestAdminRegisterUser.getEmail());
+            User user = userRepository.findByEmail(adminRegisterUserDTO.getEmail());
             if(user != null) {
                 throw new RuntimeException("Email already exists !");
             }
@@ -172,17 +169,17 @@ public class UserServiceImpl implements UserService{
                 user1.setImg(imgUrl); // Lưu URL của ảnh
             }
 
-            user1.setUsername(apiRequestAdminRegisterUser.getUsername());
-            user1.setPassword(passwordEncoder.encode(apiRequestAdminRegisterUser.getPassword()));
-            user1.setEmail(apiRequestAdminRegisterUser.getEmail());
+            user1.setUsername(adminRegisterUserDTO.getUsername());
+            user1.setPassword(passwordEncoder.encode(adminRegisterUserDTO.getPassword()));
+            user1.setEmail(adminRegisterUserDTO.getEmail());
             user1.setCoin(0.0);
             user1.setDate(LocalDateTime.now());
-            user1.setAddress(apiRequestAdminRegisterUser.getAddress());
-            user1.setBirthDay(apiRequestAdminRegisterUser.getBirthDay());
+            user1.setAddress(adminRegisterUserDTO.getAddress());
+            user1.setBirthDay(adminRegisterUserDTO.getBirthDay());
             user1.setPoint(10L);
-            user1.setPhoneNumber(apiRequestAdminRegisterUser.getPhoneNumber());
+            user1.setPhoneNumber(adminRegisterUserDTO.getPhoneNumber());
             user1.setRankEnum(RankEnum.BRONZE);
-            user1.setRoleEnum(apiRequestAdminRegisterUser.getRoleEnum());
+            user1.setRoleEnum(adminRegisterUserDTO.getRoleEnum());
             user1.setStatusUserEnum(StatusUserEnum.ACTIVE);
             user1.setEnabled(true);
 
@@ -196,7 +193,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse updateUser(Long id,APIRequestUserUpdate apiRequestUserUpdate, MultipartFile img) throws Exception {
+    public APIResponse updateUser(Long id, UserUpdateDTO userUpdateDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
             User user = userRepository.findById(id).orElse(null);
@@ -209,52 +206,52 @@ public class UserServiceImpl implements UserService{
                     user.setImg(imgUrl);
             }
 
-            if (apiRequestUserUpdate.getUsername() != null && !apiRequestUserUpdate.getUsername().isEmpty()) {
-                user.setUsername(apiRequestUserUpdate.getUsername());
+            if (userUpdateDTO.getUsername() != null && !userUpdateDTO.getUsername().isEmpty()) {
+                user.setUsername(userUpdateDTO.getUsername());
             }
 
-            if (apiRequestUserUpdate.getPassword() != null && !apiRequestUserUpdate.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(apiRequestUserUpdate.getPassword()));
+            if (userUpdateDTO.getPassword() != null && !userUpdateDTO.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userUpdateDTO.getPassword()));
             }
 
-            if (apiRequestUserUpdate.getEmail() != null && !apiRequestUserUpdate.getEmail().isEmpty()) {
-                user.setEmail(apiRequestUserUpdate.getEmail());
+            if (userUpdateDTO.getEmail() != null && !userUpdateDTO.getEmail().isEmpty()) {
+                user.setEmail(userUpdateDTO.getEmail());
             }
 
-            if (apiRequestUserUpdate.getCoin() != null) {
-                user.setCoin(apiRequestUserUpdate.getCoin());
+            if (userUpdateDTO.getCoin() != null) {
+                user.setCoin(userUpdateDTO.getCoin());
             }
 
-            if (apiRequestUserUpdate.getAddress() != null && !apiRequestUserUpdate.getAddress().isEmpty()) {
-                user.setAddress(apiRequestUserUpdate.getAddress());
+            if (userUpdateDTO.getAddress() != null && !userUpdateDTO.getAddress().isEmpty()) {
+                user.setAddress(userUpdateDTO.getAddress());
             }
 
-            if (apiRequestUserUpdate.getBirthDay() != null) {
-                user.setBirthDay(apiRequestUserUpdate.getBirthDay());
+            if (userUpdateDTO.getBirthDay() != null) {
+                user.setBirthDay(userUpdateDTO.getBirthDay());
             }
 
-            if (apiRequestUserUpdate.getPoint() != null) {
-                user.setPoint(apiRequestUserUpdate.getPoint());
+            if (userUpdateDTO.getPoint() != null) {
+                user.setPoint(userUpdateDTO.getPoint());
             }
 
-            if (apiRequestUserUpdate.getPhoneNumber() != null && !apiRequestUserUpdate.getPhoneNumber().isEmpty()) {
-                user.setPhoneNumber(apiRequestUserUpdate.getPhoneNumber());
+            if (userUpdateDTO.getPhoneNumber() != null && !userUpdateDTO.getPhoneNumber().isEmpty()) {
+                user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
             }
 
-            if (apiRequestUserUpdate.getRankEnum() != null) {
-                user.setRankEnum(apiRequestUserUpdate.getRankEnum());
+            if (userUpdateDTO.getRankEnum() != null) {
+                user.setRankEnum(userUpdateDTO.getRankEnum());
             }
 
-            if (apiRequestUserUpdate.getRoleEnum() != null) {
-                user.setRoleEnum(apiRequestUserUpdate.getRoleEnum());
+            if (userUpdateDTO.getRoleEnum() != null) {
+                user.setRoleEnum(userUpdateDTO.getRoleEnum());
             }
 
-            if (apiRequestUserUpdate.getStatusUserEnum() != null) {
-                user.setStatusUserEnum(apiRequestUserUpdate.getStatusUserEnum());
+            if (userUpdateDTO.getStatusUserEnum() != null) {
+                user.setStatusUserEnum(userUpdateDTO.getStatusUserEnum());
             }
 
-            if (apiRequestUserUpdate.isEnabled() != user.isEnabled()) {
-                user.setEnabled(apiRequestUserUpdate.isEnabled());
+            if (userUpdateDTO.isEnabled() != user.isEnabled()) {
+                user.setEnabled(userUpdateDTO.isEnabled());
             }
 
             userRepository.save(user);
@@ -431,15 +428,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse verifyOtpAndChangePassword(APIRequestUserResetPassword apiRequestUserResetPassword) throws Exception {
+    public APIResponse verifyOtpAndChangePassword(UserResetPasswordDTO userResetPasswordDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findByEmail(apiRequestUserResetPassword.getEmail());
+            User user = userRepository.findByEmail(userResetPasswordDTO.getEmail());
             if(user == null) {
-                throw new NotFoundException("User not found by email " + apiRequestUserResetPassword.getEmail());
+                throw new NotFoundException("User not found by email " + userResetPasswordDTO.getEmail());
             }
 
-            if(!user.getOtp().equals(apiRequestUserResetPassword.getOtp())) {
+            if(!user.getOtp().equals(userResetPasswordDTO.getOtp())) {
                 throw new RuntimeException("Invalid OTP !");
             }
 
@@ -451,7 +448,7 @@ public class UserServiceImpl implements UserService{
 
             user.setOtp(null);
             user.setOtpExpiry(null);
-            user.setPassword(passwordEncoder.encode(apiRequestUserResetPassword.getPassword()));
+            user.setPassword(passwordEncoder.encode(userResetPasswordDTO.getPassword()));
             userRepository.save(user);
 
             apiResponse.setStatusCode(200L);

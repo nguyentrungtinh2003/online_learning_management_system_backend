@@ -1,12 +1,11 @@
 package com.TrungTinhBackend.codearena_backend.Service.Question;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.QuestionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestQuestion;
+import com.TrungTinhBackend.codearena_backend.DTO.QuestionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuestionSpecification;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,21 +40,21 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public APIResponse addQuestion(APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
+    public APIResponse addQuestion(QuestionDTO questionDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Quiz quiz = quizRepository.findById(apiRequestQuestion.getQuiz().getId()).orElseThrow(
-                    () -> new NotFoundException("Quiz not found by id " + apiRequestQuestion.getQuiz().getId())
+            Quiz quiz = quizRepository.findById(questionDTO.getQuiz().getId()).orElseThrow(
+                    () -> new NotFoundException("Quiz not found by id " + questionDTO.getQuiz().getId())
             );
 
             Question question = new Question();
 
-            question.setQuestionName(apiRequestQuestion.getQuestionName());
-            question.setAnswerA(apiRequestQuestion.getAnswerA());
-            question.setAnswerB(apiRequestQuestion.getAnswerB());
-            question.setAnswerC(apiRequestQuestion.getAnswerC());
-            question.setAnswerD(apiRequestQuestion.getAnswerD());
-            question.setAnswerCorrect(apiRequestQuestion.getAnswerCorrect());
+            question.setQuestionName(questionDTO.getQuestionName());
+            question.setAnswerA(questionDTO.getAnswerA());
+            question.setAnswerB(questionDTO.getAnswerB());
+            question.setAnswerC(questionDTO.getAnswerC());
+            question.setAnswerD(questionDTO.getAnswerD());
+            question.setAnswerCorrect(questionDTO.getAnswerCorrect());
             question.setDeleted(false);
             if(img != null) {
                 question.setImg(imgService.uploadImg(img));
@@ -74,34 +72,34 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public APIResponse updateQuestion(Long id, APIRequestQuestion apiRequestQuestion, MultipartFile img) throws Exception {
+    public APIResponse updateQuestion(Long id, QuestionDTO questionDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Quiz quiz = quizRepository.findById(apiRequestQuestion.getQuiz().getId()).orElseThrow(
-                    () -> new NotFoundException("Quiz not found by id " + apiRequestQuestion.getQuiz().getId())
+            Quiz quiz = quizRepository.findById(questionDTO.getQuiz().getId()).orElseThrow(
+                    () -> new NotFoundException("Quiz not found by id " + questionDTO.getQuiz().getId())
             );
 
             Question question = questionRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Question not found by id " + id)
             );
 
-            if(apiRequestQuestion.getQuestionName() != null && !apiRequestQuestion.getQuestionName().isEmpty()) {
-                question.setQuestionName(apiRequestQuestion.getQuestionName());
+            if(questionDTO.getQuestionName() != null && !questionDTO.getQuestionName().isEmpty()) {
+                question.setQuestionName(questionDTO.getQuestionName());
             }
-            if(apiRequestQuestion.getAnswerA() != null && !apiRequestQuestion.getAnswerA().isEmpty()) {
-                question.setAnswerA(apiRequestQuestion.getAnswerA());
+            if(questionDTO.getAnswerA() != null && !questionDTO.getAnswerA().isEmpty()) {
+                question.setAnswerA(questionDTO.getAnswerA());
             }
-            if(apiRequestQuestion.getAnswerB() != null && !apiRequestQuestion.getAnswerB().isEmpty()) {
-                question.setAnswerB(apiRequestQuestion.getAnswerB());
+            if(questionDTO.getAnswerB() != null && !questionDTO.getAnswerB().isEmpty()) {
+                question.setAnswerB(questionDTO.getAnswerB());
             }
-            if(apiRequestQuestion.getAnswerC() != null && !apiRequestQuestion.getAnswerC().isEmpty()) {
-                question.setAnswerC(apiRequestQuestion.getAnswerC());
+            if(questionDTO.getAnswerC() != null && !questionDTO.getAnswerC().isEmpty()) {
+                question.setAnswerC(questionDTO.getAnswerC());
             }
-            if(apiRequestQuestion.getAnswerD() != null && !apiRequestQuestion.getAnswerD().isEmpty()) {
-                question.setAnswerD(apiRequestQuestion.getAnswerD());
+            if(questionDTO.getAnswerD() != null && !questionDTO.getAnswerD().isEmpty()) {
+                question.setAnswerD(questionDTO.getAnswerD());
             }
-            if(apiRequestQuestion.getAnswerCorrect() != null && !apiRequestQuestion.getAnswerCorrect().isEmpty()) {
-                question.setAnswerCorrect(apiRequestQuestion.getAnswerCorrect());
+            if(questionDTO.getAnswerCorrect() != null && !questionDTO.getAnswerCorrect().isEmpty()) {
+                question.setAnswerCorrect(questionDTO.getAnswerCorrect());
             }
             if(img != null) {
                 question.setImg(imgService.updateImg(question.getImg(),img));

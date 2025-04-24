@@ -1,10 +1,10 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class APIRequestUserResetPassword {
+public class UserResetPasswordDTO {
 
     @NotBlank(message = "Email is required !")
     @Email(message = "Invalid email format!")

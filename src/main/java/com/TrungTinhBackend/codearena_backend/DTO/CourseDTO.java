@@ -1,19 +1,12 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
-import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.CourseEnum;
-import io.micrometer.common.lang.Nullable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Data
-public class APIRequestCourse {
+public class CourseDTO {
 
     @NotBlank(message = "Course name is required !")
     @Size(min = 2, max = 255, message = "Course name must be between 2 and 255 characters!")

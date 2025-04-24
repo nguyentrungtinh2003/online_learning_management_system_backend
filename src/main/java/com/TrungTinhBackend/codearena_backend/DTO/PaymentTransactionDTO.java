@@ -1,18 +1,13 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
-import com.TrungTinhBackend.codearena_backend.Entity.User;
-import com.TrungTinhBackend.codearena_backend.Enum.PaymentTransactionStatus;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class APIRequestPaymentTransaction {
+public class PaymentTransactionDTO {
 
     private Long userId;
 

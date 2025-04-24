@@ -1,15 +1,13 @@
-package com.TrungTinhBackend.codearena_backend.Request;
+package com.TrungTinhBackend.codearena_backend.DTO;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class APIRequestQuestion {
+public class QuestionDTO {
 
     @NotBlank(message = "Question name is required !")
     @Size(min = 1, max = 255, message = "Question name must be between 1 and 255 characters!")

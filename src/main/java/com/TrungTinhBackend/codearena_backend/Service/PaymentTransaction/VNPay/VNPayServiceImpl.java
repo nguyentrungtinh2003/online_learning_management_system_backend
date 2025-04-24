@@ -5,7 +5,7 @@ import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.PaymentTransactionStatus;
 import com.TrungTinhBackend.codearena_backend.Repository.PaymentTransactionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
-import com.TrungTinhBackend.codearena_backend.Request.APIRequestPaymentTransaction;
+import com.TrungTinhBackend.codearena_backend.DTO.PaymentTransactionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class VNPayServiceImpl implements VNPayService{
     //
 
     @Override
-    public APIResponse createPayment(HttpServletRequest request, APIRequestPaymentTransaction requestDTO) throws Exception {
+    public APIResponse createPayment(HttpServletRequest request, PaymentTransactionDTO requestDTO) throws Exception {
         APIResponse response = new APIResponse();
 
         String vnp_TxnRef = String.valueOf(System.currentTimeMillis());
