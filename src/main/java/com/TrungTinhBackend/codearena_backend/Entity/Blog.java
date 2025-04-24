@@ -49,7 +49,6 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonManagedReference()
     private User user;
 
     @OneToMany(mappedBy = "blog")

@@ -89,7 +89,7 @@ public class User implements UserDetails {
     private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference()
+    @JsonIgnore
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
