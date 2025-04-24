@@ -211,35 +211,42 @@ public class BlogServiceImpl implements BlogService{
     @Transactional
     public APIResponse likeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
+       try {
 
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new NotFoundException("Blog not found !")
-        );
+           Blog blog = blogRepository.findById(blogId).orElseThrow(
+                   () -> new NotFoundException("Blog not found !")
+           );
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User not found !")
-        );
+           User user = userRepository.findById(userId).orElseThrow(
+                   () -> new NotFoundException("User not found !")
+           );
 
-        if (!blog.getLikedUsers().contains(user)) {
-            if (blog.getLikeCount() == null) blog.setLikeCount(0L);
-            blog.setLikeCount(blog.getLikeCount() + 1);
-            blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
-            user.getLikedBlogs().add(blog);     // thêm blog vào danh sách likedBlogs
+           if (!blog.getLikedUsers().contains(user)) {
+               if (blog.getLikeCount() == null) blog.setLikeCount(0L);
+               blog.setLikeCount(blog.getLikeCount() + 1);
+               blog.getLikedUsers().add(user);     // thêm user vào danh sách likedUsers
+               user.getLikedBlogs().add(blog);     // thêm blog vào danh sách likedBlogs
 
-            blogRepository.save(blog);          // lưu lại blog
-        }
+               blogRepository.save(blog);          // lưu lại blog
+           }
 
-        List<Long> likedUserIds = blog.getLikedUsers()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
+           List<Long> likedUserIds = blog.getLikedUsers()
+                   .stream()
+                   .map(User::getId)
+                   .collect(Collectors.toList());
 
-        apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("User like blog success !");
-        apiResponse.setData(likedUserIds);
-        apiResponse.setTimestamp(LocalDateTime.now());
+           apiResponse.setStatusCode(200L);
+           apiResponse.setMessage("User like blog success !");
+           apiResponse.setData(likedUserIds);
+           apiResponse.setTimestamp(LocalDateTime.now());
 
-        return apiResponse;
+           return apiResponse;
+       }catch (Exception e) {
+           e.printStackTrace(); // ghi rõ lỗi ra console
+           apiResponse.setStatusCode(500L);
+           apiResponse.setMessage("Error: " + e.getMessage());
+           return apiResponse;
+       }
     }
 
 
@@ -247,35 +254,42 @@ public class BlogServiceImpl implements BlogService{
     @Transactional
     public APIResponse unLikeBlog(Long blogId, Long userId) {
         APIResponse apiResponse = new APIResponse();
+        try {
 
-        Blog blog = blogRepository.findById(blogId).orElseThrow(
-                () -> new NotFoundException("Blog not found !")
-        );
+            Blog blog = blogRepository.findById(blogId).orElseThrow(
+                    () -> new NotFoundException("Blog not found !")
+            );
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User not found !")
-        );
-if(blog.getLikedUsers().contains(user)) {
-    if (blog.getLikeCount() == null) blog.setLikeCount(0L);
-    if (blog.getLikeCount() > 0) {
-        blog.setLikeCount(blog.getLikeCount() - 1);
-    }
-    blog.getLikedUsers().remove(user);     // thêm user vào danh sách likedUsers
-    user.getLikedBlogs().remove(blog);
+            User user = userRepository.findById(userId).orElseThrow(
+                    () -> new NotFoundException("User not found !")
+            );
+            if(blog.getLikedUsers().contains(user)) {
+                if (blog.getLikeCount() == null) blog.setLikeCount(0L);
+                if (blog.getLikeCount() > 0) {
+                    blog.setLikeCount(blog.getLikeCount() - 1);
+                }
+                blog.getLikedUsers().remove(user);     // thêm user vào danh sách likedUsers
+                user.getLikedBlogs().remove(blog);
 
-    blogRepository.save(blog);
-}
-        List<Long> likedUserIds = blog.getLikedUsers()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
+                blogRepository.save(blog);
+            }
+            List<Long> likedUserIds = blog.getLikedUsers()
+                    .stream()
+                    .map(User::getId)
+                    .collect(Collectors.toList());
 
-        apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("User un like blog success !");
-        apiResponse.setData(likedUserIds);
-        apiResponse.setTimestamp(LocalDateTime.now());
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("User un like blog success !");
+            apiResponse.setData(likedUserIds);
+            apiResponse.setTimestamp(LocalDateTime.now());
 
-        return apiResponse;
+            return apiResponse;
+        }catch(Exception e) {
+            e.printStackTrace(); // ghi rõ lỗi ra console
+            apiResponse.setStatusCode(500L);
+            apiResponse.setMessage("Error: " + e.getMessage());
+            return apiResponse;
+        }
     }
 
     @Override
