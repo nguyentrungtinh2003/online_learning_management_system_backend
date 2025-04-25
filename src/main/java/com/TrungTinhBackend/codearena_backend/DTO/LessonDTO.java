@@ -34,7 +34,7 @@ public class LessonDTO {
     )
     private String videoURL;
 
-    private Course course;
+    private Long courseId;
 
     private List<Quiz> quizzes;
 }

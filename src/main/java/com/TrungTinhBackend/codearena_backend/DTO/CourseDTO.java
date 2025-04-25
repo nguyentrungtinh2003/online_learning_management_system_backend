@@ -32,7 +32,7 @@ public class CourseDTO {
 
 //    private List<User> users;
 
-    private User user;
+    private Long userId;
 
 //    private List<Lesson> lessons;
 }

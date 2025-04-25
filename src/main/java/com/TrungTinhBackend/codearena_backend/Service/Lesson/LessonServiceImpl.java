@@ -57,8 +57,8 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse addLesson(LessonDTO lessonDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Course course = courseRepository.findById(lessonDTO.getCourse().getId()).orElseThrow(
-                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourse().getId())
+            Course course = courseRepository.findById(lessonDTO.getCourseId()).orElseThrow(
+                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourseId())
             );
 
             ChatRoom chatRoom = new ChatRoom();
@@ -123,8 +123,8 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse updateLesson(Long id, LessonDTO lessonDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Course course = courseRepository.findById(lessonDTO.getCourse().getId()).orElseThrow(
-                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourse().getId())
+            Course course = courseRepository.findById(lessonDTO.getCourseId()).orElseThrow(
+                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourseId())
             );
 
             Lesson lesson = lessonRepository.findById(id).orElseThrow(
@@ -143,7 +143,7 @@ public class LessonServiceImpl implements LessonService{
             if(video != null && !video.isEmpty()) {
                 lesson.setVideoURL(videoService.updateVideo(lesson.getVideoURL(),video));
             }
-            if(lessonDTO.getCourse() != null) {
+            if(lessonDTO.getCourseId() != null) {
                 lesson.setCourse(course);
             }
             if (lessonDTO.getQuizzes() != null && !lessonDTO.getQuizzes().isEmpty()) {

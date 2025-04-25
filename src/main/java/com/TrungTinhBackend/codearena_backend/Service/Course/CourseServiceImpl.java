@@ -47,7 +47,7 @@ public class CourseServiceImpl implements CourseService{
     public APIResponse addCourse(CourseDTO courseDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User lecturer = userRepository.findById(courseDTO.getUser().getId()).orElseThrow(
+            User lecturer = userRepository.findById(courseDTO.getUserId()).orElseThrow(
                     () -> new NotFoundException("User not found !")
             );
 
@@ -147,7 +147,7 @@ public class CourseServiceImpl implements CourseService{
     public APIResponse updateCourse(Long id, CourseDTO courseDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-        User lecturer = userRepository.findById(courseDTO.getUser().getId()).orElseThrow(
+        User lecturer = userRepository.findById(courseDTO.getUserId()).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
             Course course = courseRepository.findById(id).orElseThrow(
