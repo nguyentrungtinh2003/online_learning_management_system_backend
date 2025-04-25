@@ -159,29 +159,6 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
-    public BlogDTO convertToDTO(Blog blog) {
-        BlogDTO dto = new BlogDTO();
-        dto.setId(blog.getId());
-        dto.setBlogName(blog.getBlogName());
-        dto.setDescription(blog.getDescription());
-        dto.setUser(blog.getUser());
-        dto.setImg(blog.getImg());
-        dto.setVideo(blog.getVideo());
-
-        if (blog.getLikedUsers() != null) {
-            Set<String> likedUsernames = blog.getLikedUsers()
-                    .stream()
-                    .map(User::getUsername)
-                    .collect(Collectors.toSet());
-            dto.setLikedUsers(likedUsernames);
-        } else {
-            dto.setLikedUsers(new HashSet<>());
-        }
-
-        return dto;
-    }
-
-
     @Override
     public APIResponse getAllBlog() {
         APIResponse apiResponse = new APIResponse();
@@ -189,7 +166,19 @@ public class BlogServiceImpl implements BlogService{
         List<Blog> blogs = blogRepository.findAll();
 
         List<BlogDTO> blogDTOs = blogs.stream()
-                .map(this::convertToDTO)
+                .map(
+                        blog -> {
+                            BlogDTO blogDTO = new BlogDTO();
+                            blogDTO.setBlogName(blog.getBlogName());
+                            blogDTO.setId(blog.getId());
+                            blogDTO.setUser(blog.getUser());
+                            blogDTO.setDescription(blog.getDescription());
+                            blogDTO.setImg(blog.getImg());
+                            blogDTO.setVideo(blog.getVideo());
+                            blogDTO.setLikedUsers(blog.getLikedUsers().stream().map(User::getUsername).collect(Collectors.toSet()));
+                            return blogDTO;
+                        }
+                )
                 .toList();
 
         apiResponse.setStatusCode(200L);
