@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.Enrollment;
 
+import com.TrungTinhBackend.codearena_backend.DTO.EnrollmentDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Enrollment;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService{
@@ -75,9 +77,22 @@ public class EnrollmentServiceImpl implements EnrollmentService{
 
         List<Enrollment> enrollments = enrollmentRepository.findByUserId(userId);
 
+        List<EnrollmentDTO> enrollmentDTOS = enrollments.stream().map(enrollment -> {
+            EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
+            enrollmentDTO.setId(enrollment.getId());
+            enrollmentDTO.setCourseName(enrollment.getCourse().getCourseName());
+            enrollmentDTO.setUserId(enrollment.getUser().getId());
+            enrollmentDTO.setCourseId(enrollment.getCourse().getId());
+            enrollmentDTO.setUsername(enrollment.getUser().getUsername());
+            enrollmentDTO.setEnrolledDate(enrollment.getEnrolledDate());
+            enrollmentDTO.setProgress(enrollment.getProgress());
+            enrollmentDTO.setStatus(enrollment.getStatus().toString());
+            return enrollmentDTO;
+        }).toList();
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get user enroll course success !");
-        apiResponse.setData(enrollments);
+        apiResponse.setData(enrollmentDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }

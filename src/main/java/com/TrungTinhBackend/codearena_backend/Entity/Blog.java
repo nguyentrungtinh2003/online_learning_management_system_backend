@@ -49,7 +49,7 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "blog")

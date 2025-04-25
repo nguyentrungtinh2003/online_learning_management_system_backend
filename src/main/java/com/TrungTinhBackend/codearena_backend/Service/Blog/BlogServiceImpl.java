@@ -51,9 +51,9 @@ public class BlogServiceImpl implements BlogService{
     public APIResponse addBlog(BlogDTO blogDTO, MultipartFile img, MultipartFile video) throws Exception {
        APIResponse apiResponse = new APIResponse();
 
-       User user = userRepository.findById(blogDTO.getUser().getId()).orElseThrow(
-               () -> new NotFoundException("User not found !")
-       );
+        User user = userRepository.findById(blogDTO.getUser().getId()).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
             Blog blog = new Blog();
 
             blog.setBlogName(blogDTO.getBlogName());

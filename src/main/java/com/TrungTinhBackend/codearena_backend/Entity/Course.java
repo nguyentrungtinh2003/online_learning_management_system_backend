@@ -44,7 +44,7 @@ public class Course {
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "course")

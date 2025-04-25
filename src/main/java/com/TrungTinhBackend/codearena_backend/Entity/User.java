@@ -90,7 +90,7 @@ public class User implements UserDetails {
     private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
@@ -106,7 +106,7 @@ public class User implements UserDetails {
     private List<PaymentTransaction> paymentTransaction;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Course> courses;
 
     @Override
@@ -138,4 +138,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
 }
