@@ -85,9 +85,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Chat> chats;
 
-    @ManyToMany(mappedBy = "likedUsers")
-    @JsonIgnore
-    private Set<Blog> likedBlogs = new HashSet<>();
+//    @ManyToMany(mappedBy = "likedUsers")
+//    @JsonIgnore
+//    private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     @JsonBackReference

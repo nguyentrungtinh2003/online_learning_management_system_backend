@@ -236,7 +236,7 @@ public class BlogServiceImpl implements BlogService{
                 if (blog.getLikeCount() == null) blog.setLikeCount(0L);
                 blog.setLikeCount(blog.getLikeCount() + 1);
                 blog.getLikedUsers().add(user);
-                user.getLikedBlogs().add(blog);
+
                 blogRepository.save(blog);
             }
 
@@ -273,7 +273,7 @@ public class BlogServiceImpl implements BlogService{
                 if (blog.getLikeCount() == null) blog.setLikeCount(0L);
                 if (blog.getLikeCount() > 0) blog.setLikeCount(blog.getLikeCount() - 1);
                 blog.getLikedUsers().remove(user);
-                user.getLikedBlogs().remove(blog);
+
                 blogRepository.save(blog);
             }
 
