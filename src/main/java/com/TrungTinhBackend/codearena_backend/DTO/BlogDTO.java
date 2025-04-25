@@ -23,7 +23,7 @@ public class BlogDTO {
 
     private User user;
 
-    private Set<String> likedUsers;
+    private Set<Long> likedUsers;
 
 
     @NotBlank(message = "Image URL is required!")
