@@ -86,10 +86,11 @@ public class User implements UserDetails {
     private List<Chat> chats;
 
     @ManyToMany(mappedBy = "likedUsers")
+    @JsonIgnore
     private Set<Blog> likedBlogs = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @JsonManagedReference
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
@@ -105,7 +106,7 @@ public class User implements UserDetails {
     private List<PaymentTransaction> paymentTransaction;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore()
+    @JsonManagedReference
     private List<Course> courses;
 
     @Override

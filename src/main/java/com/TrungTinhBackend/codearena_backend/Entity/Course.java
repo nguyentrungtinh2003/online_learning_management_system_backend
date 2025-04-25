@@ -48,6 +48,7 @@ public class Course {
     private User user;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Lesson> lessons;
 
     @OneToMany(mappedBy = "course")

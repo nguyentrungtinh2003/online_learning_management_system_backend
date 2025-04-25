@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class Lesson {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonIgnore()
+    @JsonBackReference
     private Course course;
 
     @OneToMany(mappedBy = "lesson")
