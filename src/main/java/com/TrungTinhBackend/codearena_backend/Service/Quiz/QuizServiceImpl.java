@@ -1,13 +1,16 @@
 package com.TrungTinhBackend.codearena_backend.Service.Quiz;
 
+import com.TrungTinhBackend.codearena_backend.DTO.AnswerUserDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuestionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
 import com.TrungTinhBackend.codearena_backend.DTO.QuizDTO;
+import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizServiceImpl implements QuizService{
@@ -38,6 +42,9 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository) {
         this.quizRepository = quizRepository;
         this.imgService = imgService;
@@ -49,8 +56,8 @@ public class QuizServiceImpl implements QuizService{
     public APIResponse addQuiz(QuizDTO quizDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Lesson lesson = lessonRepository.findById(quizDTO.getLesson().getId()).orElseThrow(
-                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLesson().getId())
+            Lesson lesson = lessonRepository.findById(quizDTO.getLessonId()).orElseThrow(
+                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLessonId())
             );
 
             Quiz quiz = new Quiz();
@@ -82,8 +89,8 @@ public class QuizServiceImpl implements QuizService{
     public APIResponse updateQuiz(Long id, QuizDTO quizDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Lesson lesson = lessonRepository.findById(quizDTO.getLesson().getId()).orElseThrow(
-                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLesson().getId())
+            Lesson lesson = lessonRepository.findById(quizDTO.getLessonId()).orElseThrow(
+                    () -> new NotFoundException("Lesson not found by id " + quizDTO.getLessonId())
             );
 
             Quiz quiz = quizRepository.findById(id).orElseThrow(
@@ -204,6 +211,40 @@ public class QuizServiceImpl implements QuizService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get quiz by id success !");
         apiResponse.setData(quiz);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse submitQuiz(Long id,Long userId, AnswerUserDTO answerUserDTO) {
+        APIResponse apiResponse = new APIResponse();
+        long point = 0L;
+
+        Quiz quiz = quizRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Quiz not found !")
+        );
+        List<String> answerCorrect = quiz.getQuestions()
+                .stream()
+                .map(Question::getAnswerCorrect)
+                .toList();
+
+        for(String answerUserDTO1 : answerUserDTO.getAnswersUser()) {
+            if(answerCorrect.contains(answerUserDTO1)) {
+                point++;
+            }
+        }
+
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
+        user.setPoint(user.getPoint() + point);
+        userRepository.save(user);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Submit quiz success !");
+        apiResponse.setData(point);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

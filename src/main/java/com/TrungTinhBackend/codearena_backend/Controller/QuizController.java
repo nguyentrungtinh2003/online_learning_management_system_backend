@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
+import com.TrungTinhBackend.codearena_backend.DTO.AnswerUserDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.QuizDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Quiz.QuizService;
@@ -20,6 +21,13 @@ public class QuizController {
     public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") QuizDTO quizDTO,
                                                  @RequestPart(value = "img") MultipartFile img) throws Exception {
         return ResponseEntity.ok(quizService.addQuiz(quizDTO, img));
+    }
+
+    @PostMapping("/quizzes/submit/{id}/{userId}")
+    public ResponseEntity<APIResponse> submitQuiz(@PathVariable Long id,
+                                                  @PathVariable Long userId,
+                                                  @RequestBody AnswerUserDTO answerUserDTO) throws Exception {
+        return ResponseEntity.ok(quizService.submitQuiz(id,userId, answerUserDTO));
     }
 
     @GetMapping("teacher/quizzes/all")

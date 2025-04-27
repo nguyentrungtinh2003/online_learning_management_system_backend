@@ -34,7 +34,7 @@ public class QuizDTO {
     @Size(min = 2, max = 255, message = "Description must be between 2 and 255 characters!")
     private String description;
 
-    private Lesson lesson;
+    private Long lessonId;
 
     private List<Question> questions;
 }

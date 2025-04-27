@@ -40,5 +40,5 @@ public class QuestionDTO {
     )
     private String img;
 
-    private Quiz quiz;
+    private Long quizId;
 }
