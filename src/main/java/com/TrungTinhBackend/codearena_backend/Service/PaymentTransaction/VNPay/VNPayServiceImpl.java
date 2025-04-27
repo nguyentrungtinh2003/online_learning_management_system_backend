@@ -22,26 +22,35 @@ import java.util.*;
 @Service
 public class VNPayServiceImpl implements VNPayService{
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PaymentTransactionRepository paymentTransactionRepository;
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
-    @Value("${vnp_Url}")
-    private String VNP_URL;
-
-    private String VNP_RETURN_URL="https://codearena-frontend-dev.vercel.app/";
-
-    @Value("${vnp_TmnCode}")
-    private String VNP_TMNCODE;
-
-    @Value("${vnp_HashSecret}")
-    private String VNP_HASH_SECRET;
+    private final String vnpUrl;
+    private final String vnpReturnUrl;
+    private final String vnpTmnCode;
+    private final String vnpHashSecret;
 
     private static final double COIN_RATE = 10.0;
+    private static final String ORDER_INFO = "Nạp tiền vào CodeArena";
 
-    //hash
+    public VNPayServiceImpl(
+            UserRepository userRepository,
+            PaymentTransactionRepository paymentTransactionRepository,
+            @Value("${vnp_Url}") String vnpUrl,
+            @Value("${VNP_RETURN_URL}") String vnpReturnUrl,
+            @Value("${vnp_TmnCode}") String vnpTmnCode,
+            @Value("${vnp_HashSecret}") String vnpHashSecret) {
+        this.userRepository = userRepository;
+        this.paymentTransactionRepository = paymentTransactionRepository;
+        this.vnpUrl = vnpUrl;
+        this.vnpReturnUrl = vnpReturnUrl;
+        this.vnpTmnCode = vnpTmnCode;
+        this.vnpHashSecret = vnpHashSecret;
+    }
+
+
+
     public String hmacSHA512(String key, String data) throws Exception {
         Mac hmac512 = Mac.getInstance("HmacSHA512");
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA512");
@@ -68,21 +77,21 @@ public class VNPayServiceImpl implements VNPayService{
         String vnp_TxnRef = String.valueOf(System.currentTimeMillis());
         String vnp_IpAddr = request.getRemoteAddr();
 
-        String orderInfo = "Nạp tiền vào CodeArena";
+        String orderInfo = ORDER_INFO;
         String orderType = "other";
         long amount = (long) (requestDTO.getAmount() * 100); // VND x 100
 
         Map<String, String> vnpParams = new HashMap<>();
         vnpParams.put("vnp_Version", "2.1.0");
         vnpParams.put("vnp_Command", "pay");
-        vnpParams.put("vnp_TmnCode", VNP_TMNCODE);
+        vnpParams.put("vnp_TmnCode", vnpTmnCode);
         vnpParams.put("vnp_Amount", String.valueOf(amount));
         vnpParams.put("vnp_CurrCode", "VND");
         vnpParams.put("vnp_TxnRef", vnp_TxnRef);
         vnpParams.put("vnp_OrderInfo", orderInfo);
         vnpParams.put("vnp_OrderType", orderType);
         vnpParams.put("vnp_Locale", "vn");
-        vnpParams.put("vnp_ReturnUrl", VNP_RETURN_URL + "?userId=" + requestDTO.getUserId());
+        vnpParams.put("vnp_ReturnUrl", vnpReturnUrl + "?userId=" + requestDTO.getUserId());
         vnpParams.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cal = Calendar.getInstance();
@@ -106,12 +115,12 @@ public class VNPayServiceImpl implements VNPayService{
             query.append(fieldName).append('=').append(URLEncoder.encode(value, StandardCharsets.US_ASCII));
         }
 
-        String vnp_SecureHash = hmacSHA512(VNP_HASH_SECRET, hashData.toString());
+        String vnp_SecureHash = hmacSHA512(vnpHashSecret, hashData.toString());
         query.append("&vnp_SecureHash=").append(vnp_SecureHash);
 
         response.setStatusCode(200L);
         response.setMessage("Redirect to VNPay");
-        response.setData(VNP_URL + "?" + query);
+        response.setData(vnpUrl + "?" + query);
         response.setTimestamp(LocalDateTime.now());
 
         return response;

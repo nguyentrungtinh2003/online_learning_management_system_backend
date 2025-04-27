@@ -73,6 +73,7 @@ public class CodearenaBackendApplication {
 		System.setProperty("vnp_TmnCode", System.getenv("vnp_TmnCode"));
 		System.setProperty("vnp_HashSecret", System.getenv("vnp_HashSecret"));
 		System.setProperty("vnp_Url", System.getenv("vnp_Url"));
+		System.setProperty("VNP_RETURN_URL", System.getenv("VNP_RETURN_URL"));
 
 
 		SpringApplication.run(CodearenaBackendApplication.class, args);
