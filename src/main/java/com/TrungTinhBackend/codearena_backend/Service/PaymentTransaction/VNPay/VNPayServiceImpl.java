@@ -134,46 +134,62 @@ public class VNPayServiceImpl implements VNPayService{
         String amountStr = request.getParameter("vnp_Amount");
         String userIdStr = request.getParameter("userId");
 
-        if ("00".equals(responseCode)) {
-            double amountVND = Double.parseDouble(amountStr) / 100.0;
-            double coinAmount = amountVND * COIN_RATE;
-
-            Optional<User> userOpt = userRepository.findById(Long.parseLong(userIdStr));
-            if (userOpt.isEmpty()) {
-                response.setStatusCode(404L);
-                response.setMessage("User not found !");
-                response.setData(null);
-                response.setTimestamp(LocalDateTime.now());
-
-                return response;
-            }
-
-            User user = userOpt.get();
-            user.setCoin(user.getCoin() + coinAmount);
-            userRepository.save(user);
-
-            PaymentTransaction transaction = new PaymentTransaction();
-            transaction.setAmount(amountVND);
-            transaction.setCoinAmount(coinAmount);
-            transaction.setUser(user);
-            transaction.setDate(LocalDateTime.now());
-            transaction.setStatus(PaymentTransactionStatus.COMPLETED);
-            transaction.setDeleted(false);
-            paymentTransactionRepository.save(transaction);
-
-            response.setStatusCode(200L);
-            response.setMessage("Thanh toán thành công !");
+        // Kiểm tra nếu có tham số thiếu
+        if (responseCode == null || amountStr == null || userIdStr == null) {
+            response.setStatusCode(400L);
+            response.setMessage("Thiếu thông tin thanh toán!");
             response.setData(null);
             response.setTimestamp(LocalDateTime.now());
-
             return response;
         }
 
+        // Kiểm tra mã phản hồi VNPay
+        if ("00".equals(responseCode)) {
+            try {
+                double amountVND = Double.parseDouble(amountStr) / 100.0;
+                double coinAmount = amountVND * COIN_RATE;
+
+                Optional<User> userOpt = userRepository.findById(Long.parseLong(userIdStr));
+                if (userOpt.isEmpty()) {
+                    response.setStatusCode(404L);
+                    response.setMessage("User not found!");
+                    response.setData(null);
+                    response.setTimestamp(LocalDateTime.now());
+                    return response;
+                }
+
+                User user = userOpt.get();
+                user.setCoin(user.getCoin() + coinAmount);
+                userRepository.save(user);
+
+                PaymentTransaction transaction = new PaymentTransaction();
+                transaction.setAmount(amountVND);
+                transaction.setCoinAmount(coinAmount);
+                transaction.setUser(user);
+                transaction.setDate(LocalDateTime.now());
+                transaction.setStatus(PaymentTransactionStatus.COMPLETED);
+                transaction.setDeleted(false);
+                paymentTransactionRepository.save(transaction);
+
+                response.setStatusCode(200L);
+                response.setMessage("Thanh toán thành công!");
+                response.setData(null);
+                response.setTimestamp(LocalDateTime.now());
+                return response;
+            } catch (NumberFormatException e) {
+                response.setStatusCode(400L);
+                response.setMessage("Invalid amount format!");
+                response.setData(null);
+                response.setTimestamp(LocalDateTime.now());
+                return response;
+            }
+        }
+
         response.setStatusCode(500L);
-        response.setMessage("Thanh toán thất bại !");
+        response.setMessage("Thanh toán thất bại!");
         response.setData(null);
         response.setTimestamp(LocalDateTime.now());
-
         return response;
     }
+
 }
