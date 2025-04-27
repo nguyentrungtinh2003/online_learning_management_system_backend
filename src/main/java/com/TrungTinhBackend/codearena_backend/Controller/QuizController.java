@@ -19,7 +19,7 @@ public class QuizController {
 
     @PostMapping("teacher/quizzes/add")
     public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") QuizDTO quizDTO,
-                                                 @RequestPart(value = "img") MultipartFile img) throws Exception {
+                                                 @RequestPart(value = "img", required = false) MultipartFile img) throws Exception {
         return ResponseEntity.ok(quizService.addQuiz(quizDTO, img));
     }
 
