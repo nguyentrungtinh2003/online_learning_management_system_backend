@@ -41,7 +41,7 @@ public class PaymentTransactionController {
         return ResponseEntity.ok(paypalService.executePayment(paymentId, payerId, userId));
     }
 
-    @GetMapping("/execute/vnpay")
+    @PostMapping("/execute/vnpay")
     public ResponseEntity<APIResponse> executePaymentVNPay(
             HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(vnPayService.executePayment(request));
