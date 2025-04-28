@@ -87,6 +87,8 @@ public class EnrollmentServiceImpl implements EnrollmentService{
             enrollmentDTO.setEnrolledDate(enrollment.getEnrolledDate());
             enrollmentDTO.setProgress(enrollment.getProgress());
             enrollmentDTO.setStatus(enrollment.getStatus().toString());
+            enrollmentDTO.setDescription(enrollment.getCourse().getDescription());
+            enrollmentDTO.setImg(enrollment.getCourse().getImg());
             return enrollmentDTO;
         }).toList();
 
