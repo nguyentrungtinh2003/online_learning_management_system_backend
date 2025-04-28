@@ -50,11 +50,11 @@ public class LessonCommentServiceImpl implements LessonCommentService{
     public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO, MultipartFile img, MultipartFile video) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(lessonCommentDTO.getUser().getId()).orElseThrow(
+        User user = userRepository.findById(lessonCommentDTO.getUserId()).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
 
-        Lesson lesson = lessonRepository.findById(lessonCommentDTO.getLesson().getId()).orElseThrow(
+        Lesson lesson = lessonRepository.findById(lessonCommentDTO.getLessonId()).orElseThrow(
                 () -> new NotFoundException("Lesson not found !")
         );
 

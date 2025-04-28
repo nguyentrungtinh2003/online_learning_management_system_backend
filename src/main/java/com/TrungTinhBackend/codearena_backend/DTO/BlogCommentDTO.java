@@ -28,7 +28,7 @@ public class BlogCommentDTO {
     )
     private String video;
 
-    private User user;
+    private Long userId;
 
-    private Blog blog;
+    private Long blogId;
 }

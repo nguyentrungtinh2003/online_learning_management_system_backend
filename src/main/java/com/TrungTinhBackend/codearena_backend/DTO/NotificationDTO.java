@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class NotificationDTO {
 
-    private User receiver;
+    private Long receiverId;
 
     private String message;
 

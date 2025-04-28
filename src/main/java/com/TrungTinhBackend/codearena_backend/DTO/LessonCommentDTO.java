@@ -13,7 +13,7 @@ public class LessonCommentDTO {
 
     private String video;
 
-    private User user;
+    private Long userId;
 
-    private Lesson lesson;
+    private Long lessonId;
 }

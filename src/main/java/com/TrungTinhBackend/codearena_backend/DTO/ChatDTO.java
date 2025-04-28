@@ -12,7 +12,7 @@ public class ChatDTO {
 
     private ChatRoom chatRoom;
 
-    private User sender;
+    private Long senderId;
 
     @NotBlank(message = "Message is required !")
     @Size(min = 0, max = 255, message = "Message must be between 0 and 255 characters!")

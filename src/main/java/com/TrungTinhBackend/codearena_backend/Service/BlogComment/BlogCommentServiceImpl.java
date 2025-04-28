@@ -53,12 +53,12 @@ public class BlogCommentServiceImpl implements BlogCommentService{
     public APIResponse addBlogComment(BlogCommentDTO blogCommentDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findById(blogCommentDTO.getUser().getId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + blogCommentDTO.getUser().getId())
+            User user = userRepository.findById(blogCommentDTO.getUserId()).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + blogCommentDTO.getUserId())
             );
 
-            Blog blog = blogRepository.findById(blogCommentDTO.getBlog().getId()).orElseThrow(
-                    () -> new NotFoundException("Blog not found by id " + blogCommentDTO.getBlog().getId())
+            Blog blog = blogRepository.findById(blogCommentDTO.getBlogId()).orElseThrow(
+                    () -> new NotFoundException("Blog not found by id " + blogCommentDTO.getBlogId())
             );
 
             BlogComment blogComment = new BlogComment();
