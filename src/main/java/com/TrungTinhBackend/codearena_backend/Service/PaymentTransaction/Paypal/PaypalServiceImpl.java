@@ -32,7 +32,7 @@ public class PaypalServiceImpl implements PaypalService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final double COIN_RATE = 10.0; // 1 USD = 10 Coin
+    private static final double COIN_RATE = 100.0; // 1 USD = 10 Coin
 
     public PaypalServiceImpl(APIContext apiContext, PaymentTransactionRepository paymentTransactionRepository, UserRepository userRepository) {
         this.apiContext = apiContext;
@@ -113,7 +113,7 @@ public class PaypalServiceImpl implements PaypalService {
                 throw new Exception("Invalid coin rate.");
             }
 
-            double coinAmount = paymentAmount * COIN_RATE;
+            double coinAmount = (paymentAmount * 25000) / COIN_RATE;
 
             // Tìm người dùng
             Optional<User> userOpt = userRepository.findById(userId);

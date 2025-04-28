@@ -31,7 +31,7 @@ public class VNPayServiceImpl implements VNPayService{
     private final String vnpTmnCode;
     private final String vnpHashSecret;
 
-    private static final double COIN_RATE = 10.0;
+    private static final double COIN_RATE = 100.0;
     private static final String ORDER_INFO = "Nạp tiền vào CodeArena";
 
     public VNPayServiceImpl(
@@ -147,7 +147,7 @@ public class VNPayServiceImpl implements VNPayService{
         if ("00".equals(responseCode)) {
             try {
                 double amountVND = Double.parseDouble(amountStr) / 100.0;
-                double coinAmount = amountVND * COIN_RATE;
+                double coinAmount = amountVND / COIN_RATE;
 
                 Optional<User> userOpt = userRepository.findById(Long.parseLong(userIdStr));
                 if (userOpt.isEmpty()) {
