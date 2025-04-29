@@ -56,8 +56,8 @@ public class ChatServiceImpl implements ChatService{
     public APIResponse addChat(ChatDTO chatDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findById(chatDTO.getSender().getId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + chatDTO.getSender().getId())
+            User user = userRepository.findById(chatDTO.getSenderId()).orElseThrow(
+                    () -> new NotFoundException("User not found by id " + chatDTO.getSenderId())
             );
 
             ChatRoom chatRoom = chatRoomRepository.findById(chatDTO.getChatRoom().getId()).orElseThrow(
