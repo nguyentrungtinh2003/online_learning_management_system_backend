@@ -18,10 +18,9 @@ public class ChatController {
     private ChatService chatService;
 
     @MessageMapping("/chat.sendMessage")
-    public ResponseEntity<APIResponse> addChat(@Valid @RequestPart(value = "chat") ChatDTO chatDTO,
-                                                 @RequestPart(value = "img",required = false) MultipartFile img,
-                                               @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        APIResponse apiResponse = chatService.addChat(chatDTO, img, video);
+    public ResponseEntity<APIResponse> addChat(@Valid @RequestBody ChatDTO chatDTO
+                                               ) throws Exception {
+        APIResponse apiResponse = chatService.addChat(chatDTO);
 
         return ResponseEntity.status(apiResponse.getStatusCode().intValue()).body(apiResponse);
     }

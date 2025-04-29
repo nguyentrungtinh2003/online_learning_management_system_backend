@@ -17,10 +17,8 @@ public class BlogCommentController {
     private BlogCommentService blogCommentService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addBlogComment(@Valid @RequestPart(value = "blogComment") BlogCommentDTO blogCommentDTO,
-                                               @RequestPart(value = "img",required = false) MultipartFile img,
-                                               @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(blogCommentService.addBlogComment(blogCommentDTO, img, video));
+    public ResponseEntity<APIResponse> addBlogComment(@Valid @RequestBody BlogCommentDTO blogCommentDTO) throws Exception {
+        return ResponseEntity.ok(blogCommentService.addBlogComment(blogCommentDTO));
     }
 
     @GetMapping("/all")

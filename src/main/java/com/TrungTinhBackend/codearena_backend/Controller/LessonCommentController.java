@@ -17,10 +17,9 @@ public class LessonCommentController {
     private LessonCommentService lessonCommentService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") LessonCommentDTO lessonCommentDTO,
-                                                 @RequestPart(value = "img",required = false) MultipartFile img,
-                                                 @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
-        return ResponseEntity.ok(lessonCommentService.addLessonComment(lessonCommentDTO, img, video));
+    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") LessonCommentDTO lessonCommentDTO
+                                                ) throws Exception {
+        return ResponseEntity.ok(lessonCommentService.addLessonComment(lessonCommentDTO));
     }
 
     @GetMapping("/all")
