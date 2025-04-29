@@ -175,7 +175,7 @@ public class QuizServiceImpl implements QuizService{
     public APIResponse getQuizByPage(int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
-        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page,size);
         Page<Quiz> quizzes = quizRepository.findAll(pageable);
 
         apiResponse.setStatusCode(200L);
@@ -245,6 +245,21 @@ public class QuizServiceImpl implements QuizService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Submit quiz success !");
         apiResponse.setData(point);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getQuizByLessonIdAndByPage(Long lessonId, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Quiz> quizzes = quizRepository.findByLessonIdAndIsDeletedFalse(lessonId,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get quiz by lesson id success !");
+        apiResponse.setData(quizzes);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

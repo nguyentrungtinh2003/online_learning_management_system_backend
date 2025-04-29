@@ -12,4 +12,5 @@ public interface QuestionService {
     public APIResponse getQuestionByPage(int page, int size);
     public APIResponse getAllQuestion();
     public APIResponse getQuestionById(Long id);
+    public APIResponse getQuestionByQuizIdAndByPage(Long quizId, int page, int size);
 }

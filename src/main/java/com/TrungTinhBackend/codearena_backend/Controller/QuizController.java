@@ -30,6 +30,12 @@ public class QuizController {
         return ResponseEntity.ok(quizService.submitQuiz(id,userId, answerUserDTO));
     }
 
+    @GetMapping("teacher/quizzes/lesson/{lessonId}/page")
+    public ResponseEntity<APIResponse> getQuizByLessonAndPage(@PathVariable Long lessonId,@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(quizService.getQuizByLessonIdAndByPage(lessonId,page,size));
+    }
+
     @GetMapping("teacher/quizzes/all")
     public ResponseEntity<APIResponse> getAllQuiz() {
         return ResponseEntity.ok(quizService.getAllQuiz());

@@ -207,7 +207,7 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse getLessonByPage(int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
-        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page,size);
         Page<Lesson> lessons = lessonRepository.findByIsDeletedFalse(pageable);
 
         apiResponse.setStatusCode(200L);
@@ -222,7 +222,7 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse getLessonByCourseIdAndByPage(Long courseId, int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
-        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page,size);
         Page<Lesson> lessons = lessonRepository.findByCourseIdAndIsDeletedFalse(courseId,pageable);
 
         apiResponse.setStatusCode(200L);

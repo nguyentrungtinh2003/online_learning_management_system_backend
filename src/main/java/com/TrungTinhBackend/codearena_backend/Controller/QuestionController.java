@@ -22,6 +22,12 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.addQuestion(questionDTO, img));
     }
 
+    @GetMapping("teacher/questions/quiz/{quizId}/page")
+    public ResponseEntity<APIResponse> getQuestionByQuizAndPage(@PathVariable Long quizId,@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(questionService.getQuestionByQuizIdAndByPage(quizId,page,size));
+    }
+
     @GetMapping("teacher/questions/all")
     public ResponseEntity<APIResponse> getAllQuestion() {
         return ResponseEntity.ok(questionService.getAllQuestion());

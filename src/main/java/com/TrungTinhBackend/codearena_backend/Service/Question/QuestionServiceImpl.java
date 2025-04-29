@@ -157,7 +157,7 @@ public class QuestionServiceImpl implements QuestionService{
     public APIResponse getQuestionByPage(int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
-        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page,size);
         Page<Question> questions = questionRepository.findAll(pageable);
 
         apiResponse.setStatusCode(200L);
@@ -193,6 +193,21 @@ public class QuestionServiceImpl implements QuestionService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get question by id success !");
         apiResponse.setData(question);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getQuestionByQuizIdAndByPage(Long quizId, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Question> questions = questionRepository.findByQuizIdAndIsDeletedFalse(quizId,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get question by quiz id success !");
+        apiResponse.setData(questions);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

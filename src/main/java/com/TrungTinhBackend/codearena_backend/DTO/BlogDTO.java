@@ -21,7 +21,8 @@ public class BlogDTO {
     @Size(min = 2, max = 255, message = "Description must be between 2 and 255 characters!")
     private String description;
 
-    private User user;
+    private Long userId;
+    private String username;
 
     private Set<Long> likedUsers;
 
