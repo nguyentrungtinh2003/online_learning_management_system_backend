@@ -58,7 +58,7 @@ public class NotificationServiceImpl implements NotificationService{
 
         for (Long userId : allUserIds) {
             notification.setMessage(notificationDTO.getMessage());
-            notification.setReceiver(userRepository.findById(notificationDTO.getReceiver().getId()).orElseThrow(
+            notification.setReceiver(userRepository.findById(notificationDTO.getReceiverId()).orElseThrow(
                     () -> new NotFoundException("User not found !")
             ));
             notification.setCreatedAt(LocalDateTime.now());
