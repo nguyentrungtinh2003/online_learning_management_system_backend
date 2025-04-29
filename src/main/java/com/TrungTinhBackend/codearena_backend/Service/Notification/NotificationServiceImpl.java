@@ -7,6 +7,7 @@ import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.*;
 import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,17 +37,18 @@ public class NotificationServiceImpl implements NotificationService{
     private BlogRepository blogRepository;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private WebSocketSender webSocketSender;
 
     @Autowired
     private UserRepository userRepository;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, CourseRepository courseRepository, LessonRepository lessonRepository, QuizRepository quizRepository, SimpMessagingTemplate messagingTemplate, UserRepository userRepository) {
+    public NotificationServiceImpl(NotificationRepository notificationRepository, CourseRepository courseRepository, LessonRepository lessonRepository, QuizRepository quizRepository, WebSocketSender webSocketSender, UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.quizRepository = quizRepository;
-        this.messagingTemplate = messagingTemplate;
+        this.webSocketSender = webSocketSender;
+
         this.userRepository = userRepository;
     }
 
@@ -68,7 +70,7 @@ public class NotificationServiceImpl implements NotificationService{
             notificationRepository.save(notification);
 
             // Gửi WebSocket cho từng user
-            messagingTemplate.convertAndSend("/topic/user/" + userId, notification);
+            webSocketSender.sendNotification(notificationDTO);
         }
 
         apiResponse.setStatusCode(200L);
@@ -95,12 +97,19 @@ public class NotificationServiceImpl implements NotificationService{
 
         notificationRepository.save(notification);
 
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setLink(notification.getLink());
+        notificationDTO.setType(notification.getType());
+        notificationDTO.setMessage(notification.getMessage());
+        notificationDTO.setRelatedId(relatedId);
+        notificationDTO.setReceiverId(userId);
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add notification success !");
         apiResponse.setData(notification);
         apiResponse.setTimestamp(LocalDateTime.now());
 
-        messagingTemplate.convertAndSend("/topic/user/"+userId,notification);
+        webSocketSender.sendNotification(notificationDTO);
         return apiResponse;
     }
 
