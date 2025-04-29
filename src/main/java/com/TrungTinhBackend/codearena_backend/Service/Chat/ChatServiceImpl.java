@@ -53,7 +53,7 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
-    public APIResponse addChat(ChatDTO chatDTO, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse addChat(ChatDTO chatDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
             User user = userRepository.findById(chatDTO.getSenderId()).orElseThrow(
@@ -68,12 +68,12 @@ public class ChatServiceImpl implements ChatService{
 
             chat.setChatRoom(chatRoom);
             chat.setSender(user);
-            if(img != null && !img.isEmpty()) {
-                chat.setImg(imgService.uploadImg(img));
-            }
-            if(video != null && !video.isEmpty()) {
-                chat.setVideoURL(videoService.uploadVideo(video));
-            }
+//            if(img != null && !img.isEmpty()) {
+//                chat.setImg(imgService.uploadImg(img));
+//            }
+//            if(video != null && !video.isEmpty()) {
+//                chat.setVideoURL(videoService.uploadVideo(video));
+//            }
             chat.setMessage(chatDTO.getMessage());
             chat.setDeleted(false);
             chat.setTimestamp(LocalDateTime.now());

@@ -9,6 +9,7 @@ import com.TrungTinhBackend.codearena_backend.DTO.LessonCommentDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,16 +39,20 @@ public class LessonCommentServiceImpl implements LessonCommentService{
     @Autowired
     private LessonCommentRepository lessonCommentRepository;
 
-    public LessonCommentServiceImpl(UserRepository userRepository, LessonRepository lessonRepository, ImgService imgService, VideoService videoService) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    public LessonCommentServiceImpl(UserRepository userRepository, LessonRepository lessonRepository, ImgService imgService, VideoService videoService, WebSocketSender webSocketSender) {
         this.userRepository = userRepository;
         this.lessonRepository = lessonRepository;
         this.imgService = imgService;
         this.videoService = videoService;
+        this.webSocketSender = webSocketSender;
     }
 
 
     @Override
-    public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO, MultipartFile img, MultipartFile video) throws IOException {
+    public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
         User user = userRepository.findById(lessonCommentDTO.getUserId()).orElseThrow(
@@ -62,16 +67,18 @@ public class LessonCommentServiceImpl implements LessonCommentService{
         lessonComment.setContent(lessonCommentDTO.getContent());
         lessonComment.setLesson(lesson);
         lessonComment.setUser(user);
-        if(img != null) {
-            lessonComment.setImg(imgService.uploadImg(img));
-        }
-        if(video != null) {
-            lessonComment.setVideo(videoService.uploadVideo(video));
-        }
+//        if(img != null) {
+//            lessonComment.setImg(imgService.uploadImg(img));
+//        }
+//        if(video != null) {
+//            lessonComment.setVideo(videoService.uploadVideo(video));
+//        }
         lessonComment.setDate(LocalDateTime.now());
         lessonComment.setDeleted(false);
 
         lessonCommentRepository.save(lessonComment);
+
+        webSocketSender.sendLessonComment(lessonCommentDTO);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add lesson comment success !");

@@ -12,6 +12,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogCommentSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,16 +42,20 @@ public class BlogCommentServiceImpl implements BlogCommentService{
     @Autowired
     private UserRepository userRepository;
 
-    public BlogCommentServiceImpl(BlogCommentRepository blogCommentRepository, ImgService imgService, VideoService videoService, BlogRepository blogRepository, UserRepository userRepository) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    public BlogCommentServiceImpl(BlogCommentRepository blogCommentRepository, ImgService imgService, VideoService videoService, BlogRepository blogRepository, UserRepository userRepository, WebSocketSender webSocketSender) {
         this.blogCommentRepository = blogCommentRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
-    public APIResponse addBlogComment(BlogCommentDTO blogCommentDTO, MultipartFile img, MultipartFile video) throws Exception {
+    public APIResponse addBlogComment(BlogCommentDTO blogCommentDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
             User user = userRepository.findById(blogCommentDTO.getUserId()).orElseThrow(
@@ -64,18 +69,20 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             BlogComment blogComment = new BlogComment();
 
             blogComment.setContent(blogCommentDTO.getContent());
-            if(img != null && !img.isEmpty()) {
-                blogComment.setImg(imgService.uploadImg(img));
-            }
-            if(video != null && !video.isEmpty()) {
-                blogComment.setVideo(videoService.uploadVideo(video));
-            }
+//            if(img != null && !img.isEmpty()) {
+//                blogComment.setImg(imgService.uploadImg(img));
+//            }
+//            if(video != null && !video.isEmpty()) {
+//                blogComment.setVideo(videoService.uploadVideo(video));
+//            }
             blogComment.setUser(user);
             blogComment.setBlog(blog);
             blogComment.setDate(LocalDateTime.now());
             blogComment.setDeleted(false);
 
             blogCommentRepository.save(blogComment);
+
+            webSocketSender.sendBlogComment(blogCommentDTO);
 
 
             apiResponse.setStatusCode(200L);

@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface LessonCommentService {
-    public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO, MultipartFile img, MultipartFile video) throws IOException;
+    public APIResponse addLessonComment(LessonCommentDTO lessonCommentDTO) throws IOException;
     public APIResponse getAllLessonComment();
     public APIResponse getLessonCommentById(Long id);
     public APIResponse deleteLessonComment(Long id);

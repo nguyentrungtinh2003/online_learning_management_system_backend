@@ -9,9 +9,9 @@ public class LessonCommentDTO {
 
     private String content;
 
-    private String img;
-
-    private String video;
+//    private String img;
+//
+//    private String video;
 
     private Long userId;
 

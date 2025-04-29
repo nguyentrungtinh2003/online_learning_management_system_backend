@@ -172,6 +172,7 @@ public class BlogServiceImpl implements BlogService{
                             blogDTO.setBlogName(blog.getBlogName());
                             blogDTO.setId(blog.getId());
                             blogDTO.setUserId(blog.getUser().getId());
+                            blogDTO.setUsername(blog.getUser().getUsername());
                             blogDTO.setDescription(blog.getDescription());
                             blogDTO.setImg(blog.getImg());
                             blogDTO.setVideo(blog.getVideo());
