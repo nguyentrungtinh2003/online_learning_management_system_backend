@@ -69,4 +69,9 @@ public class QuizController {
     public ResponseEntity<APIResponse> deleteQuiz(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(quizService.deleteQuiz(id));
     }
+
+    @DeleteMapping("teacher/quizzes/restore/{id}")
+    public ResponseEntity<APIResponse> restoreQuiz(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(quizService.restoreQuiz(id));
+    }
 }

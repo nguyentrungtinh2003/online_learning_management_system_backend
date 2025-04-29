@@ -242,4 +242,23 @@ public class CourseServiceImpl implements CourseService{
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
+
+    @Override
+    public APIResponse restoreCourse(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course not found by id " + id)
+        );
+
+        course.setDeleted(false);
+        courseRepository.save(course);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Restore course success !");
+        apiResponse.setData(course);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

@@ -138,6 +138,25 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public APIResponse restoreQuestion(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Question not found by id " + id)
+        );
+
+        question.setDeleted(false);
+        questionRepository.save(question);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Restore question success !");
+        apiResponse.setData(question);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse searchQuestion(String keyword, int page, int size) {
         APIResponse apiResponse = new APIResponse();
 

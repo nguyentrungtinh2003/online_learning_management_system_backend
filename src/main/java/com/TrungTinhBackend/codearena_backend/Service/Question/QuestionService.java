@@ -8,6 +8,7 @@ public interface QuestionService {
     public APIResponse addQuestion(QuestionDTO questionDTO, MultipartFile img) throws Exception;
     public APIResponse updateQuestion(Long id, QuestionDTO questionDTO, MultipartFile img) throws Exception;
     public APIResponse deleteQuestion(Long id) throws Exception;
+    public APIResponse restoreQuestion(Long id);
     public APIResponse searchQuestion(String keyword, int page, int size);
     public APIResponse getQuestionByPage(int page, int size);
     public APIResponse getAllQuestion();

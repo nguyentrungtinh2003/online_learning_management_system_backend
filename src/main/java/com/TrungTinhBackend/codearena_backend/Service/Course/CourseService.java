@@ -14,4 +14,5 @@ public interface CourseService {
     public APIResponse searchCourse(String keyword, int page, int size);
     public APIResponse getCourseByUserId(Long userId);
     public APIResponse getCourseByPage(int page, int size);
+    public APIResponse restoreCourse(Long id);
 }

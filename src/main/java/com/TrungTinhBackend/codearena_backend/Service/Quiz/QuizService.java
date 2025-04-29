@@ -11,6 +11,7 @@ public interface QuizService {
     public APIResponse addQuiz(QuizDTO quizDTO, MultipartFile img) throws Exception;
     public APIResponse updateQuiz(Long id, QuizDTO quizDTO, MultipartFile img) throws Exception;
     public APIResponse deleteQuiz(Long id) throws Exception;
+    public APIResponse restoreQuiz(Long id);
     public APIResponse searchQuiz(String keyword, int page, int size);
     public APIResponse getQuizByPage(int page, int size);
     public APIResponse getAllQuiz();

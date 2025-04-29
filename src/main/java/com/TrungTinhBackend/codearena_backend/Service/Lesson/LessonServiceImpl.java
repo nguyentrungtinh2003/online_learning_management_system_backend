@@ -232,4 +232,23 @@ public class LessonServiceImpl implements LessonService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse restoreLesson(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        Lesson lesson = lessonRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Lesson not found by id " + id)
+        );
+
+        lesson.setDeleted(false);
+        lessonRepository.save(lesson);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Restore lesson success !");
+        apiResponse.setData(lesson);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
 }

@@ -19,6 +19,8 @@ public interface UserService {
 
     public APIResponse deleteUser(Long id) throws Exception;
 
+    public APIResponse restoreUser(Long id);
+
     public APIResponse getAllUser() throws Exception;
 
     public APIResponse getUserById(Long id) throws Exception;

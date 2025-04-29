@@ -16,4 +16,5 @@ public interface BlogService {
     public APIResponse likeBlog(Long userId, Long blogId);
     public APIResponse unLikeBlog(Long userId, Long blogId);
     public APIResponse getBlogsLikedByUser(Long userId);
+    public APIResponse restoreBlog(Long id);
 }

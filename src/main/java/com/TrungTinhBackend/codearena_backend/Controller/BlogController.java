@@ -79,4 +79,9 @@ public class BlogController {
     public ResponseEntity<APIResponse> deleteBlog(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(blogService.deleteBlog(id));
     }
+
+    @DeleteMapping("/restore/{id}")
+    public ResponseEntity<APIResponse> restoreBlog(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(blogService.restoreBlog(id));
+    }
 }

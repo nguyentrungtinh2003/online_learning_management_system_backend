@@ -67,4 +67,9 @@ public class LessonController {
     public ResponseEntity<APIResponse> deleteLesson(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(lessonService.deleteLesson(id));
     }
+
+    @DeleteMapping("teacher/lessons/restore/{id}")
+    public ResponseEntity<APIResponse> restoreLesson(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(lessonService.restoreLesson(id));
+    }
 }

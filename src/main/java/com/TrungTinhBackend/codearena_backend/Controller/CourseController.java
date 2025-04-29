@@ -70,4 +70,9 @@ public class CourseController {
     public ResponseEntity<APIResponse> deleteCourse(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }
+
+    @DeleteMapping("teacher/courses/restore/{id}")
+    public ResponseEntity<APIResponse> restoreCourse(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(courseService.restoreCourse(id));
+    }
 }

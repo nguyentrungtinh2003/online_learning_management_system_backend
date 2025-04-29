@@ -285,6 +285,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse restoreUser(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null) {
+            throw new NotFoundException("User not found by id " + id);
+        }
+
+        user.setEnabled(false);
+        user.setDeleted(false);
+
+        userRepository.save(user);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Restore user success");
+        apiResponse.setData(user);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getAllUser() throws Exception {
         APIResponse apiResponse = new APIResponse();
 

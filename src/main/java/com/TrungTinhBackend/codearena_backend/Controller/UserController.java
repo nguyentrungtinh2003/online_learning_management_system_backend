@@ -85,6 +85,11 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUser(id));
     }
 
+    @DeleteMapping("admin/user/restore/{id}")
+    public ResponseEntity<APIResponse> restoreUser(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(userService.restoreUser(id));
+    }
+
     @DeleteMapping("logout")
     public ResponseEntity<APIResponse> logout(@PathVariable String username) throws Exception {
         return ResponseEntity.ok(userService.logout(username));
