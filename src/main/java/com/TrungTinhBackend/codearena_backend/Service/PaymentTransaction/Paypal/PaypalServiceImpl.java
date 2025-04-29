@@ -32,7 +32,7 @@ public class PaypalServiceImpl implements PaypalService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final double COIN_RATE = 100.0; // 1 USD = 10 Coin
+    private static final double COIN_RATE = 1000.0;
 
     public PaypalServiceImpl(APIContext apiContext, PaymentTransactionRepository paymentTransactionRepository, UserRepository userRepository) {
         this.apiContext = apiContext;

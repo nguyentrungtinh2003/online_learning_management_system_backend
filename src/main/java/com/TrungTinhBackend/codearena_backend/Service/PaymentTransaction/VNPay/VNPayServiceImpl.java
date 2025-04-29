@@ -31,7 +31,7 @@ public class VNPayServiceImpl implements VNPayService{
     private final String vnpTmnCode;
     private final String vnpHashSecret;
 
-    private static final double COIN_RATE = 100.0;
+    private static final double COIN_RATE = 1000.0;
     private static final String ORDER_INFO = "Nạp tiền vào CodeArena";
 
     public VNPayServiceImpl(
