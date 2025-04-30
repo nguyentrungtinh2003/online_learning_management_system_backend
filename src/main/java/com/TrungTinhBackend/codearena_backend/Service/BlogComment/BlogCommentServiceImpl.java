@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogCommentServiceImpl implements BlogCommentService{
@@ -180,9 +181,19 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         List<BlogComment> blogComments = blogCommentRepository.findByBlogId(blogId);
 
+        List<BlogCommentDTO> blogCommentDTOS = blogComments.stream().map(blogComment -> {
+            BlogCommentDTO blogCommentDTO = new BlogCommentDTO();
+            blogCommentDTO.setBlogId(blogComment.getBlog().getId());
+            blogCommentDTO.setContent(blogComment.getContent());
+            blogCommentDTO.setUsername(blogComment.getUser().getUsername());
+            blogCommentDTO.setUserId(blogComment.getUser().getId());
+            blogCommentDTO.setImg(blogComment.getUser().getImg());
+            return blogCommentDTO;
+        }).toList();
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get blog comment by blog id success !");
-        apiResponse.setData(blogComments);
+        apiResponse.setData(blogCommentDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
