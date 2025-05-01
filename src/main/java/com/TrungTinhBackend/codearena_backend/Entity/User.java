@@ -70,6 +70,10 @@ public class User implements UserDetails {
 
     private boolean isDeleted;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore()
+    private List<UserPointHistory> userPointHistories;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore()
     private List<Enrollment> enrollments;
