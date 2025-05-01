@@ -16,6 +16,6 @@ public interface UserPointHistoryRepository extends JpaRepository<UserPointHisto
     @Query("SELECT h FROM UserPointHistory h WHERE h.date BETWEEN :startDate AND :endDate ORDER BY h.point DESC")
     List<UserPointHistory> findTop10ByWeek(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    @Query("SELECT h FROM UserPointHistory h WHERE FUNCTION('MONTH', h.date) = :month AND FUNCTION('YEAR', h.date) = :year ORDER BY h.point DESC")
+    @Query("SELECT h FROM UserPointHistory h WHERE EXTRACT(MONTH FROM h.date) = :month AND EXTRACT(YEAR FROM h.date) = :year ORDER BY h.point DESC")
     List<UserPointHistory> findTop10ByMonth(@Param("month") int month, @Param("year") int year);
 }
