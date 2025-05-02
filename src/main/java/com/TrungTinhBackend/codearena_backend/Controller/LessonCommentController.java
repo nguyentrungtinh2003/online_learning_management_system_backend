@@ -32,7 +32,7 @@ public class LessonCommentController {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentById(id));
     }
 
-    @GetMapping("/lesson/{id}")
+    @GetMapping("/lesson/{lessonId}")
     public ResponseEntity<APIResponse> getLessonCommentByLessonId(@PathVariable Long lessonId) {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentByLessonId(lessonId));
     }
