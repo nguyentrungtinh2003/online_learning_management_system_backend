@@ -17,7 +17,7 @@ public class LessonCommentController {
     private LessonCommentService lessonCommentService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestPart(value = "lessonComment") LessonCommentDTO lessonCommentDTO
+    public ResponseEntity<APIResponse> addLessonComment(@Valid @RequestBody LessonCommentDTO lessonCommentDTO
                                                 ) throws Exception {
         return ResponseEntity.ok(lessonCommentService.addLessonComment(lessonCommentDTO));
     }
