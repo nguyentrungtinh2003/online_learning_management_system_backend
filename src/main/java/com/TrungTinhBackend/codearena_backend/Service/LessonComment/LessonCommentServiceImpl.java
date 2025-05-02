@@ -129,6 +129,8 @@ public class LessonCommentServiceImpl implements LessonCommentService{
             LessonCommentDTO lessonCommentDTO = new LessonCommentDTO();
             lessonCommentDTO.setLessonId(lessonComment.getLesson().getId());
             lessonCommentDTO.setUserId(lessonComment.getUser().getId());
+            lessonCommentDTO.setUsername(lessonComment.getUser().getUsername());
+            lessonCommentDTO.setImg(lessonComment.getUser().getImg());
             lessonCommentDTO.setContent(lessonComment.getContent());
             return lessonCommentDTO;
         }).toList();

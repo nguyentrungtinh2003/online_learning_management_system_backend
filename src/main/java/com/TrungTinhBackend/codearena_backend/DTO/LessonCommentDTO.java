@@ -15,5 +15,9 @@ public class LessonCommentDTO {
 
     private Long userId;
 
+    private String username;
+
+    private String img;
+
     private Long lessonId;
 }
