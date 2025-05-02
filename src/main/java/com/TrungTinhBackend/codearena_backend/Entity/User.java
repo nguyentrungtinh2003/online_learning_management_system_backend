@@ -98,9 +98,11 @@ public class User implements UserDetails {
     private List<Blog> blogs;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore()
     private List<BlogComment> blogComments;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore()
     private List<LessonComment> lessonComments;
 
     @OneToMany(mappedBy = "lecturer")
