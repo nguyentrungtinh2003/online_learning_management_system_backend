@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.LessonComment;
 
+import com.TrungTinhBackend.codearena_backend.DTO.BlogCommentDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.*;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.LessonCommentRepository;
@@ -124,9 +125,17 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         List<LessonComment> lessonComments = lessonCommentRepository.findByLessonId(lessonId);
 
+        List<LessonCommentDTO> lessonCommentDTOS = lessonComments.stream().map(lessonComment -> {
+            LessonCommentDTO lessonCommentDTO = new LessonCommentDTO();
+            lessonCommentDTO.setLessonId(lessonComment.getLesson().getId());
+            lessonCommentDTO.setUserId(lessonComment.getUser().getId());
+            lessonCommentDTO.setContent(lessonComment.getContent());
+            return lessonCommentDTO;
+        }).toList();
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get lesson comment by lesson id success !");
-        apiResponse.setData(lessonComments);
+        apiResponse.setData(lessonCommentDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
