@@ -32,6 +32,11 @@ public class LessonCommentController {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentById(id));
     }
 
+    @GetMapping("/lesson/{id}")
+    public ResponseEntity<APIResponse> getLessonCommentByLessonId(@PathVariable Long lessonId) {
+        return ResponseEntity.ok(lessonCommentService.getLessonCommentByLessonId(lessonId));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<APIResponse> searchLessonComment(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,

@@ -119,6 +119,20 @@ public class LessonCommentServiceImpl implements LessonCommentService{
     }
 
     @Override
+    public APIResponse getLessonCommentByLessonId(Long lessonId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<LessonComment> lessonComments = lessonCommentRepository.findByLessonId(lessonId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get lesson comment by lesson id success !");
+        apiResponse.setData(lessonComments);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse deleteLessonComment(Long id) {
         APIResponse apiResponse = new APIResponse();
 

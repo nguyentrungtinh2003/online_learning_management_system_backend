@@ -8,9 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LessonCommentRepository extends JpaRepository<LessonComment,Long> {
     @Query("SELECT l FROM LessonComment l WHERE " +
             "LOWER(l.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<LessonComment> searchLessonComment(@Param("keyword") String keyword, Pageable pageable);
+
+    List<LessonComment> findByLessonId(Long lessonId);
 }
