@@ -46,5 +46,6 @@ public class Lesson {
     private ChatRoom chatRoom;
 
     @OneToMany(mappedBy = "lesson")
+    @JsonIgnore()
     private List<LessonComment> lessonComments;
 }
