@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.DTO.*;
+import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,6 +62,11 @@ public class UserController {
     @GetMapping("user/{id}")
     public ResponseEntity<APIResponse> getUserById(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("user/role/{roleEnum}")
+    public ResponseEntity<APIResponse> getUserByRole(@PathVariable RoleEnum roleEnum) throws Exception {
+        return ResponseEntity.ok(userService.getUserByRole(roleEnum));
     }
 
     @GetMapping("admin/user/search")

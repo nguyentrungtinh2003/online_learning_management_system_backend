@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Repository;
 
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,5 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
     public com.TrungTinhBackend.codearena_backend.Entity.User findByEmail(String email);
     @Query("SELECT u.id FROM User u")
     List<Long> getAllUserIds();
+    List<User> findByRoleEnum(RoleEnum roleEnum);
 }

@@ -332,6 +332,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse getUserByRole(RoleEnum roleEnum) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+
+        List<User> users = userRepository.findByRoleEnum(roleEnum);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get user by role success");
+        apiResponse.setData(users);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getUserByPage(int page, int size) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

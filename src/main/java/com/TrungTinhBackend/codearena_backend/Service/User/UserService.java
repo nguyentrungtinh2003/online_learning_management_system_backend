@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
 import com.TrungTinhBackend.codearena_backend.DTO.*;
+import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,8 @@ public interface UserService {
     public APIResponse getAllUser() throws Exception;
 
     public APIResponse getUserById(Long id) throws Exception;
+
+    public APIResponse getUserByRole(RoleEnum roleEnum) throws Exception;
 
     public APIResponse getUserByPage(int page, int size) throws Exception;
 
