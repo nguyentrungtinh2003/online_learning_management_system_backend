@@ -16,4 +16,5 @@ public interface LessonRepository extends JpaRepository<Lesson,Long>, JpaSpecifi
     List<Lesson> findByIsDeletedFalse();
     Page<Lesson> findByIsDeletedFalse(Pageable pageable);
     Page<Lesson> findByCourseIdAndIsDeletedFalse(Long courseId, Pageable pageable);
+    List<Lesson> findByCourseId(Long courseId);
 }
