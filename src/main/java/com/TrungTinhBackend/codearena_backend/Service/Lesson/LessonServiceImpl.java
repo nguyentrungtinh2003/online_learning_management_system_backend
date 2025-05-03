@@ -41,16 +41,12 @@ public class LessonServiceImpl implements LessonService{
     @Autowired
     private QuizRepository quizRepository;
 
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
-
-    public LessonServiceImpl(LessonRepository lessonRepository, ImgService imgService, VideoService videoService, CourseRepository courseRepository, QuizRepository quizRepository, ChatRoomRepository chatRoomRepository) {
+    public LessonServiceImpl(LessonRepository lessonRepository, ImgService imgService, VideoService videoService, CourseRepository courseRepository, QuizRepository quizRepository) {
         this.lessonRepository = lessonRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.courseRepository = courseRepository;
         this.quizRepository = quizRepository;
-        this.chatRoomRepository = chatRoomRepository;
     }
 
     @Override
@@ -60,12 +56,6 @@ public class LessonServiceImpl implements LessonService{
             Course course = courseRepository.findById(lessonDTO.getCourseId()).orElseThrow(
                     () -> new NotFoundException("Course not found by id " + lessonDTO.getCourseId())
             );
-
-            ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setChatRoomName("Phòng chat " + lessonDTO.getLessonName());
-            chatRoom.setDeleted(false);
-
-            chatRoomRepository.save(chatRoom);
 
             Lesson lesson = new Lesson();
 
@@ -77,7 +67,6 @@ public class LessonServiceImpl implements LessonService{
             lesson.setDeleted(false);
             lesson.setCourse(course);
             lesson.setQuizzes(null);
-            lesson.setChatRoom(chatRoom);
 
             lessonRepository.save(lesson);
 
