@@ -63,6 +63,11 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.updateLesson(id,lessonDTO, img, video));
     }
 
+    @GetMapping("teacher/lessons/courses/{courseId}/all")
+    public ResponseEntity<APIResponse> getAllLessonsByCourseId(@PathVariable Long courseId) {
+        return ResponseEntity.ok(lessonService.getAllLessonsByCourseId(courseId));
+    }
+
     @DeleteMapping("teacher/lessons/delete/{id}")
     public ResponseEntity<APIResponse> deleteLesson(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(lessonService.deleteLesson(id));
