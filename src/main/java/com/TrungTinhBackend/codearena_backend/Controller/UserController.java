@@ -48,7 +48,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserInfo(jwt));
     }
 
-    @GetMapping("admin/user/all")
+    @GetMapping("/user/all")
     public ResponseEntity<APIResponse> getAllUser() throws Exception {
         return ResponseEntity.ok(userService.getAllUser());
     }
