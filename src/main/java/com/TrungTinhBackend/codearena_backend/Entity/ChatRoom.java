@@ -19,17 +19,14 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String chatRoomName;
-
     private boolean isDeleted;
 
-    @ManyToMany(mappedBy = "chatRooms")
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "user1_id")
+    private User user1;
 
-    @OneToOne
-    @JoinColumn(name = "lesson_id",unique = true)
-    private Lesson lesson;
+    @ManyToOne
+    @JoinColumn(name = "user2_id")
+    private User user2;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    private List<Chat> chats;
 }

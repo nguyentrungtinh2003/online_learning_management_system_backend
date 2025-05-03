@@ -17,12 +17,10 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    @MessageMapping("/chat.sendMessage")
+    @PostMapping("/add")
     public ResponseEntity<APIResponse> addChat(@Valid @RequestBody ChatDTO chatDTO
                                                ) throws Exception {
-        APIResponse apiResponse = chatService.addChat(chatDTO);
-
-        return ResponseEntity.status(apiResponse.getStatusCode().intValue()).body(apiResponse);
+        return ResponseEntity.ok(chatService.addChat(chatDTO));
     }
 
     @GetMapping("/all")
@@ -33,6 +31,11 @@ public class ChatController {
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse> getChatById(@PathVariable Long id) {
         return ResponseEntity.ok(chatService.getChatById(id));
+    }
+
+    @GetMapping("/chat-room/{chatRoomId}")
+    public ResponseEntity<APIResponse> getChatByChatRoomId(@PathVariable Long chatRoomId) {
+        return ResponseEntity.ok(chatService.getChatByChatRoomId(chatRoomId));
     }
 
     @GetMapping("/search")

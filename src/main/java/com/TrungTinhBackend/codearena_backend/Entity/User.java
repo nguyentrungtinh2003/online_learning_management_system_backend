@@ -78,16 +78,8 @@ public class User implements UserDetails {
     @JsonIgnore()
     private List<Enrollment> enrollments;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_chatroom",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "chatroom_id")
-    )
-    private List<ChatRoom> chatRooms;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    private List<Chat> chats;
+//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+//    private List<Chat> chats;
 
 //    @ManyToMany(mappedBy = "likedUsers")
 //    @JsonIgnore

@@ -11,6 +11,7 @@ import com.TrungTinhBackend.codearena_backend.DTO.ChatDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,42 +42,49 @@ public class ChatServiceImpl implements ChatService{
     private ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private WebSocketSender webSocketSender;
 
-    public ChatServiceImpl(ImgService imgService, VideoService videoService, ChatRepository chatRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository, SimpMessagingTemplate messagingTemplate) {
+    public ChatServiceImpl(ImgService imgService, VideoService videoService, ChatRepository chatRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository, WebSocketSender webSocketSender) {
         this.imgService = imgService;
         this.videoService = videoService;
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
         this.chatRoomRepository = chatRoomRepository;
-        this.messagingTemplate = messagingTemplate;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
     public APIResponse addChat(ChatDTO chatDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            User user = userRepository.findById(chatDTO.getSenderId()).orElseThrow(
-                    () -> new NotFoundException("User not found by id " + chatDTO.getSenderId())
+            User user1 = userRepository.findById(chatDTO.getUser1Id()).orElseThrow(
+                    () -> new NotFoundException("User1 not found by id " + chatDTO.getUser1Id())
             );
 
-            ChatRoom chatRoom = chatRoomRepository.findById(chatDTO.getChatRoom().getId()).orElseThrow(
-                    () -> new NotFoundException("Chat Room not found by id " + chatDTO.getChatRoom().getId())
+        User user2 = userRepository.findById(chatDTO.getUser2Id()).orElseThrow(
+                () -> new NotFoundException("User2 not found by id " + chatDTO.getUser2Id())
+        );
+
+            ChatRoom chatRoom = chatRoomRepository.findById(chatDTO.getChatRoomId()).orElseThrow(
+                    () -> new NotFoundException("Chat Room not found by id " + chatDTO.getChatRoomId())
             );
 
             Chat chat = new Chat();
 
             chat.setChatRoom(chatRoom);
-            chat.setSender(user);
+            chat.setUser1(user1);
+            chat.setUser2(user2);
+            chat.setChatRoom(chatRoom);
+            chat.setMessage(chatDTO.getMessage());
+            chat.setTimestamp(LocalDateTime.now());
+        chat.setDeleted(false);
 //            if(img != null && !img.isEmpty()) {
 //                chat.setImg(imgService.uploadImg(img));
 //            }
 //            if(video != null && !video.isEmpty()) {
 //                chat.setVideoURL(videoService.uploadVideo(video));
 //            }
-            chat.setMessage(chatDTO.getMessage());
-            chat.setDeleted(false);
-            chat.setTimestamp(LocalDateTime.now());
+
 
             chatRepository.save(chat);
 
@@ -85,7 +93,7 @@ public class ChatServiceImpl implements ChatService{
             apiResponse.setData(chat);
             apiResponse.setTimestamp(LocalDateTime.now());
 
-            messagingTemplate.convertAndSend("/topic/chatroom/" + chatRoom.getId(),chat);
+            webSocketSender.sendChat(chatDTO);
 
             return apiResponse;
     }
@@ -136,6 +144,30 @@ public class ChatServiceImpl implements ChatService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get chat by page success !");
         apiResponse.setData(chats);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getChatByChatRoomId(Long chatRoomId) {
+        APIResponse apiResponse = new APIResponse();
+
+  List<Chat> chats = chatRepository.findByChatRoomId(chatRoomId);
+
+  List<ChatDTO> chatDTOS = chats.stream().map(chat -> {
+      ChatDTO chatDTO = new ChatDTO();
+      chatDTO.setChatRoomId(chat.getChatRoom().getId());
+      chatDTO.setMessage(chat.getMessage());
+      chatDTO.setUser1Id(chat.getUser1().getId());
+      chatDTO.setUser2Id(chat.getUser2().getId());
+      chatDTO.setTimeStamp(chat.getTimestamp());
+      return chatDTO;
+  }).toList();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get chat by chat room id success !");
+        apiResponse.setData(chatDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

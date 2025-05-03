@@ -7,16 +7,22 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ChatDTO {
 
-    private ChatRoom chatRoom;
+    private Long chatRoomId;
 
-    private Long senderId;
+    private Long user1Id;
+
+    private Long user2Id;
 
     @NotBlank(message = "Message is required !")
     @Size(min = 0, max = 255, message = "Message must be between 0 and 255 characters!")
     private String message;
+
+    private LocalDateTime timeStamp;
 
 //    @NotBlank(message = "Image URL is required!")
 //    @Pattern(

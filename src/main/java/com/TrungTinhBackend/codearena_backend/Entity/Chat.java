@@ -20,18 +20,18 @@ public class Chat {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "chatroom_id")
-    private ChatRoom chatRoom;
+    @JoinColumn(name = "user1_id")
+    private User user1;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User sender;
+    @JoinColumn(name = "user2_id")
+    private User user2;
 
     private String message;
 
-    private String img;
-
-    private String videoURL;
+    @ManyToOne
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
 
     private LocalDateTime timestamp;
 
