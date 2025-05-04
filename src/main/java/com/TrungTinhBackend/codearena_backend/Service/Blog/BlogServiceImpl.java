@@ -295,7 +295,7 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setData(likedUserIds);
             apiResponse.setTimestamp(LocalDateTime.now());
 
-            webSocketSender.sendLike(blogId,userId,likedUserIds);
+            webSocketSender.sendUnLike(blogId,userId,likedUserIds);
 
             return apiResponse;
         } catch (Exception e) {
