@@ -64,6 +64,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("user/email/{email}")
+    public ResponseEntity<APIResponse> getUserByEmail(@PathVariable String email) throws Exception {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
     @GetMapping("user/role/{roleEnum}")
     public ResponseEntity<APIResponse> getUserByRole(@PathVariable RoleEnum roleEnum) throws Exception {
         return ResponseEntity.ok(userService.getUserByRole(roleEnum));

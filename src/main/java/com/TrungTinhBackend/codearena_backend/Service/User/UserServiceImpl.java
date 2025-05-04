@@ -332,6 +332,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse getUserByEmail(String email) throws Exception {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findByEmail(email);
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get user by email success");
+        apiResponse.setData(user);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getUserByRole(RoleEnum roleEnum) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

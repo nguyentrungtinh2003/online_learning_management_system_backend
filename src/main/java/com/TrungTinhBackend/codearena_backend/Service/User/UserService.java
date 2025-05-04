@@ -26,6 +26,8 @@ public interface UserService {
 
     public APIResponse getUserById(Long id) throws Exception;
 
+    public APIResponse getUserByEmail(String email) throws Exception;
+
     public APIResponse getUserByRole(RoleEnum roleEnum) throws Exception;
 
     public APIResponse getUserByPage(int page, int size) throws Exception;
