@@ -234,7 +234,7 @@ public class CourseServiceImpl implements CourseService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<Course> courses = courseRepository.findByIsDeletedFalse(pageable);
+        Page<Course> courses = courseRepository.findAll(pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get course by page success !");

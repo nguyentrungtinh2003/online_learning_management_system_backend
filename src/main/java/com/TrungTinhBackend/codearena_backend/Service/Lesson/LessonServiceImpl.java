@@ -93,6 +93,20 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
+    public APIResponse getAllLessonsByCourseId(Long courseId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all lessons by course id success !");
+        apiResponse.setData(lessons);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getLessonById(Long id) {
         APIResponse apiResponse = new APIResponse();
 
