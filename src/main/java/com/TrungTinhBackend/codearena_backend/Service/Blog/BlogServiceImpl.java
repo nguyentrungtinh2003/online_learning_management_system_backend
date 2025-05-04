@@ -10,6 +10,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,11 +41,15 @@ public class BlogServiceImpl implements BlogService{
     @Autowired
     private UserRepository userRepository;
 
-    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository, WebSocketSender webSocketSender) {
         this.blogRepository = blogRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.userRepository = userRepository;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -251,6 +256,8 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setData(likedUserIds);
             apiResponse.setTimestamp(LocalDateTime.now());
 
+            webSocketSender.sendLike(blogId,userId,likedUserIds);
+
             return apiResponse;
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,6 +294,8 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setMessage("User un like blog success !");
             apiResponse.setData(likedUserIds);
             apiResponse.setTimestamp(LocalDateTime.now());
+
+            webSocketSender.sendLike(blogId,userId,likedUserIds);
 
             return apiResponse;
         } catch (Exception e) {

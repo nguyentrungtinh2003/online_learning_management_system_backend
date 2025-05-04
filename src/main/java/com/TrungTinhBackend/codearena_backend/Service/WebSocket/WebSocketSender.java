@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class WebSocketSender {
 
@@ -24,6 +26,14 @@ public class WebSocketSender {
 
     public void sendChat(ChatDTO chatDTO) {
         messagingTemplate.convertAndSend("/topic/chat-room/" + chatDTO.getChatRoomId(),chatDTO);
+    }
+
+    public void sendLike(Long blogId, Long userId, List<Long> likedUserIds) {
+        messagingTemplate.convertAndSend("/topic/like/" + blogId,likedUserIds);
+    }
+
+    public void sendUnLike(Long blogId, Long userId, List<Long> likedUserIds) {
+        messagingTemplate.convertAndSend("/topic/un-like/" + blogId,likedUserIds);
     }
 
     public void sendNotification(NotificationDTO notificationDTO) {
