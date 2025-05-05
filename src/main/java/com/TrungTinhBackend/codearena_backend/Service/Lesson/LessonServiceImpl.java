@@ -211,7 +211,7 @@ public class LessonServiceImpl implements LessonService{
         APIResponse apiResponse = new APIResponse();
 
         Pageable pageable = PageRequest.of(page,size);
-        Page<Lesson> lessons = lessonRepository.findByIsDeletedFalse(pageable);
+        Page<Lesson> lessons = lessonRepository.findAll(pageable);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get lesson by page success !");

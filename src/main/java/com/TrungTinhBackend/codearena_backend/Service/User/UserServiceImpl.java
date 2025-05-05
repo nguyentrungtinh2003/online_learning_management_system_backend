@@ -406,6 +406,9 @@ public class UserServiceImpl implements UserService{
                 newUser.setUsername(name);
                 newUser.setImg(profilePicture);
                 newUser.setProvider("GOOGLE");
+                newUser.setPoint(0L);
+                newUser.setCoin(0.0);
+                newUser.setRoleEnum(RoleEnum.STUDENT);
                 userRepository.save(newUser); // Lưu vào DB
             }
 
