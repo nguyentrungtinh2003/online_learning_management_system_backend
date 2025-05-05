@@ -106,9 +106,10 @@ public class ChatServiceImpl implements ChatService{
                     () -> new NotFoundException("Chat not found by id " + id)
             );
 
-            chat.setDeleted(true);
-
-            chatRepository.save(chat);
+//            chat.setDeleted(true);
+//
+//            chatRepository.save(chat);
+        chatRepository.delete(chat);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete chat success !");

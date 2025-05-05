@@ -102,9 +102,11 @@ public class BlogCommentServiceImpl implements BlogCommentService{
                     () -> new NotFoundException("Blog comment not found by id " + id)
             );
 
-            blogComment.setDeleted(true);
+//            blogComment.setDeleted(true);
 
-            blogCommentRepository.save(blogComment);
+//            blogCommentRepository.save(blogComment);
+
+        blogCommentRepository.delete(blogComment);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog comment success !");

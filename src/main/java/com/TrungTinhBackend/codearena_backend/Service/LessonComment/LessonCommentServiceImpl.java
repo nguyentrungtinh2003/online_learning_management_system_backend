@@ -151,8 +151,10 @@ public class LessonCommentServiceImpl implements LessonCommentService{
                 () -> new NotFoundException("Lesson comment not found !")
         );
 
-        lessonComment.setDeleted(true);
-        lessonCommentRepository.save(lessonComment);
+//        lessonComment.setDeleted(true);
+//        lessonCommentRepository.save(lessonComment);
+
+        lessonCommentRepository.delete(lessonComment);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Delete lesson comment by id success !");
