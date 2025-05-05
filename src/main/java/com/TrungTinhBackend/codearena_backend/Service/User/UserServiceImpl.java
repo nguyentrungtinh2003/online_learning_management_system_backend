@@ -361,7 +361,7 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
 
             Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
-            Page<User> page1 = userRepository.findAllByIsDeletedFalse(pageable);
+            Page<User> page1 = userRepository.findAll(pageable);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Get all user by page "+page+" ,size "+size+" success");
