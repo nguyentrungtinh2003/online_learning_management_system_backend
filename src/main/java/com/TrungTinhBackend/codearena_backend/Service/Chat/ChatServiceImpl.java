@@ -158,6 +158,7 @@ public class ChatServiceImpl implements ChatService{
 
   List<ChatDTO> chatDTOS = chats.stream().map(chat -> {
       ChatDTO chatDTO = new ChatDTO();
+      chatDTO.setId(chat.getId());
       chatDTO.setChatRoomId(chat.getChatRoom().getId());
       chatDTO.setMessage(chat.getMessage());
       chatDTO.setUser1Id(chat.getUser1().getId());

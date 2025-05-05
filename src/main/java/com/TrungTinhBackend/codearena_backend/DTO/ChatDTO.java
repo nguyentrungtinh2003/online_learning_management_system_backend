@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Data
 public class ChatDTO {
 
+    private Long id;
+
     private Long chatRoomId;
 
     private Long user1Id;

@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class LessonCommentDTO {
 
+    private Long id;
+
     private String content;
 
 //    private String img;

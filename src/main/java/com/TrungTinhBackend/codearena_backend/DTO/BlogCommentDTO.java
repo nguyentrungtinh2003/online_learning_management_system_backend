@@ -30,6 +30,8 @@ public class BlogCommentDTO {
 
     private Long userId;
 
+    private Long id;
+
     private String username;
 
     private String img;

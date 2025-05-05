@@ -127,6 +127,7 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         List<LessonCommentDTO> lessonCommentDTOS = lessonComments.stream().map(lessonComment -> {
             LessonCommentDTO lessonCommentDTO = new LessonCommentDTO();
+            lessonCommentDTO.setId(lessonComment.getId());
             lessonCommentDTO.setLessonId(lessonComment.getLesson().getId());
             lessonCommentDTO.setUserId(lessonComment.getUser().getId());
             lessonCommentDTO.setUsername(lessonComment.getUser().getUsername());

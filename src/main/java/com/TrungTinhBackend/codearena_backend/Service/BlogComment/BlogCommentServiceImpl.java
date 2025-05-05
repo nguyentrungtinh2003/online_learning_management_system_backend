@@ -185,6 +185,7 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         List<BlogCommentDTO> blogCommentDTOS = blogComments.stream().map(blogComment -> {
             BlogCommentDTO blogCommentDTO = new BlogCommentDTO();
+            blogCommentDTO.setId(blogComment.getId());
             blogCommentDTO.setBlogId(blogComment.getBlog().getId());
             blogCommentDTO.setContent(blogComment.getContent());
             blogCommentDTO.setUsername(blogComment.getUser().getUsername());
