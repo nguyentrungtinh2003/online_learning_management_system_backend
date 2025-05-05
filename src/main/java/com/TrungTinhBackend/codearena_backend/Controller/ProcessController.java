@@ -15,9 +15,9 @@ public class ProcessController {
 
     @PutMapping("/create/{userId}/{courseId}")
     public ResponseEntity<APIResponse> createProcess(@PathVariable Long userId,
-                                                    @PathVariable Long courseId,
+                                                    @PathVariable Long courseId
                                                     ) throws Exception {
-        return ResponseEntity.ok(processService.updateProcess(userId, courseId, lessonId));
+        return ResponseEntity.ok(processService.createInitialProcess(userId, courseId ));
     }
 
     @PutMapping("/update/{userId}/{courseId}/{lessonId}")
