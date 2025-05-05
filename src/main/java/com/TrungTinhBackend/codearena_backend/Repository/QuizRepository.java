@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz,Long>, JpaSpecificationExecutor<Quiz> {
     Page<Quiz> findByLessonIdAndIsDeletedFalse(Long lessonId, Pageable pageable);
+    List<Quiz> findByLessonId(Long lessonId);
 }

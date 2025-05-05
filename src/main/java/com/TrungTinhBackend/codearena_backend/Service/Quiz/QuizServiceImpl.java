@@ -191,6 +191,21 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
+    public APIResponse getAllQuizzessByLessonId(Long lessonId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Quiz> quizzes = quizRepository.findByLessonId(lessonId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all lessons by lesson id success !");
+        apiResponse.setData(quizzes);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    
+    @Override
     public APIResponse getQuizByPage(int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
