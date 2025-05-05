@@ -26,6 +26,7 @@ public class BlogDTO {
 
     private Set<Long> likedUsers;
 
+    private boolean isDeleted;
 
     @NotBlank(message = "Image URL is required!")
     @Pattern(

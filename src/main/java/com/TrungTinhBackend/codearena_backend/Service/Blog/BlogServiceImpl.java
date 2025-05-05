@@ -174,6 +174,7 @@ public class BlogServiceImpl implements BlogService{
                 .map(
                         blog -> {
                             BlogDTO blogDTO = new BlogDTO();
+                            blogDTO.setDeleted(blog.isDeleted());
                             blogDTO.setBlogName(blog.getBlogName());
                             blogDTO.setId(blog.getId());
                             blogDTO.setUserId(blog.getUser().getId());
