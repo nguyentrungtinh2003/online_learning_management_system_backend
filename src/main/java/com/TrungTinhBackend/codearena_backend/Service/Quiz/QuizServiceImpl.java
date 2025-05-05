@@ -194,7 +194,7 @@ public class QuizServiceImpl implements QuizService{
     public APIResponse getAllQuizzessByLessonId(Long lessonId) {
         APIResponse apiResponse = new APIResponse();
 
-        List<Quiz> quizzes = lessonRepository.findByLessonId(lessonId);
+        List<Quiz> quizzes = quizRepository.findByLessonId(lessonId);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get all lessons by lesson id success !");
