@@ -75,7 +75,7 @@ public class QuizController {
         return ResponseEntity.ok(quizService.deleteQuiz(id));
     }
 
-    @DeleteMapping("teacher/quizzes/restore/{id}")
+    @PutMapping("teacher/quizzes/restore/{id}")
     public ResponseEntity<APIResponse> restoreQuiz(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(quizService.restoreQuiz(id));
     }

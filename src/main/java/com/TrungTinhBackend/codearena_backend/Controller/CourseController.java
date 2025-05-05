@@ -71,7 +71,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }
 
-    @DeleteMapping("teacher/courses/restore/{id}")
+    @PutMapping("teacher/courses/restore/{id}")
     public ResponseEntity<APIResponse> restoreCourse(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(courseService.restoreCourse(id));
     }

@@ -62,7 +62,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.deleteQuestion(id));
     }
 
-    @DeleteMapping("teacher/questions/restore/{id}")
+    @PutMapping("teacher/questions/restore/{id}")
     public ResponseEntity<APIResponse> restoreQuestion(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(questionService.restoreQuestion(id));
     }

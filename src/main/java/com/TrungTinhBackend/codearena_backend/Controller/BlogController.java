@@ -80,7 +80,7 @@ public class BlogController {
         return ResponseEntity.ok(blogService.deleteBlog(id));
     }
 
-    @DeleteMapping("/restore/{id}")
+    @PutMapping("/restore/{id}")
     public ResponseEntity<APIResponse> restoreBlog(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(blogService.restoreBlog(id));
     }
