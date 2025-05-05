@@ -41,6 +41,11 @@ public class QuizController {
         return ResponseEntity.ok(quizService.getAllQuiz());
     }
 
+    @GetMapping("teacher/quizzes/lessons/{lessonId}/all")
+    public ResponseEntity<APIResponse> getAllQuizzessByLessonId(@PathVariable Long lessonId) {
+        return ResponseEntity.ok(quizService.getAllQuizzessByLessonId(lessonId));
+    }
+
     @GetMapping("quizzes/{id}")
     public ResponseEntity<APIResponse> getQuizById(@PathVariable Long id) {
         return ResponseEntity.ok(quizService.getQuizById(id));
