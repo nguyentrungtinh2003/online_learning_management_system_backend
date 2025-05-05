@@ -37,5 +37,6 @@ public class BlogComment {
 
     @ManyToOne
     @JoinColumn(name = "blog_id")
+    @JsonIgnore
     private Blog blog;
 }
