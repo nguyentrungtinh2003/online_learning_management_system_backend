@@ -10,6 +10,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.EnrollmentRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.Process.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,14 @@ public class EnrollmentServiceImpl implements EnrollmentService{
     @Autowired
     private CourseRepository courseRepository;
 
-    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository) {
+    @Autowired
+    private ProcessService processService;
+
+    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository, ProcessService processService) {
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
+        this.processService = processService;
     }
 
     @Override
@@ -63,6 +68,8 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         enrollment.setProgress(0);
 
         enrollmentRepository.save(enrollment);
+
+        processService.createInitialProcess(userId,courseId);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User enroll success !");
