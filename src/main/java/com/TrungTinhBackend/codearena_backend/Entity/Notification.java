@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Entity;
 
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = true)
+    @JsonIgnore
     private User receiver;
 
     private String message;

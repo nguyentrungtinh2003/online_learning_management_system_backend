@@ -15,14 +15,20 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping("/add")
-    public ResponseEntity<APIResponse> addNotification(@Valid @RequestBody NotificationDTO notificationDTO) throws Exception {
-        return ResponseEntity.ok(notificationService.addNotification(notificationDTO));
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<APIResponse> addNotification(@Valid @RequestBody NotificationDTO notificationDTO) throws Exception {
+//        return ResponseEntity.ok(notificationService.addNotification(notificationDTO));
+//    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<APIResponse> getNotificationByUserId(@PathVariable Long userId) throws Exception {
         return ResponseEntity.ok(notificationService.getUserNotifications(userId));
+    }
+
+    @PutMapping("/read/{notificationId}")
+    public ResponseEntity<APIResponse> updateReadNotification(
+                                                              @PathVariable Long notificationId) throws Exception {
+        return ResponseEntity.ok(notificationService.getUserNotifications(notificationId));
     }
 
     @GetMapping("/search")

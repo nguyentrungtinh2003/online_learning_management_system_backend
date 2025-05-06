@@ -1,7 +1,10 @@
 package com.TrungTinhBackend.codearena_backend.Service.Course;
 
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
+import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
@@ -9,7 +12,9 @@ import com.TrungTinhBackend.codearena_backend.DTO.CourseDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Enrollment.EnrollmentService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.CourseSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,11 +41,18 @@ public class CourseServiceImpl implements CourseService{
     @Autowired
     private ImgService imgService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService, WebSocketSender webSocketSender) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.enrollmentService = enrollmentService;
         this.imgService = imgService;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -65,6 +77,15 @@ public class CourseServiceImpl implements CourseService{
 
             courseRepository.save(course);
 
+            notificationService.addNotification("Khoá học "+course.getCourseName()+" vừa được tạo !", "COURSE", 1L);
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setRelatedId(course.getUser().getId());
+        notificationDTO.setType(NotificationType.COURSE);
+        notificationDTO.setMessage("Khoá học "+course.getCourseName()+" vừa được tạo !");
+        notificationDTO.setCreatedAt(LocalDateTime.now());
+        notificationDTO.setStatus(NotificationStatus.UNREAD);
+
+webSocketSender.sendNotification(notificationDTO);
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add course success !");
             apiResponse.setData(course);

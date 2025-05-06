@@ -53,33 +53,40 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public APIResponse addNotification(NotificationDTO notificationDTO) {
+    public APIResponse addNotification( String message, String type, Long relatedId) {
         APIResponse apiResponse = new APIResponse();
-        Notification notification = new Notification();
+
         List<Long> allUserIds = userRepository.getAllUserIds();  // Lấy tất cả user ID
 
-        for (Long userId : allUserIds) {
-            notification.setMessage(notificationDTO.getMessage());
-            notification.setReceiver(userRepository.findById(notificationDTO.getReceiverId()).orElseThrow(
+        for (Long userId1 : allUserIds) {
+            Notification notification = new Notification();
+            notification.setMessage(message);
+            notification.setReceiver(userRepository.findById(userId1).orElseThrow(
                     () -> new NotFoundException("User not found !")
             ));
             notification.setCreatedAt(LocalDateTime.now());
             notification.setStatus(NotificationStatus.UNREAD);
-            notification.setType(notificationDTO.getType());
-            notification.setRelatedId(notificationDTO.getRelatedId()); // Clone object
+            notification.setType(NotificationType.valueOf(type));
+            notification.setRelatedId(relatedId);
             notificationRepository.save(notification);
 
-            // Gửi WebSocket cho từng user
+            NotificationDTO notificationDTO = new NotificationDTO();
+            notificationDTO.setMessage(message);
+            notificationDTO.setReceiverId(userId1);
+            notificationDTO.setType(NotificationType.valueOf(type));
+            notificationDTO.setRelatedId(relatedId);
+
             webSocketSender.sendNotification(notificationDTO);
         }
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add notification success !");
-        apiResponse.setData(notification);
+        apiResponse.setData(null);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
     }
+
 
     @Override
     public APIResponse sendSystemNotification(Long userId, String message,String type,Long relatedId) {
@@ -122,6 +129,25 @@ public class NotificationServiceImpl implements NotificationService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get notification by user success !");
         apiResponse.setData(notifications);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse updateReadNotification( Long notificationId) {
+        APIResponse apiResponse = new APIResponse();
+
+       Notification notification = notificationRepository.findById(notificationId).orElseThrow(
+               () -> new NotFoundException("Notification not found !")
+       );
+
+       notification.setStatus(NotificationStatus.READ);
+       notificationRepository.save(notification);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Read notification success !");
+        apiResponse.setData(null);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
