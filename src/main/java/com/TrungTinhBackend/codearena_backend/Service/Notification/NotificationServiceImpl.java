@@ -142,8 +142,7 @@ public class NotificationServiceImpl implements NotificationService{
                () -> new NotFoundException("Notification not found !")
        );
 
-       notification.setStatus(NotificationStatus.READ);
-       notificationRepository.save(notification);
+        notificationRepository.delete(notification);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Read notification success !");
