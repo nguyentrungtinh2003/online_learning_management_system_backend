@@ -85,9 +85,10 @@ public class EnrollmentServiceImpl implements EnrollmentService{
 
         processService.createInitialProcess(userId,courseId);
 
-        notificationService.addNotification("Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L);
+        notificationService.sendSystemNotification(userId,"Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L);
         NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setRelatedId(course.getUser().getId());
+        notificationDTO.setRelatedId(1L);
+        notificationDTO.setReceiverId(userId);
         notificationDTO.setType(NotificationType.COURSE);
         notificationDTO.setMessage("Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice());
         notificationDTO.setCreatedAt(LocalDateTime.now());
