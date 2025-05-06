@@ -77,8 +77,6 @@ public class QuizServiceImpl implements QuizService{
 
             quizRepository.save(quiz);
 
-        notificationService.addNotification("Khoá học "+course.getCourseName()+" vừa được tạo !", "COURSE", 1L);
-
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add quiz success !");
             apiResponse.setData(quiz);
