@@ -17,4 +17,6 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
     @Query("SELECT n FROM Notification n WHERE " +
             "LOWER(n.message) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Notification> searchNotification(@Param("keyword") String keyword, Pageable pageable);
+
+    List<Notification> findByReceiverId(Long userId);
 }

@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
+import com.TrungTinhBackend.codearena_backend.DTO.SystemInfoDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.SystemInfo;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.SystemInfo.SystemInfoService;
@@ -16,9 +17,9 @@ public class SystemInfoController {
     private SystemInfoService systemInfoService;
 
     @PostMapping("/admin/system-info/add")
-    public ResponseEntity<APIResponse> addSystemInfo(@RequestPart("system") SystemInfo systemInfo,
+    public ResponseEntity<APIResponse> addSystemInfo(@RequestPart("system") SystemInfoDTO systemInfoDTO,
                                                      @RequestPart("img") MultipartFile img) throws Exception {
-        return ResponseEntity.ok(systemInfoService.addSystemInfo(systemInfo,img));
+        return ResponseEntity.ok(systemInfoService.addSystemInfo(systemInfoDTO,img));
     }
 
     @GetMapping("/admin/system-info/{id}")
@@ -28,9 +29,9 @@ public class SystemInfoController {
 
     @PutMapping("/admin/update/system-info/{id}")
     public ResponseEntity<APIResponse> updateSystemInfo(@PathVariable Long id,
-                                                        @RequestPart("system") SystemInfo systemInfo,
+                                                        @RequestPart("system") SystemInfoDTO systemInfoDTO,
                                                         @RequestPart("img") MultipartFile img) throws Exception {
-        return ResponseEntity.ok(systemInfoService.updateSystemInfo(id,systemInfo,img));
+        return ResponseEntity.ok(systemInfoService.updateSystemInfo(id,systemInfoDTO,img));
     }
 
     @DeleteMapping("/admin/delete/system-info/{id}")

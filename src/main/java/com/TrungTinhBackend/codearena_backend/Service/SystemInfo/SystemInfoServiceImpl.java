@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.SystemInfo;
 
+import com.TrungTinhBackend.codearena_backend.DTO.SystemInfoDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.SystemInfo;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
@@ -34,25 +35,25 @@ public class SystemInfoServiceImpl implements SystemInfoService{
     }
 
     @Override
-    public APIResponse addSystemInfo(SystemInfo systemInfo, MultipartFile img) throws IOException {
+    public APIResponse addSystemInfo(SystemInfoDTO systemInfoDTO, MultipartFile img) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(systemInfo.getUser().getId()).orElseThrow(
+        User user = userRepository.findById(systemInfoDTO.getUserId()).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
 
         SystemInfo systemInfo1 = new SystemInfo();
-        systemInfo1.setSystemName(systemInfo.getSystemName());
+        systemInfo1.setSystemName(systemInfoDTO.getSystemName());
         systemInfo1.setDate(LocalDateTime.now());
-        systemInfo1.setEmail(systemInfo.getEmail());
-        systemInfo1.setAddress(systemInfo.getAddress());
+        systemInfo1.setEmail(systemInfoDTO.getEmail());
+        systemInfo1.setAddress(systemInfoDTO.getAddress());
         systemInfo1.setImg(imgService.uploadImg(img));
         systemInfo1.setDeleted(false);
-        systemInfo1.setSlogan(systemInfo.getSlogan());
-        systemInfo1.setDescription(systemInfo.getDescription());
-        systemInfo1.setPhoneNumber(systemInfo.getPhoneNumber());
+        systemInfo1.setSlogan(systemInfoDTO.getSlogan());
+        systemInfo1.setDescription(systemInfoDTO.getDescription());
+        systemInfo1.setPhoneNumber(systemInfoDTO.getPhoneNumber());
         systemInfo1.setUser(user);
-        systemInfo1.setSocialMediaURL(systemInfo.getSocialMediaURL());
+        systemInfo1.setSocialMediaURL(systemInfoDTO.getSocialMediaURL());
 
         systemInfoRepository.save(systemInfo1);
 
@@ -79,10 +80,10 @@ public class SystemInfoServiceImpl implements SystemInfoService{
     }
 
     @Override
-    public APIResponse updateSystemInfo(Long id, SystemInfo systemInfo, MultipartFile img) throws IOException {
+    public APIResponse updateSystemInfo(Long id, SystemInfoDTO systemInfoDTO, MultipartFile img) throws IOException {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(systemInfo.getUser().getId()).orElseThrow(
+        User user = userRepository.findById(systemInfoDTO.getUserId()).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
 
@@ -90,16 +91,16 @@ public class SystemInfoServiceImpl implements SystemInfoService{
                 () -> new NotFoundException("System info not found !")
         );
 
-        if (systemInfo.getSystemName() != null) {
-            systemInfo1.setSystemName(systemInfo.getSystemName());
+        if (systemInfoDTO.getSystemName() != null) {
+            systemInfo1.setSystemName(systemInfoDTO.getSystemName());
         }
 
-        if (systemInfo.getEmail() != null) {
-            systemInfo1.setEmail(systemInfo.getEmail());
+        if (systemInfoDTO.getEmail() != null) {
+            systemInfo1.setEmail(systemInfoDTO.getEmail());
         }
 
-        if (systemInfo.getAddress() != null) {
-            systemInfo1.setAddress(systemInfo.getAddress());
+        if (systemInfoDTO.getAddress() != null) {
+            systemInfo1.setAddress(systemInfoDTO.getAddress());
         }
 
         if (img != null) {
@@ -108,24 +109,24 @@ public class SystemInfoServiceImpl implements SystemInfoService{
 
         systemInfo1.setDeleted(false); // giữ mặc định
 
-        if (systemInfo.getSlogan() != null) {
-            systemInfo1.setSlogan(systemInfo.getSlogan());
+        if (systemInfoDTO.getSlogan() != null) {
+            systemInfo1.setSlogan(systemInfoDTO.getSlogan());
         }
 
-        if (systemInfo.getDescription() != null) {
-            systemInfo1.setDescription(systemInfo.getDescription());
+        if (systemInfoDTO.getDescription() != null) {
+            systemInfo1.setDescription(systemInfoDTO.getDescription());
         }
 
-        if (systemInfo.getPhoneNumber() != null) {
-            systemInfo1.setPhoneNumber(systemInfo.getPhoneNumber());
+        if (systemInfoDTO.getPhoneNumber() != null) {
+            systemInfo1.setPhoneNumber(systemInfoDTO.getPhoneNumber());
         }
 
         if (user != null) {
             systemInfo1.setUser(user);
         }
 
-        if (systemInfo.getSocialMediaURL() != null) {
-            systemInfo1.setSocialMediaURL(systemInfo.getSocialMediaURL());
+        if (systemInfoDTO.getSocialMediaURL() != null) {
+            systemInfo1.setSocialMediaURL(systemInfoDTO.getSocialMediaURL());
         }
 
 
