@@ -71,6 +71,7 @@ public class NotificationServiceImpl implements NotificationService{
             notificationRepository.save(notification);
 
             NotificationDTO notificationDTO = new NotificationDTO();
+            notificationDTO.setId(notification.getId());
             notificationDTO.setMessage(message);
             notificationDTO.setReceiverId(userId1);
             notificationDTO.setType(NotificationType.valueOf(type));
@@ -105,6 +106,7 @@ public class NotificationServiceImpl implements NotificationService{
         notificationRepository.save(notification);
 
         NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setId(notification.getId());
         notificationDTO.setLink(notification.getLink());
         notificationDTO.setType(notification.getType());
         notificationDTO.setMessage(notification.getMessage());

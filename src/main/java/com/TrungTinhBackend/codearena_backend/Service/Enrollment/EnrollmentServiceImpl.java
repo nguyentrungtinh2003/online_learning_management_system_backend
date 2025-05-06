@@ -85,19 +85,9 @@ public class EnrollmentServiceImpl implements EnrollmentService{
 
         processService.createInitialProcess(userId,courseId);
 
-        notificationService.sendSystemNotification(userId,"Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L).getData();
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(userId,"Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L).getData();
 
-        // Tạo DTO trả về
-        NotificationDTO dto = new NotificationDTO();
-        dto.setReceiverId(userId);
-        dto.setMessage("Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice());
-        dto.setType(NotificationType.COURSE);
-        dto.setRelatedId(1L);
-
-        dto.setCreatedAt(LocalDateTime.now());
-        dto.setStatus(NotificationStatus.UNREAD);
-
-        webSocketSender.sendNotification(dto);
+        webSocketSender.sendNotification(notificationDTO);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User enroll success !");

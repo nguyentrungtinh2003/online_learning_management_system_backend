@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Data
 public class NotificationDTO {
 
+    private Long id;
+
     private Long receiverId;
 
     private String message;
