@@ -113,7 +113,7 @@ public class NotificationServiceImpl implements NotificationService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add notification success !");
-        apiResponse.setData(notification);
+        apiResponse.setData(notificationDTO);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         webSocketSender.sendNotification(notificationDTO);
