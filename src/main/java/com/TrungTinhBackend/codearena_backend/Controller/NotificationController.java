@@ -28,7 +28,7 @@ public class NotificationController {
     @PutMapping("/read/{notificationId}")
     public ResponseEntity<APIResponse> updateReadNotification(
                                                               @PathVariable Long notificationId) throws Exception {
-        return ResponseEntity.ok(notificationService.getUserNotifications(notificationId));
+        return ResponseEntity.ok(notificationService.updateReadNotification(notificationId));
     }
 
     @GetMapping("/search")
