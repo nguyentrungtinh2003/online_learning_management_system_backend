@@ -42,17 +42,13 @@ public class CourseServiceImpl implements CourseService{
     private ImgService imgService;
 
     @Autowired
-    private WebSocketSender webSocketSender;
-
-    @Autowired
     private NotificationService notificationService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService, WebSocketSender webSocketSender) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.enrollmentService = enrollmentService;
         this.imgService = imgService;
-        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -77,15 +73,6 @@ public class CourseServiceImpl implements CourseService{
 
             courseRepository.save(course);
 
-            notificationService.addNotification("Khoá học "+course.getCourseName()+" vừa được tạo !", "COURSE", 1L);
-        NotificationDTO notificationDTO = new NotificationDTO();
-        notificationDTO.setRelatedId(course.getUser().getId());
-        notificationDTO.setType(NotificationType.COURSE);
-        notificationDTO.setMessage("Khoá học "+course.getCourseName()+" vừa được tạo !");
-        notificationDTO.setCreatedAt(LocalDateTime.now());
-        notificationDTO.setStatus(NotificationStatus.UNREAD);
-
-webSocketSender.sendNotification(notificationDTO);
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add course success !");
             apiResponse.setData(course);

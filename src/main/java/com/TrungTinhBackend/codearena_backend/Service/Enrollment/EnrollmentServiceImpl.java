@@ -1,16 +1,21 @@
 package com.TrungTinhBackend.codearena_backend.Service.Enrollment;
 
 import com.TrungTinhBackend.codearena_backend.DTO.EnrollmentDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Enrollment;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.EnrollmentStatus;
+import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
+import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.EnrollmentRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.Process.ProcessService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -34,11 +39,20 @@ public class EnrollmentServiceImpl implements EnrollmentService{
     @Autowired
     private ProcessService processService;
 
-    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository, ProcessService processService) {
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+
+    public EnrollmentServiceImpl(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository, ProcessService processService, NotificationService notificationService, WebSocketSender webSocketSender) {
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.processService = processService;
+        this.notificationService = notificationService;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -70,6 +84,16 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         enrollmentRepository.save(enrollment);
 
         processService.createInitialProcess(userId,courseId);
+
+        notificationService.addNotification("Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L);
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setRelatedId(course.getUser().getId());
+        notificationDTO.setType(NotificationType.COURSE);
+        notificationDTO.setMessage("Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice());
+        notificationDTO.setCreatedAt(LocalDateTime.now());
+        notificationDTO.setStatus(NotificationStatus.UNREAD);
+
+        webSocketSender.sendNotification(notificationDTO);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User enroll success !");
