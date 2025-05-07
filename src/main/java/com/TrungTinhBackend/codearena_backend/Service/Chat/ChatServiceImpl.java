@@ -168,6 +168,8 @@ public class ChatServiceImpl implements ChatService{
       chatDTO.setUser1Id(chat.getUser1().getId());
       chatDTO.setUser2Id(chat.getUser2().getId());
       chatDTO.setTimeStamp(chat.getTimestamp());
+      chatDTO.setUser1Img(chat.getUser1().getImg());
+      chatDTO.setUser2Img(chat.getUser2().getImg());
       return chatDTO;
   }).toList();
 
