@@ -50,8 +50,9 @@ public class LessonCommentController {
         return ResponseEntity.ok(lessonCommentService.getLessonCommentByPage(page,size));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<APIResponse> deleteLessonCommentById(@PathVariable Long id) {
-        return ResponseEntity.ok(lessonCommentService.deleteLessonComment(id));
+    @DeleteMapping("/delete/{id}/{userId}")
+    public ResponseEntity<APIResponse> deleteLessonCommentById(@PathVariable Long id,
+                                                               @PathVariable Long userId) {
+        return ResponseEntity.ok(lessonCommentService.deleteLessonComment(id,userId));
     }
 }
