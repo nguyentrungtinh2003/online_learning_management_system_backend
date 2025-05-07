@@ -269,7 +269,7 @@ public class QuizServiceImpl implements QuizService{
             }
         }
 
-        User user = userRepository.findById(id).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
 
