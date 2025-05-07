@@ -54,8 +54,9 @@ public class BlogCommentController {
         return ResponseEntity.ok(blogCommentService.getBlogCommentByPage(page,size));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<APIResponse> deleteBlogComment(@PathVariable Long id) throws Exception {
-        return ResponseEntity.ok(blogCommentService.deleteBlogComment(id));
+    @DeleteMapping("/delete/{id}/{userId}")
+    public ResponseEntity<APIResponse> deleteBlogComment(@PathVariable Long id,
+                                                         @PathVariable Long userId) throws Exception {
+        return ResponseEntity.ok(blogCommentService.deleteBlogComment(id,userId));
     }
 }

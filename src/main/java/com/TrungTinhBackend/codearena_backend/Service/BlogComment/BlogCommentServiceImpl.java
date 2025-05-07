@@ -85,6 +85,9 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
             webSocketSender.sendBlogComment(blogCommentDTO);
 
+        user.setPoint(user.getPoint() + 2);
+        userRepository.save(user);
+
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog comment success !");
@@ -95,7 +98,7 @@ public class BlogCommentServiceImpl implements BlogCommentService{
     }
 
     @Override
-    public APIResponse deleteBlogComment(Long id) throws Exception {
+    public APIResponse deleteBlogComment(Long id, Long userId) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
             BlogComment blogComment = blogCommentRepository.findById(id).orElseThrow(
@@ -106,7 +109,14 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
 //            blogCommentRepository.save(blogComment);
 
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found by id " + userId)
+        );
+
         blogCommentRepository.delete(blogComment);
+
+        user.setPoint(user.getPoint() - 2);
+        userRepository.save(user);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog comment success !");

@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BlogCommentService {
     public APIResponse addBlogComment(BlogCommentDTO blogCommentDTO) throws Exception;
-    public APIResponse deleteBlogComment(Long id) throws Exception;
+    public APIResponse deleteBlogComment(Long id, Long userId) throws Exception;
     public APIResponse searchBlogComment(String keyword, int page, int size);
     public APIResponse getBlogCommentByPage(int page, int size);
     public APIResponse getAllBlogComment();

@@ -77,6 +77,9 @@ public class BlogServiceImpl implements BlogService{
 
             blogRepository.save(blog);
 
+        user.setPoint(user.getPoint() + 5);
+        userRepository.save(user);
+
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog success !");
             apiResponse.setData(blog);
@@ -114,16 +117,23 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse deleteBlog(Long id) {
+    public APIResponse deleteBlog(Long id,Long userId) {
         APIResponse apiResponse = new APIResponse();
 
             Blog blog = blogRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Blog not found by id " + id)
             );
 
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
             blog.setDeleted(true);
 
             blogRepository.save(blog);
+
+            user.setPoint(user.getPoint() - 5);
+            userRepository.save(user);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog success !");
@@ -257,6 +267,9 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setData(likedUserIds);
             apiResponse.setTimestamp(LocalDateTime.now());
 
+            user.setPoint(user.getPoint() + 1);
+            userRepository.save(user);
+
             webSocketSender.sendLike(blogId,userId,likedUserIds);
 
             return apiResponse;
@@ -291,6 +304,9 @@ public class BlogServiceImpl implements BlogService{
                     .map(User::getId)
                     .collect(Collectors.toList());
 
+            user.setPoint(user.getPoint() - 1);
+            userRepository.save(user);
+
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("User un like blog success !");
             apiResponse.setData(likedUserIds);
@@ -322,16 +338,23 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public APIResponse restoreBlog(Long id) {
+    public APIResponse restoreBlog(Long id, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Blog not found by id " + id)
         );
 
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found by id " + userId)
+        );
+
         blog.setDeleted(false);
 
         blogRepository.save(blog);
+
+        user.setPoint(user.getPoint() + 5);
+        userRepository.save(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Restore blog success !");

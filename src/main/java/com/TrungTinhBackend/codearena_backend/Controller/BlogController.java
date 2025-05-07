@@ -75,13 +75,15 @@ public class BlogController {
         return ResponseEntity.ok(blogService.updateBlog(id, blogDTO, img, video));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<APIResponse> deleteBlog(@PathVariable Long id) throws Exception {
-        return ResponseEntity.ok(blogService.deleteBlog(id));
+    @DeleteMapping("/delete/{id}/{userId}")
+    public ResponseEntity<APIResponse> deleteBlog(@PathVariable Long id,
+                                                  @PathVariable Long userId) throws Exception {
+        return ResponseEntity.ok(blogService.deleteBlog(id,userId));
     }
 
-    @PutMapping("/restore/{id}")
-    public ResponseEntity<APIResponse> restoreBlog(@PathVariable Long id) throws Exception {
-        return ResponseEntity.ok(blogService.restoreBlog(id));
+    @PutMapping("/restore/{id}/{userId}")
+    public ResponseEntity<APIResponse> restoreBlog(@PathVariable Long id,
+                                                   @PathVariable Long userId) throws Exception {
+        return ResponseEntity.ok(blogService.restoreBlog(id, userId));
     }
 }

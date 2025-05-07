@@ -77,6 +77,9 @@ public class LessonCommentServiceImpl implements LessonCommentService{
         lessonComment.setDate(LocalDateTime.now());
         lessonComment.setDeleted(false);
 
+        user.setPoint(user.getPoint() + 2);
+        userRepository.save(user);
+
         lessonCommentRepository.save(lessonComment);
 
         webSocketSender.sendLessonComment(lessonCommentDTO);
@@ -145,17 +148,24 @@ public class LessonCommentServiceImpl implements LessonCommentService{
     }
 
     @Override
-    public APIResponse deleteLessonComment(Long id) {
+    public APIResponse deleteLessonComment(Long id, Long userId) {
         APIResponse apiResponse = new APIResponse();
 
         LessonComment lessonComment = lessonCommentRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Lesson comment not found !")
         );
 
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
 //        lessonComment.setDeleted(true);
 //        lessonCommentRepository.save(lessonComment);
 
         lessonCommentRepository.delete(lessonComment);
+
+        user.setPoint(user.getPoint() - 2);
+        userRepository.save(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Delete lesson comment by id success !");

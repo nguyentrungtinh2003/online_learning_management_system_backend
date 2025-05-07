@@ -15,6 +15,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserSpecification userSpecification;
+
+    @Autowired
+    private WebSocketSender webSocketSender;
 
     public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, UserSpecification userSpecification) {
         this.userRepository = userRepository;
@@ -433,6 +437,8 @@ public class UserServiceImpl implements UserService{
         if (jwt == null || !jwtUtils.isTokenValid(jwt,user)) {
             throw  new BadCredentialsException("Token invalid");
         }
+
+        webSocketSender.sendUserInfo(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get user info success !");

@@ -4,6 +4,7 @@ import com.TrungTinhBackend.codearena_backend.DTO.BlogCommentDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.ChatDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.LessonCommentDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,9 @@ public class WebSocketSender {
 
     public void sendNotification(NotificationDTO notificationDTO) {
         messagingTemplate.convertAndSend("/topic/user/" + notificationDTO.getReceiverId(),notificationDTO);
+    }
+
+    public void sendUserInfo(User user) {
+        messagingTemplate.convertAndSend("/topic/user-info/" + user.getId(),user);
     }
 }
