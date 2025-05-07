@@ -14,6 +14,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,11 +46,16 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private UserRepository userRepository;
 
-    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository, UserRepository userRepository, WebSocketSender webSocketSender) {
         this.quizRepository = quizRepository;
         this.imgService = imgService;
         this.lessonRepository = lessonRepository;
         this.questionRepository = questionRepository;
+        this.userRepository = userRepository;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -308,6 +314,8 @@ public class QuizServiceImpl implements QuizService{
 
         user.setPoint(user.getPoint() + point);
         userRepository.save(user);
+
+        webSocketSender.sendUserInfo(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Submit quiz success !");
