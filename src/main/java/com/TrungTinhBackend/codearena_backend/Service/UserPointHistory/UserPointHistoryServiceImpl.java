@@ -23,6 +23,31 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     @Autowired
     private UserRepository userRepository;
 
+    public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository) {
+        this.userPointHistoryRepository = userPointHistoryRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public APIResponse addUserPointHistory(UserPointHistory userPointHistory) {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findById(userPointHistory.getUser().getId()).orElse(null);
+
+        UserPointHistory userPointHistory1 = new UserPointHistory();
+        userPointHistory1.setUser(user);
+        userPointHistory1.setPoint(userPointHistory.getPoint());
+        userPointHistory1.setDate(LocalDate.now());
+
+        userPointHistoryRepository.save(userPointHistory1);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Save user point history success");
+        apiResponse.setData(userPointHistory1);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
     @Override
     public APIResponse getTop10ByDate(LocalDate date) {
         APIResponse apiResponse = new APIResponse();

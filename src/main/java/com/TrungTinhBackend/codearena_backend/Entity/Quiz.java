@@ -46,6 +46,6 @@ public class Quiz {
     @JsonManagedReference()
     private List<Question> questions;
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> userSubmit;
 }

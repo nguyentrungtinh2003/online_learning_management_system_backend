@@ -1,15 +1,13 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
+import com.TrungTinhBackend.codearena_backend.Entity.UserPointHistory;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +19,11 @@ public class UserPointHistoryController {
 
     @Autowired
     private UserPointHistoryService userPointHistoryService;
+
+    @PostMapping("/add")
+    public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistory userPointHistory) {
+        return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(userPointHistory));
+    }
 
     @GetMapping("/day")
     public ResponseEntity<APIResponse> getTopByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

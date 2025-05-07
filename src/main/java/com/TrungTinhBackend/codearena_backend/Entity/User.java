@@ -78,7 +78,7 @@ public class User implements UserDetails {
     @JsonIgnore()
     private List<Enrollment> enrollments;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quiz_id")
     @JsonIgnore()
     private Quiz quiz;
