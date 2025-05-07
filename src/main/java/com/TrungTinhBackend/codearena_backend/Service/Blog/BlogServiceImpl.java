@@ -79,6 +79,7 @@ public class BlogServiceImpl implements BlogService{
 
         user.setPoint(user.getPoint() + 5);
         userRepository.save(user);
+        webSocketSender.sendUserInfo(user);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog success !");
@@ -134,6 +135,7 @@ public class BlogServiceImpl implements BlogService{
 
             user.setPoint(user.getPoint() - 5);
             userRepository.save(user);
+        webSocketSender.sendUserInfo(user);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog success !");
@@ -271,6 +273,7 @@ public class BlogServiceImpl implements BlogService{
             userRepository.save(user);
 
             webSocketSender.sendLike(blogId,userId,likedUserIds);
+            webSocketSender.sendUserInfo(user);
 
             return apiResponse;
         } catch (Exception e) {
@@ -313,6 +316,7 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             webSocketSender.sendUnLike(blogId,userId,likedUserIds);
+            webSocketSender.sendUserInfo(user);
 
             return apiResponse;
         } catch (Exception e) {
@@ -355,6 +359,7 @@ public class BlogServiceImpl implements BlogService{
 
         user.setPoint(user.getPoint() + 5);
         userRepository.save(user);
+        webSocketSender.sendUserInfo(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Restore blog success !");

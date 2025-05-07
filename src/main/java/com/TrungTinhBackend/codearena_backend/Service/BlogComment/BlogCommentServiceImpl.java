@@ -84,6 +84,7 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             blogCommentRepository.save(blogComment);
 
             webSocketSender.sendBlogComment(blogCommentDTO);
+        webSocketSender.sendUserInfo(user);
 
         user.setPoint(user.getPoint() + 2);
         userRepository.save(user);
@@ -117,6 +118,8 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         user.setPoint(user.getPoint() - 2);
         userRepository.save(user);
+
+        webSocketSender.sendUserInfo(user);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog comment success !");
