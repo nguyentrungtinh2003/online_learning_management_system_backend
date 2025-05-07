@@ -37,4 +37,6 @@ public class QuizDTO {
     private Long lessonId;
 
     private List<Question> questions;
+
+    private List<Long> userIdSubmit;
 }

@@ -16,6 +16,7 @@ public interface QuizService {
     public APIResponse getQuizByPage(int page, int size);
     public APIResponse getAllQuiz();
     public APIResponse getQuizById(Long id);
+    public APIResponse checkIfUserHasDoneQuiz(Long userId, Long quizId);
     public APIResponse submitQuiz(Long id,Long userId, AnswerUserDTO answerUserDTO);
     public APIResponse getQuizByLessonIdAndByPage(Long lessonId,int page, int size);
     public APIResponse getAllQuizzessByLessonId(Long lessonId);

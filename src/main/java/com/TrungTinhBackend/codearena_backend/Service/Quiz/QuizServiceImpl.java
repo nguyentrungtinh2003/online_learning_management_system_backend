@@ -251,6 +251,36 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
+    public APIResponse checkIfUserHasDoneQuiz(Long userId, Long quizId) {
+
+        APIResponse apiResponse = new APIResponse();
+
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(
+                () -> new NotFoundException("Quiz not found !")
+        );
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
+        if(quiz.getUserSubmit() != null && quiz.getUserSubmit().contains(user)) {
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("User has done quiz !");
+            apiResponse.setData(true);
+            apiResponse.setTimestamp(LocalDateTime.now());
+
+            return apiResponse;
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("User start quiz !");
+        apiResponse.setData(false);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse submitQuiz(Long id,Long userId, AnswerUserDTO answerUserDTO) {
         APIResponse apiResponse = new APIResponse();
         long point = 0L;
@@ -269,9 +299,12 @@ public class QuizServiceImpl implements QuizService{
             }
         }
 
-        User user = userRepository.findById(id).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("User not found !")
         );
+
+        quiz.getUserSubmit().add(user);
+        quizRepository.save(quiz);
 
         user.setPoint(user.getPoint() + point);
         userRepository.save(user);

@@ -45,4 +45,7 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz")
     @JsonManagedReference()
     private List<Question> questions;
+
+    @OneToMany(mappedBy = "quiz")
+    private List<User> userSubmit;
 }

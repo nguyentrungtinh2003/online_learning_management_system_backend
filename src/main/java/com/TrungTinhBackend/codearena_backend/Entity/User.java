@@ -78,6 +78,11 @@ public class User implements UserDetails {
     @JsonIgnore()
     private List<Enrollment> enrollments;
 
+    @ManyToOne()
+    @JoinColumn(name = "quiz_id")
+    @JsonIgnore()
+    private Quiz quiz;
+
 //    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
 //    private List<Chat> chats;
 

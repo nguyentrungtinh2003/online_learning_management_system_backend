@@ -30,6 +30,12 @@ public class QuizController {
         return ResponseEntity.ok(quizService.submitQuiz(id,userId, answerUserDTO));
     }
 
+    @GetMapping("/quizzes/check/{userId}/{quizId}")
+    public ResponseEntity<APIResponse> checkIfUserHasDoneQuiz(@PathVariable Long userId,
+                                                  @PathVariable Long quizId) throws Exception {
+        return ResponseEntity.ok(quizService.checkIfUserHasDoneQuiz(userId, quizId));
+    }
+
     @GetMapping("teacher/quizzes/lesson/{lessonId}/page")
     public ResponseEntity<APIResponse> getQuizByLessonAndPage(@PathVariable Long lessonId,@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "6") int size) throws Exception {
