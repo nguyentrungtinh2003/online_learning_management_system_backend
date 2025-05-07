@@ -18,6 +18,10 @@ public class ChatDTO {
 
     private Long user1Id;
 
+    private String user1Img;
+
+    private String user2Img;
+
     private Long user2Id;
 
     @NotBlank(message = "Message is required !")

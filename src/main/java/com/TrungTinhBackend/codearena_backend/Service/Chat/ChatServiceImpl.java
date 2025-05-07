@@ -88,7 +88,11 @@ public class ChatServiceImpl implements ChatService{
 
             chatRepository.save(chat);
 
-            apiResponse.setStatusCode(200L);
+            chatDTO.setUser1Img(user1.getImg());
+        chatDTO.setUser2Img(user2.getImg());
+
+
+        apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add chat success !");
             apiResponse.setData(chat);
             apiResponse.setTimestamp(LocalDateTime.now());
