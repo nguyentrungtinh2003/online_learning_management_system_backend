@@ -82,13 +82,14 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         lessonCommentRepository.save(lessonComment);
 
-        webSocketSender.sendLessonComment(lessonCommentDTO);
-        webSocketSender.sendUserInfo(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Add lesson comment success !");
         apiResponse.setData(lessonComment);
         apiResponse.setTimestamp(LocalDateTime.now());
+
+        webSocketSender.sendLessonComment(lessonCommentDTO);
+        webSocketSender.sendUserInfo(user);
 
         return apiResponse;
     }
@@ -167,12 +168,14 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         user.setPoint(user.getPoint() - 2);
         userRepository.save(user);
-        webSocketSender.sendUserInfo(user);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Delete lesson comment by id success !");
         apiResponse.setData(lessonComment);
         apiResponse.setTimestamp(LocalDateTime.now());
+
+        webSocketSender.sendUserInfo(user);
+
 
         return apiResponse;
     }

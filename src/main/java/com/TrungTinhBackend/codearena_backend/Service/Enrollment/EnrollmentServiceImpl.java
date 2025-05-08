@@ -87,13 +87,14 @@ public class EnrollmentServiceImpl implements EnrollmentService{
 
         NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(userId,"Bạn vừa mua khoá học "+course.getCourseName()+" Giá "+course.getPrice(), "COURSE", 1L).getData();
 
-        webSocketSender.sendNotification(notificationDTO);
-        webSocketSender.sendUserInfo(user);
-
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("User enroll success !");
         apiResponse.setData(enrollment);
         apiResponse.setTimestamp(LocalDateTime.now());
+
+        webSocketSender.sendNotification(notificationDTO);
+        webSocketSender.sendUserInfo(user);
+
         return apiResponse;
     }
 
