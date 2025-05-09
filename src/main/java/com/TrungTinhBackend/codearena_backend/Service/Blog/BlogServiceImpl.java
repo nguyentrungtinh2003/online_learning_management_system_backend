@@ -374,4 +374,18 @@ public class BlogServiceImpl implements BlogService{
         return apiResponse;
     }
 
+    @Override
+    public APIResponse getRandomBlog(int limit) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Blog> blogs = blogRepository.findRandomBlogs(limit);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get blogs random success !");
+        apiResponse.setData(blogs);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }

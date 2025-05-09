@@ -17,4 +17,7 @@ public interface BlogRepository extends JpaRepository<Blog,Long>, JpaSpecificati
 
     @Query("SELECT b FROM Blog b JOIN b.likedUsers u WHERE u.id = :userId")
     List<Blog> findBlogsLikedByUser(@Param("userId") Long userId);
+
+    @Query(value = "SELECT * FROM Blog ORDER BY RANDOM() LIMIT :limit", nativeQuery = true)
+    List<Blog> findRandomBlogs(@Param("limit") int limit);
 }

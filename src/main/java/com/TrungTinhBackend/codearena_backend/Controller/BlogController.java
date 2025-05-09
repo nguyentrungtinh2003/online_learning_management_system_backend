@@ -68,6 +68,11 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogByPage(page,size));
     }
 
+    @GetMapping("/limit")
+    public ResponseEntity<APIResponse> getBlogRandom(@RequestParam(defaultValue = "10") int limit) throws Exception {
+        return ResponseEntity.ok(blogService.getRandomBlog(limit));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") BlogDTO blogDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img,

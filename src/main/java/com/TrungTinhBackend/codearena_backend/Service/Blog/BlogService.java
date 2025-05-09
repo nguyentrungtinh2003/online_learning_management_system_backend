@@ -17,4 +17,5 @@ public interface BlogService {
     public APIResponse unLikeBlog(Long userId, Long blogId);
     public APIResponse getBlogsLikedByUser(Long userId);
     public APIResponse restoreBlog(Long id, Long userId);
+    public APIResponse getRandomBlog(int limit);
 }
