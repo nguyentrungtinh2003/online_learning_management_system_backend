@@ -21,7 +21,7 @@ public class UserPointHistoryController {
     private UserPointHistoryService userPointHistoryService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistory dto) {
+    public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistoryDTO dto) {
         return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(dto));
     }
 
