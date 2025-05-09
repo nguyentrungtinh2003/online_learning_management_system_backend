@@ -29,21 +29,26 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     }
 
     @Override
-    public APIResponse addUserPointHistory(UserPointHistory userPointHistory) {
+    public APIResponse addUserPointHistory(UserPointHistory dto) {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(userPointHistory.getUser().getId()).orElse(null);
+        User user = userRepository.findById(dto.getUserId()).orElse(null);
+            if (user == null) {
+                apiResponse.setStatusCode(404L);
+                apiResponse.setMessage("User not found");
+                return apiResponse;
+        }
+        
+        UserPointHistory history = new UserPointHistory();
+        history.setUser(user);
+        history.setPoint(dto.getPoint());
+        history.setDate(LocalDate.now());
 
-        UserPointHistory userPointHistory1 = new UserPointHistory();
-        userPointHistory1.setUser(user);
-        userPointHistory1.setPoint(userPointHistory.getPoint());
-        userPointHistory1.setDate(LocalDate.now());
-
-        userPointHistoryRepository.save(userPointHistory1);
+        userPointHistoryRepository.save(history);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Save user point history success");
-        apiResponse.setData(userPointHistory1);
+        apiResponse.setData(history);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
