@@ -9,6 +9,7 @@ public interface ProcessRepository extends JpaRepository<Process,Long> {
     Process findByUserIdAndLessonId(Long userId, Long lessonId);
     Long countByCourseIdAndLessonIsNotNull(Long courseId);
     Long countByCourseIdAndUserIdAndCompletionPercent(Long courseId, Long userId, Integer value);
-
+    // Thêm method mới trong ProcessRepository:
+    Long countByCourseIdAndUserIdAndLessonIsNotNullAndCompletionPercent(Long courseId, Long userId, Integer completionPercent);
     Process findByUserIdAndCourseIdAndLessonIsNull(Long userId, Long courseId);
 }

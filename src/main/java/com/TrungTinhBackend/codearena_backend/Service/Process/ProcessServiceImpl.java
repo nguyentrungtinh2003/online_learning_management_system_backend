@@ -103,7 +103,7 @@ public class ProcessServiceImpl implements ProcessService{
 
         // 2. Tính tổng số bài học và số bài đã hoàn thành
         long totalLessons = processRepository.countByCourseIdAndLessonIsNotNull(courseId);
-        long completedLessons = processRepository.countByCourseIdAndUserIdAndCompletionPercent(courseId, userId, 100);
+        long completedLessons = processRepository.countByCourseIdAndUserIdAndLessonIsNotNullAndCompletionPercent(courseId, userId, 100);
 
         // 3. Cập nhật tiến độ khóa học
         Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
