@@ -86,10 +86,12 @@ public class ProcessServiceImpl implements ProcessService{
         return apiResponse;
     }
 
-
     @Override
     public APIResponse updateProcess(Long userId, Long courseId, Long lessonId) {
         APIResponse apiResponse = new APIResponse();
+
+        // 0. Đảm bảo tất cả Process đều được tạo (bao gồm lesson mới nếu có)
+        createInitialProcess(userId, courseId);
 
         // 1. Cập nhật tiến độ bài học
         Process lessonProcess = processRepository.findByUserIdAndLessonId(userId, lessonId);
@@ -97,15 +99,18 @@ public class ProcessServiceImpl implements ProcessService{
             throw new NotFoundException("Lesson process not found!");
         }
 
-        lessonProcess.setCompletionPercent(100);
-        lessonProcess.setStatus(ProcessEnum.COMPLETED);
-        processRepository.saveAndFlush(lessonProcess); // flush để đảm bảo dữ liệu được cập nhật trước khi tính toán
+        // Nếu bài học chưa hoàn thành thì mới cập nhật
+        if (lessonProcess.getCompletionPercent() < 100) {
+            lessonProcess.setCompletionPercent(100);
+            lessonProcess.setStatus(ProcessEnum.COMPLETED);
+            processRepository.saveAndFlush(lessonProcess);
+        }
 
         // 2. Tính tổng số bài học và số bài đã hoàn thành
-        long totalLessons = processRepository.countByCourseIdAndLessonIsNotNull(courseId);
+        long totalLessons = processRepository.countByCourseIdAndUserIdAndLessonIsNotNull(courseId, userId);
         long completedLessons = processRepository.countByCourseIdAndUserIdAndLessonIsNotNullAndCompletionPercent(courseId, userId, 100);
 
-        // 3. Cập nhật tiến độ khóa học
+        // 3. Cập nhật tiến độ khóa học (lesson = null)
         Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
         if (courseProcess == null) {
             throw new NotFoundException("Course process not found!");
@@ -113,12 +118,7 @@ public class ProcessServiceImpl implements ProcessService{
 
         int newCompletionPercent = (int) ((completedLessons * 100) / totalLessons);
         courseProcess.setCompletionPercent(newCompletionPercent);
-
-        if (newCompletionPercent == 100) {
-            courseProcess.setStatus(ProcessEnum.COMPLETED);
-        } else {
-            courseProcess.setStatus(ProcessEnum.IN_PROGRESS);
-        }
+        courseProcess.setStatus(newCompletionPercent == 100 ? ProcessEnum.COMPLETED : ProcessEnum.IN_PROGRESS);
 
         processRepository.save(courseProcess);
 
@@ -130,6 +130,5 @@ public class ProcessServiceImpl implements ProcessService{
 
         return apiResponse;
     }
-
 
 }
