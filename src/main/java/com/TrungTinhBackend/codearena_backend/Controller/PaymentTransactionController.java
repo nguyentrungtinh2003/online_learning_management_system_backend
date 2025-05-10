@@ -76,4 +76,11 @@ public class PaymentTransactionController {
     public ResponseEntity<APIResponse> restorePayment(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.restorePayment(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<APIResponse> searchPayment(@RequestParam(required = false) String keyword,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.searchPayment(keyword, page, size));
+    }
 }

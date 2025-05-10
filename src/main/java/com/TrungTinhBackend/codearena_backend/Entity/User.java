@@ -106,6 +106,7 @@ public class User implements UserDetails {
     private List<CourseMaterial> courseMaterials;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<PaymentTransaction> paymentTransaction;
 
     @OneToMany(mappedBy = "user")

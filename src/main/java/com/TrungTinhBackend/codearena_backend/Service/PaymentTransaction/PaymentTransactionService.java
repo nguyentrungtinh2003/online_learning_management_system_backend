@@ -8,4 +8,5 @@ public interface PaymentTransactionService {
     public APIResponse getPaymentByUserId(Long userId);
     public APIResponse deletePayment(Long id);
     public APIResponse restorePayment(Long id);
+    public APIResponse searchPayment(String keyword, int page, int size);
 }

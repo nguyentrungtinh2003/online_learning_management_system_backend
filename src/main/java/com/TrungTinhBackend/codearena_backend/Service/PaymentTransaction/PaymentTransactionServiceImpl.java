@@ -2,13 +2,17 @@ package com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction;
 
 import com.TrungTinhBackend.codearena_backend.Entity.PaymentTransaction;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.PaymentTransactionRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.PaymentTransactionSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -102,6 +106,23 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Restore payment by id success !");
         apiResponse.setData(paymentTransaction);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse searchPayment(String keyword, int page, int size) {
+        APIResponse apiResponse = new APIResponse();
+
+        Pageable pageable = PageRequest.of(page,size);
+        Specification<PaymentTransaction> specification = PaymentTransactionSpecification.searchByKeyword(keyword);
+
+        Page<PaymentTransaction> paymentTransactions = paymentTransactionRepository.findAll(specification,pageable);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Search payment success");
+        apiResponse.setData(paymentTransactions);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
