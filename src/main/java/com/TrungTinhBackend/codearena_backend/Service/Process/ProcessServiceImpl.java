@@ -44,17 +44,17 @@ public class ProcessServiceImpl implements ProcessService{
     public APIResponse createInitialProcess(Long userId, Long courseId) {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User not found !")
-        );
+        // 1. Lấy user và course từ DB
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found!"));
 
-        Course course = courseRepository.findById(courseId).orElseThrow(
-                () -> new NotFoundException("Course not found !")
-        );
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found!"));
 
-        // 1. Tạo process cho khóa học (lesson = null)
-        if (processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId) == null) {
-            Process courseProcess = new Process();
+        // 2. Tạo process cho khóa học (lesson = null) nếu chưa có
+        Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
+        if (courseProcess == null) {
+            courseProcess = new Process();
             courseProcess.setUser(user);
             courseProcess.setCourse(course);
             courseProcess.setLesson(null);
@@ -63,63 +63,73 @@ public class ProcessServiceImpl implements ProcessService{
             processRepository.save(courseProcess);
         }
 
-        List<Long> lessonIds = course.getLessons()
-                .stream()
-                .map(Lesson::getId)
-                .toList();
-        // 2. Tạo process cho từng bài học
-        for (Long lessonId : lessonIds) {
-            if (processRepository.findByUserIdAndLessonId(userId, lessonId) == null) {
-                Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-                        () -> new NotFoundException("Lesson not found !")
-                );
+        // 3. Tạo process cho từng bài học nếu chưa có
+        List<Lesson> lessons = course.getLessons();
+        for (Lesson lesson : lessons) {
+            if (processRepository.findByUserIdAndLessonId(userId, lesson.getId()) == null) {
                 Process lessonProcess = new Process();
                 lessonProcess.setUser(user);
                 lessonProcess.setCourse(course);
-                lessonProcess.setLesson(lesson); // bạn cần có class Lesson và mapping
+                lessonProcess.setLesson(lesson);
                 lessonProcess.setCompletionPercent(0);
                 lessonProcess.setStatus(ProcessEnum.IN_PROGRESS);
                 processRepository.save(lessonProcess);
             }
         }
 
+        // 4. Trả về kết quả
         apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Add process success !");
+        apiResponse.setMessage("Add process success!");
         apiResponse.setData(null);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
     }
 
+
     @Override
-    public APIResponse updateProcess(Long userId, Long courseId, Long lessonId) throws Exception {
+    public APIResponse updateProcess(Long userId, Long courseId, Long lessonId) {
         APIResponse apiResponse = new APIResponse();
 
-            Process lessonProcess = processRepository.findByUserIdAndLessonId(userId, lessonId);
-            lessonProcess.setCompletionPercent(100);
-            processRepository.save(lessonProcess);
+        // 1. Cập nhật tiến độ bài học
+        Process lessonProcess = processRepository.findByUserIdAndLessonId(userId, lessonId);
+        if (lessonProcess == null) {
+            throw new NotFoundException("Lesson process not found!");
+        }
 
-            // 2. Tính số bài đã hoàn thành / tổng số bài
-            long totalLessons = processRepository.countByCourseIdAndLessonIsNotNull(courseId);
-            long completedLessons = processRepository.countByCourseIdAndUserIdAndCompletionPercent(courseId, userId, 100);
+        lessonProcess.setCompletionPercent(100);
+        lessonProcess.setStatus(ProcessEnum.COMPLETED);
+        processRepository.saveAndFlush(lessonProcess); // flush để đảm bảo dữ liệu được cập nhật trước khi tính toán
 
-            Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
+        // 2. Tính tổng số bài học và số bài đã hoàn thành
+        long totalLessons = processRepository.countByCourseIdAndLessonIsNotNull(courseId);
+        long completedLessons = processRepository.countByCourseIdAndUserIdAndCompletionPercent(courseId, userId, 100);
 
-            int newCompletionPercent = (int) ((completedLessons * 100)/totalLessons);
-            courseProcess.setCompletionPercent(newCompletionPercent);
+        // 3. Cập nhật tiến độ khóa học
+        Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
+        if (courseProcess == null) {
+            throw new NotFoundException("Course process not found!");
+        }
 
-            if(newCompletionPercent == 100) {
-                courseProcess.setStatus(ProcessEnum.COMPLETED);
-            }
+        int newCompletionPercent = (int) ((completedLessons * 100) / totalLessons);
+        courseProcess.setCompletionPercent(newCompletionPercent);
 
-            processRepository.save(courseProcess);
+        if (newCompletionPercent == 100) {
+            courseProcess.setStatus(ProcessEnum.COMPLETED);
+        } else {
+            courseProcess.setStatus(ProcessEnum.IN_PROGRESS);
+        }
 
-            apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("Update process success !");
-            apiResponse.setData(courseProcess);
-            apiResponse.setTimestamp(LocalDateTime.now());
+        processRepository.save(courseProcess);
 
-            return apiResponse;
+        // 4. Trả về kết quả
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Update process success!");
+        apiResponse.setData(courseProcess);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
     }
+
 
 }

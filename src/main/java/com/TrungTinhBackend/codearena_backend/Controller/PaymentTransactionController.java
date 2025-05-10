@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.DTO.PaymentTransactionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.PaymentTransactionService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal.PaypalService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.VNPay.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,9 @@ public class PaymentTransactionController {
 
     @Autowired
     private VNPayService vnPayService;
+
+    @Autowired
+    private PaymentTransactionService paymentTransactionService;
 
     @PostMapping("/create")
     public ResponseEntity<APIResponse> createPayment(HttpServletRequest request,@Valid @RequestBody PaymentTransactionDTO paymentTransactionDTO) throws Exception {
@@ -45,5 +49,31 @@ public class PaymentTransactionController {
     public ResponseEntity<APIResponse> executePaymentVNPay(
             HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(vnPayService.executePayment(request));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<APIResponse> getPaymentByPage(@RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "6") int size) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getPaymentByPage(page,size));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<APIResponse> getPaymentById(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getPaymentById(id));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<APIResponse> getPaymentByUserId(@PathVariable Long userId) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getPaymentByUserId(userId));
+    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<APIResponse> deletePayment(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.deletePayment(id));
+    }
+
+    @GetMapping("/restore/{id}")
+    public ResponseEntity<APIResponse> restorePayment(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.restorePayment(id));
     }
 }
