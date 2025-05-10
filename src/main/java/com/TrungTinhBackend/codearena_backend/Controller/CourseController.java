@@ -42,6 +42,11 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
+    @GetMapping("/user/{userId}/courses-progress")
+    public ResponseEntity<APIResponse> getCoursesProgress(@PathVariable Long userId) {
+        return ResponseEntity.ok(courseService.getCoursesProgress(userId));
+    }
+
     @GetMapping("teacher/courses/user/{userId}")
     public ResponseEntity<APIResponse> getCourseByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(courseService.getCourseByUserId(userId));

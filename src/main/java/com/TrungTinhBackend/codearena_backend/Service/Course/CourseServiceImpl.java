@@ -1,12 +1,18 @@
 package com.TrungTinhBackend.codearena_backend.Service.Course;
 
+import com.TrungTinhBackend.codearena_backend.DTO.CourseProgressDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.EnrollmentDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
+import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
+import com.TrungTinhBackend.codearena_backend.Entity.Process;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationStatus;
 import com.TrungTinhBackend.codearena_backend.Enum.NotificationType;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
+import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
+import com.TrungTinhBackend.codearena_backend.Repository.ProcessRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.DTO.CourseDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -25,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService{
@@ -42,13 +49,20 @@ public class CourseServiceImpl implements CourseService{
     private ImgService imgService;
 
     @Autowired
+    private LessonRepository lessonRepository;
+
+    @Autowired
+    private ProcessRepository processRepository;
+
+    @Autowired
     private NotificationService notificationService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository, EnrollmentService enrollmentService, ImgService imgService, LessonRepository lessonRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.enrollmentService = enrollmentService;
         this.imgService = imgService;
+        this.lessonRepository = lessonRepository;
     }
 
     @Override
@@ -269,4 +283,38 @@ public class CourseServiceImpl implements CourseService{
 
         return apiResponse;
     }
+
+    @Override
+    public APIResponse getCoursesProgress(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        // Retrieve enrolled courses for the user
+        List<EnrollmentDTO> enrollmentDTOS =(List<EnrollmentDTO>) enrollmentService.getEnrollByUserId(userId).getData();
+
+        // Map the courses to a list of CourseProgressDTO
+        List<CourseProgressDTO> courseProgressList = enrollmentDTOS.stream().map(enroll -> {
+            List<Lesson> lessons = lessonRepository.findByCourseId(enroll.getCourseId());
+            List<Process> processes = processRepository.findByUserIdAndCourseId(userId, enroll.getCourseId());
+
+            long completedLessons = lessons.stream()
+                    .filter(lesson -> processes.stream()
+                            .anyMatch(p -> p.getLesson().getId() != null && p.getLesson().getId().equals(lesson.getId()) && p.getCompletionPercent() >= 100))
+                    .count();
+
+            int totalLessons = lessons.size();
+            int percent = totalLessons > 0 ? (int) ((completedLessons * 100.0) / totalLessons) : 0;
+
+            // Return CourseProgressDTO with the calculated progress
+            return new CourseProgressDTO(enroll.getId(), enroll.getCourseName(),enroll.getDescription(),enroll.getImg(), (int) completedLessons, totalLessons, percent);
+        }).collect(Collectors.toList());
+
+        // Set the API response details
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Retrieve course progress success!");
+        apiResponse.setData(courseProgressList); // Set the data to the course progress list
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
 }

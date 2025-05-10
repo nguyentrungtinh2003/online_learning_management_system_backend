@@ -4,8 +4,11 @@ import com.TrungTinhBackend.codearena_backend.Entity.Process;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ProcessRepository extends JpaRepository<Process,Long> {
+    List<Process> findByUserIdAndCourseId(Long userId, Long courseId);
     // Tìm tiến độ theo user và bài học
     Process findByUserIdAndLessonId(Long userId, Long lessonId);
 

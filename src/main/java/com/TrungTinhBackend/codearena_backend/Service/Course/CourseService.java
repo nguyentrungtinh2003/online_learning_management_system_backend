@@ -15,4 +15,6 @@ public interface CourseService {
     public APIResponse getCourseByUserId(Long userId);
     public APIResponse getCourseByPage(int page, int size);
     public APIResponse restoreCourse(Long id);
+
+    public APIResponse getCoursesProgress(Long userId);
 }
