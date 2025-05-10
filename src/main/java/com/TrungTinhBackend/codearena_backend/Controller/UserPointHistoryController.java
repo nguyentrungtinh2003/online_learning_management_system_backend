@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
+import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.UserPointHistory;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
@@ -21,8 +22,8 @@ public class UserPointHistoryController {
     private UserPointHistoryService userPointHistoryService;
 
     @PostMapping("/add")
-    public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistoryDTO dto) {
-        return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(dto));
+    public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistoryDTO userPointHistoryDTO) {
+        return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(userPointHistoryDTO));
     }
 
     @GetMapping("/day")

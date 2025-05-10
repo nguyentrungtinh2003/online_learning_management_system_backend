@@ -1,7 +1,9 @@
 package com.TrungTinhBackend.codearena_backend.Service.UserPointHistory;
 
+import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Entity.UserPointHistory;
+import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.UserPointHistoryRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
@@ -29,26 +31,23 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     }
 
     @Override
-    public APIResponse addUserPointHistory(UserPointHistory dto) {
+    public APIResponse addUserPointHistory(UserPointHistoryDTO userPointHistoryDTO) {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(dto.getUserId()).orElse(null);
-            if (user == null) {
-                apiResponse.setStatusCode(404L);
-                apiResponse.setMessage("User not found");
-                return apiResponse;
-        }
+        User user = userRepository.findById(userPointHistoryDTO.getUserId()).orElseThrow(
+                () -> new NotFoundException("User not found")
+        );
         
-        UserPointHistory history = new UserPointHistory();
-        history.setUser(user);
-        history.setPoint(dto.getPoint());
-        history.setDate(LocalDate.now());
+        UserPointHistory userPointHistory = new UserPointHistory();
+        userPointHistory.setUser(user);
+        userPointHistory.setPoint(userPointHistoryDTO.getPoint());
+        userPointHistory.setDate(LocalDate.now());
 
-        userPointHistoryRepository.save(history);
+        userPointHistoryRepository.save(userPointHistory);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Save user point history success");
-        apiResponse.setData(history);
+        apiResponse.setData(userPointHistory);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
