@@ -67,12 +67,12 @@ public class PaymentTransactionController {
         return ResponseEntity.ok(paymentTransactionService.getPaymentByUserId(userId));
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<APIResponse> deletePayment(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.deletePayment(id));
     }
 
-    @GetMapping("/restore/{id}")
+    @PutMapping("/restore/{id}")
     public ResponseEntity<APIResponse> restorePayment(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.restorePayment(id));
     }
