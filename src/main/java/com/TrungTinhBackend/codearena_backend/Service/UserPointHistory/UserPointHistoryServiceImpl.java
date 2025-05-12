@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,7 +57,23 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     public APIResponse getTop10ByDate(LocalDate date) {
         APIResponse apiResponse = new APIResponse();
 
-        List<UserPointHistory> userPointHistories = userPointHistoryRepository.findTop10ByDateOrderByPointDesc(date);
+        List<UserPointHistory> userPointHistories = userPointHistoryRepository.findTop10ByDateOrderByPointDesc(date).stream()
+                .collect(Collectors.groupingBy(
+                        h -> h.getUser().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.reducing((h1, h2) -> {
+                                    h1.setPoint(h1.getPoint() + h2.getPoint());
+                                    return h1;
+                                }),
+                                optional -> optional.orElse(null)
+                        )
+                ))
+                .values().stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparingLong(UserPointHistory::getPoint).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get top 10 by date success");
         apiResponse.setData(userPointHistories);
@@ -96,7 +113,23 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     public APIResponse getTop10ByMonth(int month, int year) {
         APIResponse apiResponse = new APIResponse();
 
-        List<UserPointHistory> userPointHistories = userPointHistoryRepository.findTop10ByMonth(month,year);
+        List<UserPointHistory> userPointHistories = userPointHistoryRepository.findTop10ByMonth(month, year).stream()
+                .collect(Collectors.groupingBy(
+                        h -> h.getUser().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.reducing((h1, h2) -> {
+                                    h1.setPoint(h1.getPoint() + h2.getPoint());
+                                    return h1;
+                                }),
+                                optional -> optional.orElse(null)
+                        )
+                ))
+                .values().stream()
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparingLong(UserPointHistory::getPoint).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get top 10 by month, year success");
         apiResponse.setData(userPointHistories);

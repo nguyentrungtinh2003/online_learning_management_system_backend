@@ -298,7 +298,7 @@ public class CourseServiceImpl implements CourseService{
 
             long completedLessons = lessons.stream()
                     .filter(lesson -> processes.stream()
-                            .anyMatch(p -> p.getLesson().getId() != null && p.getLesson().getId().equals(lesson.getId()) && p.getCompletionPercent() >= 100))
+                            .anyMatch(p ->p.getLesson() != null && p.getLesson().getId() != null && p.getLesson().getId().equals(lesson.getId()) && p.getCompletionPercent() >= 100))
                     .count();
 
             int totalLessons = lessons.size();
