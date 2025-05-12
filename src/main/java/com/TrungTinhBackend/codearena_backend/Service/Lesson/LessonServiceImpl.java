@@ -66,7 +66,6 @@ public class LessonServiceImpl implements LessonService{
             lesson.setVideoURL(videoService.uploadVideo(video));
             lesson.setDeleted(false);
             lesson.setCourse(course);
-            lesson.setQuizzes(null);
 
             lessonRepository.save(lesson);
 
@@ -149,19 +148,17 @@ public class LessonServiceImpl implements LessonService{
             if(lessonDTO.getCourseId() != null) {
                 lesson.setCourse(course);
             }
-            if (lessonDTO.getQuizzes() != null && !lessonDTO.getQuizzes().isEmpty()) {
-                List<Quiz> quizList = quizRepository.findAllById(
-                        lessonDTO.getQuizzes().stream().map(Quiz::getId).toList()
-                );
+        if (lessonDTO.getQuizzes() != null && !lessonDTO.getQuizzes().isEmpty()) {
+            List<Quiz> quizList = quizRepository.findAllById(lessonDTO.getQuizzes());
 
-                if (quizList.size() != lessonDTO.getQuizzes().size()) {
-                    throw new NotFoundException("One or more quizzes not found !");
-                }
-
-                lesson.setQuizzes(quizList);
+            if (quizList.size() != lessonDTO.getQuizzes().size()) {
+                throw new NotFoundException("One or more quizzes not found!");
             }
 
-            lessonRepository.save(lesson);
+            lesson.setQuizzes(quizList);
+        }
+
+        lessonRepository.save(lesson);
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Update lesson success !");

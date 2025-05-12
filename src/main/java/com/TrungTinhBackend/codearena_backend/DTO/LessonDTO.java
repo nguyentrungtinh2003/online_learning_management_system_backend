@@ -36,5 +36,5 @@ public class LessonDTO {
 
     private Long courseId;
 
-    private List<Quiz> quizzes;
+    private List<Long> quizzes;
 }
