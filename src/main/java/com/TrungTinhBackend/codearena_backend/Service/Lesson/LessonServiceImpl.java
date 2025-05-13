@@ -215,6 +215,7 @@ public class LessonServiceImpl implements LessonService{
             LessonDTO lessonDTO = new LessonDTO();
             lessonDTO.setLessonName(lesson.getLessonName());
             lessonDTO.setDescription(lesson.getDescription());
+            lessonDTO.setDate(lesson.getDate());
             lessonDTO.setCourseId(lesson.getCourse() != null ? lesson.getCourse().getId() : null);
             return lessonDTO;
         });

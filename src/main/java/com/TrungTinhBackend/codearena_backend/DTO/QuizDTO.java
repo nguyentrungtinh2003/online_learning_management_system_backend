@@ -6,6 +6,7 @@ import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -35,6 +36,8 @@ public class QuizDTO {
     private String description;
 
     private Long lessonId;
+
+    private LocalDateTime date;
 
     private List<Question> questions;
 

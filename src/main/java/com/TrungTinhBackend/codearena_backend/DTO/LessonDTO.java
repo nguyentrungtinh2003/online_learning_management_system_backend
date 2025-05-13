@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -35,6 +36,8 @@ public class LessonDTO {
     private String videoURL;
 
     private Long courseId;
+
+    private LocalDateTime date;
 
     private List<Long> quizzes;
 }

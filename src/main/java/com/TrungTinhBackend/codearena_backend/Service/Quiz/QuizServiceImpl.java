@@ -225,6 +225,7 @@ public class QuizServiceImpl implements QuizService{
             quizDTO.setPrice(quiz.getPrice());
             quizDTO.setDescription(quiz.getDescription());
             quizDTO.setLessonId(quiz.getLesson().getId());
+            quizDTO.setDate(quiz.getDate());
 
             return quizDTO;
         });
