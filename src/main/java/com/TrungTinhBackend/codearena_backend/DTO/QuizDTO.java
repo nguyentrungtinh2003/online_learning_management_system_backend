@@ -37,6 +37,8 @@ public class QuizDTO {
 
     private Long lessonId;
 
+    private String LessonName;
+
     private LocalDateTime date;
 
     private List<Question> questions;
