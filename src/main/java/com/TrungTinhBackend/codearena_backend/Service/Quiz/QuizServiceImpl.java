@@ -220,6 +220,7 @@ public class QuizServiceImpl implements QuizService{
 
         Page<QuizDTO> quizDTOS = quizzes.map(quiz -> {
             QuizDTO quizDTO = new QuizDTO();
+            quizDTO.setId(quiz.getId());
             quizDTO.setQuizEnum(quiz.getQuizEnum());
             quizDTO.setQuizName(quiz.getQuizName());
             quizDTO.setPrice(quiz.getPrice());

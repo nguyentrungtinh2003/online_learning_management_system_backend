@@ -13,6 +13,8 @@ import java.util.List;
 @Data
 public class LessonDTO {
 
+    private Long id;
+
     @NotBlank(message = "Lesson name is required !")
     @Size(min = 2, max = 255, message = "Lesson name must be between 2 and 255 characters!")
     private String lessonName;

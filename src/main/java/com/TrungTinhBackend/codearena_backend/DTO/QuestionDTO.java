@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class QuestionDTO {
 
+    private Long id;
     @NotBlank(message = "Question name is required !")
     @Size(min = 1, max = 255, message = "Question name must be between 1 and 255 characters!")
     private String questionName;

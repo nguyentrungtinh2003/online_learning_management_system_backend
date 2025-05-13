@@ -213,6 +213,7 @@ public class LessonServiceImpl implements LessonService{
 
         Page<LessonDTO> lessonDTOPage = lessons.map(lesson -> {
             LessonDTO lessonDTO = new LessonDTO();
+            lessonDTO.setId(lesson.getId());
             lessonDTO.setLessonName(lesson.getLessonName());
             lessonDTO.setDescription(lesson.getDescription());
             lessonDTO.setDate(lesson.getDate());

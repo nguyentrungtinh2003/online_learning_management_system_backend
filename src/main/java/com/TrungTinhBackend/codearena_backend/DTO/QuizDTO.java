@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 public class QuizDTO {
 
+    private Long id;
+
     @NotBlank(message = "Quiz name is required !")
     @Size(min = 2, max = 255, message = "Quiz name must be between 2 and 255 characters!")
     private String quizName;
