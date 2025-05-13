@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LessonServiceImpl implements LessonService{
@@ -210,9 +211,17 @@ public class LessonServiceImpl implements LessonService{
         Pageable pageable = PageRequest.of(page,size);
         Page<Lesson> lessons = lessonRepository.findAll(pageable);
 
+        Page<LessonDTO> lessonDTOPage = lessons.map(lesson -> {
+            LessonDTO lessonDTO = new LessonDTO();
+            lessonDTO.setLessonName(lesson.getLessonName());
+            lessonDTO.setDescription(lesson.getDescription());
+            lessonDTO.setCourseId(lesson.getCourse() != null ? lesson.getCourse().getId() : null);
+            return lessonDTO;
+        });
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get lesson by page success !");
-        apiResponse.setData(lessons);
+        apiResponse.setData(lessonDTOPage);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
