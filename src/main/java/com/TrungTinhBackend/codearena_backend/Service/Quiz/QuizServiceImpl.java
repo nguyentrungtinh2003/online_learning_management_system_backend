@@ -218,9 +218,20 @@ public class QuizServiceImpl implements QuizService{
         Pageable pageable = PageRequest.of(page,size);
         Page<Quiz> quizzes = quizRepository.findAll(pageable);
 
+        Page<QuizDTO> quizDTOS = quizzes.map(quiz -> {
+            QuizDTO quizDTO = new QuizDTO();
+            quizDTO.setQuizEnum(quiz.getQuizEnum());
+            quizDTO.setQuizName(quiz.getQuizName());
+            quizDTO.setPrice(quiz.getPrice());
+            quizDTO.setDescription(quiz.getDescription());
+            quizDTO.setLessonId(quiz.getLesson().getId());
+
+            return quizDTO;
+        });
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get quiz by page success !");
-        apiResponse.setData(quizzes);
+        apiResponse.setData(quizDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
