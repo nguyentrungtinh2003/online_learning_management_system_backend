@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 public interface UserPointHistoryService {
     public APIResponse addUserPointHistory(UserPointHistoryDTO userPointHistoryDTO);
+    public APIResponse getUserPointHistoryByUserId(Long userId);
     public APIResponse getTop10ByDate(LocalDate date);
     public APIResponse getTop10ByWeek(LocalDate startDate, LocalDate endDate);
     public APIResponse getTop10ByMonth(int month, int year);

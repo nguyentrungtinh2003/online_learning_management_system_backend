@@ -7,6 +7,8 @@ import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.UserPointHistoryRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +28,17 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     @Autowired
     private UserRepository userRepository;
 
-    public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository) {
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    @Autowired
+    private UserService userService;
+
+    public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService) {
         this.userPointHistoryRepository = userPointHistoryRepository;
         this.userRepository = userRepository;
+        this.webSocketSender = webSocketSender;
+        this.userService = userService;
     }
 
     @Override
@@ -38,6 +48,12 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         User user = userRepository.findById(userPointHistoryDTO.getUserId()).orElseThrow(
                 () -> new NotFoundException("User not found")
         );
+
+        user.setPoint(user.getPoint() + userPointHistoryDTO.getPoint());
+        user.setRankEnum(userService.calculateRank(user.getPoint()));
+        userRepository.save(user);
+
+        webSocketSender.sendUserInfo(user);
         
         UserPointHistory userPointHistory = new UserPointHistory();
         userPointHistory.setUser(user);
@@ -49,6 +65,19 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Save user point history success");
         apiResponse.setData(userPointHistory);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getUserPointHistoryByUserId(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<UserPointHistory> userPointHistories = userPointHistoryRepository.findByUserId(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get user point history by userId success");
+        apiResponse.setData(userPointHistories);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }

@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.Blog;
 
+import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Blog;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
@@ -10,6 +11,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
+import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import jakarta.transaction.Transactional;
@@ -48,13 +50,17 @@ public class BlogServiceImpl implements BlogService{
     @Autowired
     private WebSocketSender webSocketSender;
 
-    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository, UserService userService, WebSocketSender webSocketSender) {
+    @Autowired
+    private UserPointHistoryService userPointHistoryService;
+
+    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository, UserService userService, WebSocketSender webSocketSender, UserPointHistoryService userPointHistoryService) {
         this.blogRepository = blogRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.webSocketSender = webSocketSender;
+        this.userPointHistoryService = userPointHistoryService;
     }
 
     @Override
@@ -82,16 +88,12 @@ public class BlogServiceImpl implements BlogService{
 
             blogRepository.save(blog);
 
-        user.setPoint(user.getPoint() + 5);
-        user.setRankEnum(userService.calculateRank(user.getPoint()));
-        userRepository.save(user);
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),5L));
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog success !");
             apiResponse.setData(blog);
             apiResponse.setTimestamp(LocalDateTime.now());
-
-        webSocketSender.sendUserInfo(user);
 
             return apiResponse;
 
@@ -142,10 +144,7 @@ public class BlogServiceImpl implements BlogService{
 
             blogRepository.save(blog);
 
-            user.setPoint(user.getPoint() - 5);
-        user.setRankEnum(userService.calculateRank(user.getPoint()));
-            userRepository.save(user);
-
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),-5L));
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog success !");
@@ -276,9 +275,8 @@ public class BlogServiceImpl implements BlogService{
                     .map(User::getId)
                     .collect(Collectors.toList());
 
-            user.setPoint(user.getPoint() + 1);
-            user.setRankEnum(userService.calculateRank(user.getPoint()));
-            userRepository.save(user);
+
+            userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),1L));
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("User like blog success !");
@@ -286,7 +284,6 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             webSocketSender.sendLike(blogId,userId,likedUserIds);
-            webSocketSender.sendUserInfo(user);
 
             return apiResponse;
         } catch (Exception e) {
@@ -320,9 +317,8 @@ public class BlogServiceImpl implements BlogService{
                     .map(User::getId)
                     .collect(Collectors.toList());
 
-            user.setPoint(user.getPoint() - 1);
-            user.setRankEnum(userService.calculateRank(user.getPoint()));
-            userRepository.save(user);
+//            user.setPoint(user.getPoint() - 1);
+            userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),-1L));
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("User un like blog success !");
@@ -330,7 +326,6 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
             webSocketSender.sendUnLike(blogId,userId,likedUserIds);
-            webSocketSender.sendUserInfo(user);
 
             return apiResponse;
         } catch (Exception e) {

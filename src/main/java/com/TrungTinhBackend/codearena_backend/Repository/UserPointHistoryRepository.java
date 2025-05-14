@@ -13,6 +13,8 @@ import java.util.List;
 public interface UserPointHistoryRepository extends JpaRepository<UserPointHistory,Long> {
     List<UserPointHistory> findTop10ByDateOrderByPointDesc(LocalDate date);
 
+    List<UserPointHistory> findByUserId(Long userId);
+
     @Query("SELECT h FROM UserPointHistory h WHERE h.date BETWEEN :startDate AND :endDate ORDER BY h.point DESC")
     List<UserPointHistory> findTop10ByWeek(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 

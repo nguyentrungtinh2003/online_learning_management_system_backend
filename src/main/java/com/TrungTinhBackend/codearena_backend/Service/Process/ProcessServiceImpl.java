@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.Process;
 
+import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Process;
@@ -12,6 +13,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.ProcessRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
+import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,12 +44,16 @@ public class ProcessServiceImpl implements ProcessService{
     @Autowired
     private WebSocketSender webSocketSender;
 
-    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository, UserService userService, WebSocketSender webSocketSender) {
+    @Autowired
+    private UserPointHistoryService userPointHistoryService;
+
+    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository, UserService userService, WebSocketSender webSocketSender, UserPointHistoryService userPointHistoryService) {
         this.processRepository = processRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.userService = userService;
         this.webSocketSender = webSocketSender;
+        this.userPointHistoryService = userPointHistoryService;
     }
 
     @Override
@@ -118,11 +124,7 @@ public class ProcessServiceImpl implements ProcessService{
             lessonProcess.setCompletionPercent(100);
             lessonProcess.setStatus(ProcessEnum.COMPLETED);
 
-            user.setPoint(user.getPoint() +1);
-
-            user.setRankEnum(userService.calculateRank(user.getPoint()));
-            userRepository.save(user);
-            webSocketSender.sendUserInfo(user);
+           userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(userId,1L));
 
             processRepository.saveAndFlush(lessonProcess);
         }

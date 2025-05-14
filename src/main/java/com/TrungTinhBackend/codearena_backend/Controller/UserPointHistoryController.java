@@ -14,30 +14,35 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/rankings")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserPointHistoryController {
 
     @Autowired
     private UserPointHistoryService userPointHistoryService;
 
-    @PostMapping("/add")
+    @PostMapping("/rankings/add")
     public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistoryDTO userPointHistoryDTO) {
         return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(userPointHistoryDTO));
     }
 
-    @GetMapping("/day")
+    @GetMapping("/user-point-history/{userId}")
+    public ResponseEntity<APIResponse> getUserPointHistoryByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(userPointHistoryService.getUserPointHistoryByUserId(userId));
+    }
+
+    @GetMapping("/rankings/day")
     public ResponseEntity<APIResponse> getTopByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(userPointHistoryService.getTop10ByDate(date));
     }
 
-    @GetMapping("/week")
+    @GetMapping("/rankings/week")
     public ResponseEntity<APIResponse> getTopByWeek(@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return ResponseEntity.ok(userPointHistoryService.getTop10ByWeek(startDate,endDate));
     }
 
-    @GetMapping("/month")
+    @GetMapping("/rankings/month")
     public ResponseEntity<APIResponse> getTopByMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
         return ResponseEntity.ok(userPointHistoryService.getTop10ByMonth(month,year));
     }

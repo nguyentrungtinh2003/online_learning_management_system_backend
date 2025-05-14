@@ -134,8 +134,9 @@ public class UserServiceImpl implements UserService{
             user1.setEmail(userRegisterDTO.getEmail());
             user1.setEnabled(true);
             user1.setCoin(0.0);
-            user1.setPoint(10L);
+            user1.setPoint(0L);
             user1.setRoleEnum(RoleEnum.STUDENT);
+            user1.setRankEnum(RankEnum.BRONZE);
             user1.setStatusUserEnum(StatusUserEnum.ACTIVE);
 
             userRepository.save(user1);
@@ -180,7 +181,7 @@ public class UserServiceImpl implements UserService{
             user1.setDate(LocalDateTime.now());
             user1.setAddress(adminRegisterUserDTO.getAddress());
             user1.setBirthDay(adminRegisterUserDTO.getBirthDay());
-            user1.setPoint(10L);
+            user1.setPoint(0L);
             user1.setPhoneNumber(adminRegisterUserDTO.getPhoneNumber());
             user1.setRankEnum(RankEnum.BRONZE);
             user1.setRoleEnum(adminRegisterUserDTO.getRoleEnum());
@@ -325,11 +326,11 @@ public class UserServiceImpl implements UserService{
     public RankEnum calculateRank(Long point) {
         if (point > 2000) {
             return RankEnum.DIAMOND;
-        } else if (point > 1500) {
-            return RankEnum.PLATINUM;
         } else if (point > 1000) {
-            return RankEnum.GOLD;
+            return RankEnum.PLATINUM;
         } else if (point > 500) {
+            return RankEnum.GOLD;
+        } else if (point > 200) {
             return RankEnum.SILVER;
         } else {
             return RankEnum.BRONZE;
