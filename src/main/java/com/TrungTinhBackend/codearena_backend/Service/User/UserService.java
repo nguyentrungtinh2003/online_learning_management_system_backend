@@ -25,6 +25,8 @@ public interface UserService {
     public APIResponse getAllUser() throws Exception;
 
     public APIResponse countUser();
+    public APIResponse getTop5Coin();
+    public APIResponse getTop5Point();
 
     public APIResponse getUserById(Long id) throws Exception;
 

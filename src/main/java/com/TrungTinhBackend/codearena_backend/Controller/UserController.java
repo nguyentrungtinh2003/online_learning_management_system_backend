@@ -74,6 +74,16 @@ public class UserController {
         return ResponseEntity.ok(userService.countUser());
     }
 
+    @GetMapping("user/coin")
+    public ResponseEntity<APIResponse> getTọpUserCoin() throws Exception {
+        return ResponseEntity.ok(userService.getTop5Coin());
+    }
+
+    @GetMapping("user/point")
+    public ResponseEntity<APIResponse> getTopUserPoint() throws Exception {
+        return ResponseEntity.ok(userService.getTop5Point());
+    }
+
     @GetMapping("user/role/{roleEnum}")
     public ResponseEntity<APIResponse> getUserByRole(@PathVariable RoleEnum roleEnum) throws Exception {
         return ResponseEntity.ok(userService.getUserByRole(roleEnum));

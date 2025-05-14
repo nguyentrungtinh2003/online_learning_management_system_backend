@@ -334,6 +334,30 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse getTop5Coin() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<User> users = userRepository.findTop5ByOrderByCoinDesc();
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get top 5 user coin success");
+        apiResponse.setData(users);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getTop5Point() {
+        APIResponse apiResponse = new APIResponse();
+
+        List<User> users = userRepository.findTop5ByOrderByPointDesc();
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get top 5 user point success");
+        apiResponse.setData(users);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getUserById(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

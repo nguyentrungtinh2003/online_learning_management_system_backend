@@ -23,4 +23,10 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
     @Query("SELECT u.id FROM User u")
     List<Long> getAllUserIds();
     List<User> findByRoleEnum(RoleEnum roleEnum);
+
+    // Top 5 users theo coin
+    List<User> findTop5ByOrderByCoinDesc();
+
+    // Top 5 users theo point
+    List<User> findTop5ByOrderByPointDesc();
 }
