@@ -67,8 +67,9 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         List<MonthlyAmountDTO> dtos = new ArrayList<>();
 
         for (Object[] row : results) {
-            int month = ((Number) row[0]).intValue();
-            Double amount = ((Number) row[1]).doubleValue();
+            int month = ((Number) row[0]).intValue(); // thường là Integer hoặc BigDecimal
+            double amount = row[1] == null ? 0 : ((Number) row[1]).doubleValue();
+
             dtos.add(new MonthlyAmountDTO(month, amount));
         }
 
