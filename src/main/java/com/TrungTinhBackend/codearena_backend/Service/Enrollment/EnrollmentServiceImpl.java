@@ -25,6 +25,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,14 +137,20 @@ public class EnrollmentServiceImpl implements EnrollmentService{
 
         Page<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(PageRequest.of(0, 4));
 
+        List<TopCourseDTO> topCourses = new ArrayList<>();
+
         for (Object[] row : result.getContent()) {
             Course course = (Course) row[0];
             Long enrollmentCount = (Long) row[1];
+
+            // Create TopCourseDTO and add to the list
+            TopCourseDTO topCourseDTO = new TopCourseDTO(course, enrollmentCount);
+            topCourses.add(topCourseDTO);
         }
 
         response.setStatusCode(200L);
         response.setMessage("Top 4 most enrolled courses");
-        response.setData(result.getContent());  // Trả về danh sách DTO
+        response.setData(topCourses);  // Set the mapped list of DTOs
         response.setTimestamp(LocalDateTime.now());
 
         return response;
