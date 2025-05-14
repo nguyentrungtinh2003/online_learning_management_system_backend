@@ -18,10 +18,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     void deleteByUserAndCourse(User user, Course course);
     List<Enrollment> findByUserId(Long userId);
 
-    @Query("SELECT new com.TrungTinhBackend.codearena_backend.dto.TopCourseDTO(e.course.id, COUNT(e.id)) " +
+    @Query("SELECT e.course.id, COUNT(e.id) " +
             "FROM Enrollment e " +
             "GROUP BY e.course.id " +
             "ORDER BY COUNT(e.id) DESC")
-    Page<TopCourseDTO> findTopCoursesByEnrollment(Pageable pageable);
-
+    Page<Object[]> findTopCoursesByEnrollment(Pageable pageable);
 }

@@ -134,8 +134,14 @@ public class EnrollmentServiceImpl implements EnrollmentService{
     public APIResponse getTopEnrolledCourses() {
         APIResponse response = new APIResponse();
 
-        Pageable pageable = PageRequest.of(0, 4);
-        Page<TopCourseDTO> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
+        Page<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(PageRequest.of(0, 4));
+
+        for (Object[] row : result.getContent()) {
+            Long courseId = (Long) row[0];
+            Long enrollmentCount = (Long) row[1];
+
+            System.out.println("Course ID: " + courseId + ", Enrollments: " + enrollmentCount);
+        }
 
         response.setStatusCode(200L);
         response.setMessage("Top 4 most enrolled courses");
