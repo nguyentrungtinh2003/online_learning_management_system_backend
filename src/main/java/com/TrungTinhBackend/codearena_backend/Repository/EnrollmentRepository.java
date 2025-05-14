@@ -18,7 +18,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     void deleteByUserAndCourse(User user, Course course);
     List<Enrollment> findByUserId(Long userId);
 
-    @Query("SELECT e.course.name, COUNT(e.id) " +
+    @Query("SELECT e.course.course_name, COUNT(e.id) " +
             "FROM Enrollment e " +
             "GROUP BY e.course.name " +
             "ORDER BY COUNT(e.id) DESC")
