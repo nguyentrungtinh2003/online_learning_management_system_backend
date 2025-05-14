@@ -137,10 +137,10 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         Page<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(PageRequest.of(0, 4));
 
         for (Object[] row : result.getContent()) {
-            Long courseId = (Long) row[0];
+            String courseName = (String) row[0];
             Long enrollmentCount = (Long) row[1];
 
-            System.out.println("Course ID: " + courseId + ", Enrollments: " + enrollmentCount);
+            System.out.println("Course ID: " + courseName + ", Enrollments: " + enrollmentCount);
         }
 
         response.setStatusCode(200L);

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TopCourseDTO {
-    private Long courseId;
+    private String courseName;
     private Long enrollmentCount;
 
     public TopCourseDTO(Long aLong, Long aLong1) {
