@@ -135,17 +135,14 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         APIResponse response = new APIResponse();
 
         Pageable pageable = PageRequest.of(0, 4);
-        Page<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
-
-        List<TopCourseDTO> dtos = result.stream()
-                .map(obj -> new TopCourseDTO((Long) obj[0], (Long) obj[1]))
-                .collect(Collectors.toList());
+        Page<TopCourseDTO> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
 
         response.setStatusCode(200L);
         response.setMessage("Top 4 most enrolled courses");
-        response.setData(dtos);
+        response.setData(result.getContent());  // Trả về danh sách DTO
         response.setTimestamp(LocalDateTime.now());
 
         return response;
     }
+
 }

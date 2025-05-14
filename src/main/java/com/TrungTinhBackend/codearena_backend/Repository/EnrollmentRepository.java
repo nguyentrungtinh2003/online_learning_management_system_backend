@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Repository;
 
+import com.TrungTinhBackend.codearena_backend.DTO.TopCourseDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Enrollment;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -17,11 +18,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     void deleteByUserAndCourse(User user, Course course);
     List<Enrollment> findByUserId(Long userId);
 
-    @Query("SELECT e.courseId, COUNT(e.id) as enrollCount " +
+    @Query("SELECT new com.TrungTinhBackend.codearena_backend.dto.TopCourseDTO(e.courseId, COUNT(e.id)) " +
             "FROM Enrollment e " +
             "GROUP BY e.courseId " +
-            "ORDER BY enrollCount DESC")
-    Page<Object[]> findTopCoursesByEnrollment(Pageable pageable);  // Đổi List<Object[]> thành Page<Object[]>
-
-
+            "ORDER BY COUNT(e.id) DESC")
+    Page<TopCourseDTO> findTopCoursesByEnrollment(Pageable pageable);
 }
