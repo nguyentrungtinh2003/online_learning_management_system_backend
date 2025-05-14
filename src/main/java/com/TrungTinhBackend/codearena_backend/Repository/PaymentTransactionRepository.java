@@ -17,15 +17,16 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
     @Query("SELECT SUM(p.amount) FROM PaymentTransaction p")
     Double getTotalAmount();
     Page<PaymentTransaction> findAll(Specification<PaymentTransaction> specification, Pageable pageable);
+
     @Query(value = """
     SELECT 
-        MONTH(date) AS month,
+        EXTRACT(MONTH FROM date) AS month,
         SUM(amount) AS amount
     FROM payment_transaction
     WHERE is_deleted = false
-      AND YEAR(date) = :year
-    GROUP BY MONTH(date)
-    ORDER BY MONTH(date)
+      AND EXTRACT(YEAR FROM date) = :year
+    GROUP BY EXTRACT(MONTH FROM date)
+    ORDER BY EXTRACT(MONTH FROM date)
 """, nativeQuery = true)
     List<Object[]> getMonthlyAmountsByYear(@Param("year") int year);
 
