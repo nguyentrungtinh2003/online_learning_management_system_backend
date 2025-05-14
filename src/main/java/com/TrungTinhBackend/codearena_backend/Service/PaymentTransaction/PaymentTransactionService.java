@@ -4,6 +4,8 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 
 public interface PaymentTransactionService {
     public APIResponse getPaymentByPage(int page, int size);
+    public APIResponse getAllPayment();
+    public APIResponse getMonthlyAmountsByYear(int year);
     public APIResponse getPaymentById(Long id);
     public APIResponse getPaymentByUserId(Long userId);
     public APIResponse getTotalAmount();

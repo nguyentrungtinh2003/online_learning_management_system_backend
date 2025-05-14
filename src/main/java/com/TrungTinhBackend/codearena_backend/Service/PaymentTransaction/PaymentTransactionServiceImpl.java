@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction;
 
+import com.TrungTinhBackend.codearena_backend.DTO.MonthlyAmountDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.PaymentTransaction;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -16,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,6 +40,41 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get payment by page success !");
         apiResponse.setData(paymentTransactions);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getAllPayment() {
+        APIResponse apiResponse = new APIResponse();
+
+       List<PaymentTransaction> paymentTransactions = paymentTransactionRepository.findAll();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get all payment success !");
+        apiResponse.setData(paymentTransactions);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getMonthlyAmountsByYear(int year) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<Object[]> results = paymentTransactionRepository.getMonthlyAmountsByYear(year);
+        List<MonthlyAmountDTO> dtos = new ArrayList<>();
+
+        for (Object[] row : results) {
+            int month = ((Number) row[0]).intValue();
+            Double amount = ((Number) row[1]).doubleValue();
+            dtos.add(new MonthlyAmountDTO(month, amount));
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get amount by month, year success !");
+        apiResponse.setData(dtos);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;

@@ -57,6 +57,16 @@ public class PaymentTransactionController {
         return ResponseEntity.ok(paymentTransactionService.getPaymentByPage(page,size));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<APIResponse> getAllPayment() throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getAllPayment());
+    }
+
+    @GetMapping("/monthly-amounts/{year}")
+    public ResponseEntity<APIResponse> getMonthlyAmountsYear(@PathVariable int year) throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getMonthlyAmountsByYear(year));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse> getPaymentById(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.getPaymentById(id));
