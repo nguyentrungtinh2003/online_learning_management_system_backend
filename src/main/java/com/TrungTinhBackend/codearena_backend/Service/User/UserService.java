@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
 import com.TrungTinhBackend.codearena_backend.DTO.*;
+import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
 import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,8 @@ public interface UserService {
     public APIResponse restoreUser(Long id);
 
     public APIResponse getAllUser() throws Exception;
+
+    public RankEnum calculateRank(Long point);
 
     public APIResponse countUser();
     public APIResponse getTop5Coin();

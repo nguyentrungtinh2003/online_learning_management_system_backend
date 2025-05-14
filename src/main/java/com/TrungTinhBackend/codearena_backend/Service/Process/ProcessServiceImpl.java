@@ -11,6 +11,8 @@ import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.ProcessRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
+import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -34,10 +36,18 @@ public class ProcessServiceImpl implements ProcessService{
     @Autowired
     private LessonRepository lessonRepository;
 
-    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository) {
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private WebSocketSender webSocketSender;
+
+    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository, UserService userService, WebSocketSender webSocketSender) {
         this.processRepository = processRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
+        this.userService = userService;
+        this.webSocketSender = webSocketSender;
     }
 
     @Override
@@ -93,6 +103,10 @@ public class ProcessServiceImpl implements ProcessService{
         // 0. Đảm bảo tất cả Process đều được tạo (bao gồm lesson mới nếu có)
         createInitialProcess(userId, courseId);
 
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
         // 1. Cập nhật tiến độ bài học
         Process lessonProcess = processRepository.findByUserIdAndLessonId(userId, lessonId);
         if (lessonProcess == null) {
@@ -103,6 +117,13 @@ public class ProcessServiceImpl implements ProcessService{
         if (lessonProcess.getCompletionPercent() < 100) {
             lessonProcess.setCompletionPercent(100);
             lessonProcess.setStatus(ProcessEnum.COMPLETED);
+
+            user.setPoint(user.getPoint() +1);
+
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
+            userRepository.save(user);
+            webSocketSender.sendUserInfo(user);
+
             processRepository.saveAndFlush(lessonProcess);
         }
 

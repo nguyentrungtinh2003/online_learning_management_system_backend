@@ -83,9 +83,6 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
             blogCommentRepository.save(blogComment);
 
-        user.setPoint(user.getPoint() + 2);
-        userRepository.save(user);
-
 
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Add blog comment success !");
@@ -93,7 +90,6 @@ public class BlogCommentServiceImpl implements BlogCommentService{
             apiResponse.setTimestamp(LocalDateTime.now());
 
         webSocketSender.sendBlogComment(blogCommentDTO);
-        webSocketSender.sendUserInfo(user);
 
             return apiResponse;
     }
@@ -116,15 +112,10 @@ public class BlogCommentServiceImpl implements BlogCommentService{
 
         blogCommentRepository.delete(blogComment);
 
-        user.setPoint(user.getPoint() - 2);
-        userRepository.save(user);
-
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Delete blog comment success !");
             apiResponse.setData(blogComment);
             apiResponse.setTimestamp(LocalDateTime.now());
-
-        webSocketSender.sendUserInfo(user);
 
             return apiResponse;
     }

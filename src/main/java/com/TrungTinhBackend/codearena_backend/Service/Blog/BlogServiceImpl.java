@@ -9,6 +9,7 @@ import com.TrungTinhBackend.codearena_backend.DTO.BlogDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.BlogSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import jakarta.transaction.Transactional;
@@ -42,13 +43,17 @@ public class BlogServiceImpl implements BlogService{
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private WebSocketSender webSocketSender;
 
-    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository, WebSocketSender webSocketSender) {
+    public BlogServiceImpl(BlogRepository blogRepository, ImgService imgService, VideoService videoService, UserRepository userRepository, UserService userService, WebSocketSender webSocketSender) {
         this.blogRepository = blogRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.userRepository = userRepository;
+        this.userService = userService;
         this.webSocketSender = webSocketSender;
     }
 
@@ -78,6 +83,7 @@ public class BlogServiceImpl implements BlogService{
             blogRepository.save(blog);
 
         user.setPoint(user.getPoint() + 5);
+        user.setRankEnum(userService.calculateRank(user.getPoint()));
         userRepository.save(user);
 
             apiResponse.setStatusCode(200L);
@@ -137,6 +143,7 @@ public class BlogServiceImpl implements BlogService{
             blogRepository.save(blog);
 
             user.setPoint(user.getPoint() - 5);
+        user.setRankEnum(userService.calculateRank(user.getPoint()));
             userRepository.save(user);
 
 
@@ -270,6 +277,7 @@ public class BlogServiceImpl implements BlogService{
                     .collect(Collectors.toList());
 
             user.setPoint(user.getPoint() + 1);
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
             userRepository.save(user);
 
             apiResponse.setStatusCode(200L);
@@ -313,6 +321,7 @@ public class BlogServiceImpl implements BlogService{
                     .collect(Collectors.toList());
 
             user.setPoint(user.getPoint() - 1);
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
             userRepository.save(user);
 
             apiResponse.setStatusCode(200L);
@@ -363,6 +372,7 @@ public class BlogServiceImpl implements BlogService{
         blogRepository.save(blog);
 
         user.setPoint(user.getPoint() + 5);
+        user.setRankEnum(userService.calculateRank(user.getPoint()));
         userRepository.save(user);
         webSocketSender.sendUserInfo(user);
 

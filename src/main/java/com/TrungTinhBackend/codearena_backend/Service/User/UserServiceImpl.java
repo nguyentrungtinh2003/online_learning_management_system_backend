@@ -322,6 +322,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public RankEnum calculateRank(Long point) {
+        if (point > 2000) {
+            return RankEnum.DIAMOND;
+        } else if (point > 1500) {
+            return RankEnum.PLATINUM;
+        } else if (point > 1000) {
+            return RankEnum.GOLD;
+        } else if (point > 500) {
+            return RankEnum.SILVER;
+        } else {
+            return RankEnum.BRONZE;
+        }
+    }
+
+    @Override
     public APIResponse countUser() {
         APIResponse apiResponse = new APIResponse();
 

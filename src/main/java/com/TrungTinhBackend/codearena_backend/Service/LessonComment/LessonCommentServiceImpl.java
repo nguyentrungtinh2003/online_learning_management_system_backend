@@ -77,9 +77,6 @@ public class LessonCommentServiceImpl implements LessonCommentService{
         lessonComment.setDate(LocalDateTime.now());
         lessonComment.setDeleted(false);
 
-        user.setPoint(user.getPoint() + 2);
-        userRepository.save(user);
-
         lessonCommentRepository.save(lessonComment);
 
 
@@ -89,7 +86,6 @@ public class LessonCommentServiceImpl implements LessonCommentService{
         apiResponse.setTimestamp(LocalDateTime.now());
 
         webSocketSender.sendLessonComment(lessonCommentDTO);
-        webSocketSender.sendUserInfo(user);
 
         return apiResponse;
     }
@@ -166,15 +162,10 @@ public class LessonCommentServiceImpl implements LessonCommentService{
 
         lessonCommentRepository.delete(lessonComment);
 
-        user.setPoint(user.getPoint() - 2);
-        userRepository.save(user);
-
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Delete lesson comment by id success !");
         apiResponse.setData(lessonComment);
         apiResponse.setTimestamp(LocalDateTime.now());
-
-        webSocketSender.sendUserInfo(user);
 
 
         return apiResponse;
