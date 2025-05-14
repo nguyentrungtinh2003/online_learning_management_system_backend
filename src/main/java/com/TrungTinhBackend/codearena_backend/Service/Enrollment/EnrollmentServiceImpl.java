@@ -18,6 +18,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationS
 import com.TrungTinhBackend.codearena_backend.Service.Process.ProcessService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -134,7 +135,7 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         APIResponse response = new APIResponse();
 
         Pageable pageable = PageRequest.of(0, 4);
-        List<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
+        Page<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
 
         List<TopCourseDTO> dtos = result.stream()
                 .map(obj -> new TopCourseDTO((Long) obj[0], (Long) obj[1]))

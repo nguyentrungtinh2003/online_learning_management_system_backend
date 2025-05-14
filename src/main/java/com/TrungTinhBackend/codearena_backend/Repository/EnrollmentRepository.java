@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Repository;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Enrollment;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
             "FROM Enrollment e " +
             "GROUP BY e.courseId " +
             "ORDER BY enrollCount DESC")
-    List<Object[]> findTopCoursesByEnrollment(Pageable pageable);
+    Page<Object[]> findTopCoursesByEnrollment(Pageable pageable);  // Đổi List<Object[]> thành Page<Object[]>
+
 
 }
