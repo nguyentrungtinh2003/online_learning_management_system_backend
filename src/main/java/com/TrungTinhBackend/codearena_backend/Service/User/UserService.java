@@ -24,6 +24,8 @@ public interface UserService {
 
     public APIResponse getAllUser() throws Exception;
 
+    public APIResponse countUser();
+
     public APIResponse getUserById(Long id) throws Exception;
 
     public APIResponse getUserByEmail(String email) throws Exception;

@@ -322,6 +322,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public APIResponse countUser() {
+        APIResponse apiResponse = new APIResponse();
+
+        Long countUser = userRepository.count();
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Count user success");
+        apiResponse.setData(countUser);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse getUserById(Long id) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

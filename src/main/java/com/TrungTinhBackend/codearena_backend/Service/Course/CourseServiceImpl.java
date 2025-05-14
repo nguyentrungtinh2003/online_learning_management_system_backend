@@ -166,6 +166,20 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public APIResponse countCourse() {
+        APIResponse apiResponse = new APIResponse();
+
+        Long countCourse = courseRepository.count();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get count course success !");
+        apiResponse.setData(countCourse);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse updateCourse(Long id, CourseDTO courseDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 

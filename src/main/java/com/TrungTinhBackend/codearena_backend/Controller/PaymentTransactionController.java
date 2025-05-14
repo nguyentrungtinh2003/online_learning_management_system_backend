@@ -62,6 +62,11 @@ public class PaymentTransactionController {
         return ResponseEntity.ok(paymentTransactionService.getPaymentById(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<APIResponse> getTotalAmount() throws Exception {
+        return ResponseEntity.ok(paymentTransactionService.getTotalAmount());
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<APIResponse> getPaymentByUserId(@PathVariable Long userId) throws Exception {
         return ResponseEntity.ok(paymentTransactionService.getPaymentByUserId(userId));

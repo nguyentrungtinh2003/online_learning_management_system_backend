@@ -74,6 +74,20 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService{
     }
 
     @Override
+    public APIResponse getTotalAmount() {
+        APIResponse apiResponse = new APIResponse();
+
+        Double totalAmount = paymentTransactionRepository.getTotalAmount();
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get total amount success !");
+        apiResponse.setData(totalAmount);
+        apiResponse.setTimestamp(LocalDateTime.now());
+
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse deletePayment(Long id) {
         APIResponse apiResponse = new APIResponse();
 

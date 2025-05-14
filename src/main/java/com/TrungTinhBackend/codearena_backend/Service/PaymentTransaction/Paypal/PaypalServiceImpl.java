@@ -128,7 +128,7 @@ public class PaypalServiceImpl implements PaypalService {
             // Lưu giao dịch
             PaymentTransaction transaction = new PaymentTransaction();
             transaction.setUser(user);
-            transaction.setAmount(paymentAmount);
+            transaction.setAmount(paymentAmount * 25000);
             transaction.setCoinAmount(coinAmount);
             transaction.setStatus(PaymentTransactionStatus.COMPLETED);
             transaction.setDate(LocalDateTime.now());

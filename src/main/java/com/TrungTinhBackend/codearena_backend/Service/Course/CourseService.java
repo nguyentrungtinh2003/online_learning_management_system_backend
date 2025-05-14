@@ -9,6 +9,7 @@ public interface CourseService {
     public APIResponse buyCourse(Long userId,Long courseId);
     public APIResponse getAllCourse();
     public APIResponse getCourseById(Long id);
+    public APIResponse countCourse();
     public APIResponse updateCourse(Long id, CourseDTO courseDTO, MultipartFile img) throws Exception;
     public APIResponse deleteCourse(Long id) throws Exception;
     public APIResponse searchCourse(String keyword, int page, int size);
