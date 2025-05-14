@@ -2,6 +2,7 @@ package com.TrungTinhBackend.codearena_backend.Service.Enrollment;
 
 import com.TrungTinhBackend.codearena_backend.DTO.EnrollmentDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.TopCourseDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Enrollment;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -17,6 +18,8 @@ import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationS
 import com.TrungTinhBackend.codearena_backend.Service.Process.ProcessService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -124,5 +127,24 @@ public class EnrollmentServiceImpl implements EnrollmentService{
         apiResponse.setData(enrollmentDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
+    }
+
+    @Override
+    public APIResponse getTopEnrolledCourses() {
+        APIResponse response = new APIResponse();
+
+        Pageable pageable = PageRequest.of(0, 4);
+        List<Object[]> result = enrollmentRepository.findTopCoursesByEnrollment(pageable);
+
+        List<TopCourseDTO> dtos = result.stream()
+                .map(obj -> new TopCourseDTO((Long) obj[0], (Long) obj[1]))
+                .collect(Collectors.toList());
+
+        response.setStatusCode(200L);
+        response.setMessage("Top 4 most enrolled courses");
+        response.setData(dtos);
+        response.setTimestamp(LocalDateTime.now());
+
+        return response;
     }
 }

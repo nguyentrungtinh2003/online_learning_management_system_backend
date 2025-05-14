@@ -22,4 +22,10 @@ public class EnrollmentController {
     public ResponseEntity<APIResponse> getEnrollByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(enrollmentService.getEnrollByUserId(userId));
     }
+
+    @GetMapping("/enroll/top-enrollments")
+    public ResponseEntity<APIResponse> getTopEnrolledCourses() {
+        return ResponseEntity.ok(enrollmentService.getTopEnrolledCourses());
+    }
+
 }
