@@ -24,6 +24,8 @@ public class BlogDTO {
     private Long userId;
     private String username;
 
+    private String userImg;
+
     private Set<Long> likedUsers;
 
     private boolean isDeleted;
