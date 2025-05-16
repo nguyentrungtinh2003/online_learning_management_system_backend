@@ -16,8 +16,10 @@ import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -505,6 +507,19 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
         SecurityContextHolder.clearContext(); // Xóa authentication context
         new SecurityContextLogoutHandler().logout(request, null, null);
+
+        // Xóa cookie
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0); // Xóa cookie ngay lập tức
+        response.addCookie(cookie);
+
+        // Invalidate session nếu có
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Logout success !");
