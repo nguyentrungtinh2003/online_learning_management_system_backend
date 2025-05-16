@@ -455,8 +455,8 @@ public class UserServiceImpl implements UserService{
             String profilePicture = (String) attributes.get("picture");
 
             // Kiểm tra và lưu vào DB nếu cần
-            Optional<User> existingUser = Optional.ofNullable(userRepository.findByEmail(email));
-            if (existingUser.isEmpty()) {
+            User existingUser = userRepository.findByEmail(email);
+            if (existingUser == null) {
                 User newUser = new User();
                 newUser.setEmail(email);
                 newUser.setUsername(name);
@@ -465,6 +465,7 @@ public class UserServiceImpl implements UserService{
                 newUser.setPoint(0L);
                 newUser.setCoin(0.0);
                 newUser.setRoleEnum(RoleEnum.STUDENT);
+                newUser.setRankEnum(RankEnum.BRONZE);
                 userRepository.save(newUser); // Lưu vào DB
             }
 
