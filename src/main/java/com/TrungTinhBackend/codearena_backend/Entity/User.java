@@ -59,6 +59,7 @@ public class User implements UserDetails {
     private StatusUserEnum statusUserEnum;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private String provider;
 

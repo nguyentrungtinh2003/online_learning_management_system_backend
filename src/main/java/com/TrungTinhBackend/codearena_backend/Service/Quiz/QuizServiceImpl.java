@@ -136,6 +136,7 @@ public class QuizServiceImpl implements QuizService{
 
                 quiz.setQuestions(questionList);
             }
+            quiz.setUpdateDate(LocalDateTime.now());
 
             quizRepository.save(quiz);
 
@@ -232,6 +233,7 @@ public class QuizServiceImpl implements QuizService{
             quizDTO.setDescription(quiz.getDescription());
             quizDTO.setLessonId(quiz.getLesson().getId());
             quizDTO.setDate(quiz.getDate());
+            quizDTO.setUpdateDate(quiz.getUpdateDate());
             quizDTO.setLessonName(quiz.getLesson().getLessonName());
 
             return quizDTO;

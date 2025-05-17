@@ -32,6 +32,7 @@ public class SystemInfo {
     private String email;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private String socialMediaURL;
 

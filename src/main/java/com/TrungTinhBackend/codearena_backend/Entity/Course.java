@@ -35,6 +35,7 @@ public class Course {
     private CourseEnum courseEnum;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private boolean isDeleted;
     

@@ -34,6 +34,7 @@ public class Blog {
     private String video;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private Long likeCount;
 

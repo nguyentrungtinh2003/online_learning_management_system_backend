@@ -117,6 +117,7 @@ public class BlogServiceImpl implements BlogService{
             if(video != null && !video.isEmpty()) {
                 blog.setVideo(videoService.updateVideo(blog.getVideo(), video));
             }
+            blog.setUpdateDate(LocalDateTime.now());
 
             blogRepository.save(blog);
 

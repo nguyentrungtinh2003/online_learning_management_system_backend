@@ -23,6 +23,7 @@ public class CourseMaterial {
     private String description;
     private String file;
     private LocalDateTime uploadDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name = "course_id")

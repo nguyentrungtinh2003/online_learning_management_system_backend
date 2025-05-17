@@ -208,6 +208,8 @@ public class CourseServiceImpl implements CourseService{
             if(lecturer != null) {
                 course.setUser(lecturer);
             }
+            course.setUpdateDate(LocalDateTime.now());
+
             courseRepository.save(course);
 
             apiResponse.setStatusCode(200L);

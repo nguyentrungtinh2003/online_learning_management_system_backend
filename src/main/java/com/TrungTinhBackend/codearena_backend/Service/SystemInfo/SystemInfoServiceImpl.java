@@ -129,6 +129,7 @@ public class SystemInfoServiceImpl implements SystemInfoService{
             systemInfo1.setSocialMediaURL(systemInfoDTO.getSocialMediaURL());
         }
 
+        systemInfo1.setUpdateDate(LocalDateTime.now());
 
         systemInfoRepository.save(systemInfo1);
 

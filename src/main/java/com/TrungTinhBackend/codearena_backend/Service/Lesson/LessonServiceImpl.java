@@ -158,6 +158,7 @@ public class LessonServiceImpl implements LessonService{
 
             lesson.setQuizzes(quizList);
         }
+        lesson.setUpdateDate(LocalDateTime.now());
 
         lessonRepository.save(lesson);
 
@@ -217,6 +218,7 @@ public class LessonServiceImpl implements LessonService{
             lessonDTO.setLessonName(lesson.getLessonName());
             lessonDTO.setDescription(lesson.getDescription());
             lessonDTO.setDate(lesson.getDate());
+            lessonDTO.setUpdateDate(lesson.getUpdateDate());
             lessonDTO.setCourseName(lesson.getCourse().getCourseName());
             lessonDTO.setCourseId(lesson.getCourse() != null ? lesson.getCourse().getId() : null);
             return lessonDTO;

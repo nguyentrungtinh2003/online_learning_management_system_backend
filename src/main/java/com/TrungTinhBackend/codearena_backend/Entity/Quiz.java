@@ -32,6 +32,7 @@ public class Quiz {
     private QuizEnum quizEnum;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private String description;
 

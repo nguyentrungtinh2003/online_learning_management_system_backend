@@ -33,8 +33,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -260,6 +262,8 @@ public class UserServiceImpl implements UserService{
             if (userUpdateDTO.isEnabled() != user.isEnabled()) {
                 user.setEnabled(userUpdateDTO.isEnabled());
             }
+
+            user.setUpdateDate(LocalDateTime.now());
 
             userRepository.save(user);
 
@@ -505,24 +509,48 @@ public class UserServiceImpl implements UserService{
     @Override
     public APIResponse logoutGoogle(HttpServletRequest request, HttpServletResponse response) {
         APIResponse apiResponse = new APIResponse();
-        SecurityContextHolder.clearContext(); // Xóa authentication context
-        new SecurityContextLogoutHandler().logout(request, null, null);
 
-        // Xóa cookie
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            String username = null;
+
+            if (principal instanceof UserDetails) {
+                username = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof OAuth2User) {
+                username = ((OAuth2User) principal).getAttribute("email"); // hoặc "name"
+            } else if (principal instanceof String) {
+                username = (String) principal;
+            }
+
+            if (username != null) {
+                // Nếu là JWT, xóa refresh token
+                User user = userRepository.findByUsername(username);
+                Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUser(user);
+                refreshToken.ifPresent(refreshTokenRepository::delete);
+            }
+
+            // Clear Spring Security context
+            SecurityContextHolder.clearContext();
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+
+        // Xóa cookie JSESSIONID (nếu có)
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // Xóa cookie ngay lập tức
+        cookie.setMaxAge(0); // xóa ngay
         response.addCookie(cookie);
 
-        // Invalidate session nếu có
+        // Invalidate session
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
 
         apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Logout success !");
+        apiResponse.setMessage("Logout success!");
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }

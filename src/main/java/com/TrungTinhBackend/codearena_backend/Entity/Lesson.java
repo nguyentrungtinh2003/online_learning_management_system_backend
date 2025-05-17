@@ -29,6 +29,7 @@ public class Lesson {
     private String img;
 
     private LocalDateTime date;
+    private LocalDateTime updateDate;
 
     private String videoURL;
 
