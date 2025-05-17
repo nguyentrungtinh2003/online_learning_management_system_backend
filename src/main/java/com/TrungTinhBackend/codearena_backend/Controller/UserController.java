@@ -72,8 +72,8 @@ public class UserController {
 
     @GetMapping("user/{id}")
     public ResponseEntity<APIResponse> getUserById(@PathVariable Long id) throws Exception {
-        String username = SecurityUtils.getCurrentUsername();
-        auditLogService.addLog(username,"VIEW","View user "+id);
+//        String username = SecurityUtils.getCurrentUsername();
+//        auditLogService.addLog(username,"VIEW","View user "+id);
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
