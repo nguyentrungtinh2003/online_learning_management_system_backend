@@ -24,11 +24,10 @@ public class CourseController {
         this.auditLogService = auditLogService;
     }
 
-    String username = SecurityUtils.getCurrentUsername();
-
     @PostMapping("teacher/courses/add")
     public ResponseEntity<APIResponse> addCourse(@Valid @RequestPart(value = "course") CourseDTO courseDTO,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"ADD","Add course");
         return ResponseEntity.ok(courseService.addCourse(courseDTO, img));
     }
@@ -36,6 +35,7 @@ public class CourseController {
     @PostMapping("/courses/buy/{userId}/{courseId}")
     public ResponseEntity<APIResponse> buyCourse(@PathVariable Long userId,
                                                  @PathVariable Long courseId) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"BUY","Buy course "+courseId);
         return ResponseEntity.ok(courseService.buyCourse(userId, courseId));
     }
@@ -52,6 +52,7 @@ public class CourseController {
 
     @GetMapping("/courses/{id}")
     public ResponseEntity<APIResponse> getCourseById(@PathVariable Long id) {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"VIEW","View course "+id);
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
@@ -70,6 +71,7 @@ public class CourseController {
     public ResponseEntity<APIResponse> searchCourse(@RequestParam(required = false) String keyword,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "5") int size) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"SEARCH","Search course keyword  "+keyword);
         return ResponseEntity.ok(courseService.searchCourse(keyword, page,size));
     }
@@ -83,18 +85,21 @@ public class CourseController {
     @PutMapping("teacher/courses/update/{id}")
     public ResponseEntity<APIResponse> updateCourse(@PathVariable Long id,@Valid @RequestPart(value = "course") CourseDTO courseDTO,
                                                  @RequestPart(value = "img",required = false) MultipartFile img) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"UPDATE","Update course "+id);
         return ResponseEntity.ok(courseService.updateCourse(id,courseDTO, img));
     }
 
     @DeleteMapping("teacher/courses/delete/{id}")
     public ResponseEntity<APIResponse> deleteCourse(@PathVariable Long id) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"DELETE","Delete course "+id);
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }
 
     @PutMapping("teacher/courses/restore/{id}")
     public ResponseEntity<APIResponse> restoreCourse(@PathVariable Long id) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(username,"RESTORE","Restore course "+id);
         return ResponseEntity.ok(courseService.restoreCourse(id));
     }
