@@ -2,9 +2,11 @@ package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.DTO.PaymentTransactionDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.AuditLog.AuditLogService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.PaymentTransactionService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.Paypal.PaypalService;
 import com.TrungTinhBackend.codearena_backend.Service.PaymentTransaction.VNPay.VNPayService;
+import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,19 @@ public class PaymentTransactionController {
     @Autowired
     private PaymentTransactionService paymentTransactionService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     @PostMapping("/create")
     public ResponseEntity<APIResponse> createPayment(HttpServletRequest request,@Valid @RequestBody PaymentTransactionDTO paymentTransactionDTO) throws Exception {
         if("PayPal".equalsIgnoreCase(paymentTransactionDTO.getMethod())) {
+            String username = SecurityUtils.getCurrentUsername();
+            auditLogService.addLog(username,"RECHARGE","Recharge "+paymentTransactionDTO.getAmount()+" $");
             return ResponseEntity.ok(paypalService.createPayment(paymentTransactionDTO));
         }
         if("VNPay".equalsIgnoreCase(paymentTransactionDTO.getMethod())) {
+            String username = SecurityUtils.getCurrentUsername();
+            auditLogService.addLog(username,"RECHARGE","Recharge "+paymentTransactionDTO.getAmount()+" VND");
             return ResponseEntity.ok(vnPayService.createPayment( request,paymentTransactionDTO));
         }
         return ResponseEntity.internalServerError().body(new APIResponse(500L,"Phương thức thanh toán không hợp lệ",null,LocalDateTime.now()));

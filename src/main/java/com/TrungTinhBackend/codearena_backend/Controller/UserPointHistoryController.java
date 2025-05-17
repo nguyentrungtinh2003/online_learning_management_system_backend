@@ -1,9 +1,12 @@
 package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
+import com.TrungTinhBackend.codearena_backend.Entity.AuditLog;
 import com.TrungTinhBackend.codearena_backend.Entity.UserPointHistory;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.AuditLog.AuditLogService;
 import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
+import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,8 +24,13 @@ public class UserPointHistoryController {
     @Autowired
     private UserPointHistoryService userPointHistoryService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     @PostMapping("/rankings/add")
     public ResponseEntity<APIResponse> addPointHistory(@RequestBody UserPointHistoryDTO userPointHistoryDTO) {
+        String username = SecurityUtils.getCurrentUsername();
+        auditLogService.addLog(username,"PLUS POINT","Plus "+userPointHistoryDTO.getPoint()+" point");
         return ResponseEntity.ok(userPointHistoryService.addUserPointHistory(userPointHistoryDTO));
     }
 
