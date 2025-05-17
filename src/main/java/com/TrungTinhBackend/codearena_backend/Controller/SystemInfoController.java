@@ -31,8 +31,8 @@ public class SystemInfoController {
 
     @GetMapping("/admin/system-info/{id}")
     public ResponseEntity<APIResponse> getSystemInfo(@PathVariable Long id) throws Exception {
-        String username = SecurityUtils.getCurrentUsername();
-        auditLogService.addLog(username,"VIEW","View system info");
+//        String username = SecurityUtils.getCurrentUsername();
+//        auditLogService.addLog(username,"VIEW","View system info");
         return ResponseEntity.ok(systemInfoService.getSystemInfo(id));
     }
 
