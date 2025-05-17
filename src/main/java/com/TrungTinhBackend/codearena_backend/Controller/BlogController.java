@@ -2,7 +2,9 @@ package com.TrungTinhBackend.codearena_backend.Controller;
 
 import com.TrungTinhBackend.codearena_backend.DTO.BlogDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.AuditLog.AuditLogService;
 import com.TrungTinhBackend.codearena_backend.Service.Blog.BlogService;
+import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,16 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
+    String username = SecurityUtils.getCurrentUsername();
+
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addBlog(@Valid @RequestPart(value = "blog") BlogDTO blogDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
+        auditLogService.addLog(username,"ADD","Add blog");
         return ResponseEntity.ok(blogService.addBlog(blogDTO, img, video));
     }
 
@@ -30,6 +38,7 @@ public class BlogController {
 
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse> getBlogById(@PathVariable Long id) {
+        auditLogService.addLog(username,"VIEW","View blog "+id);
         return ResponseEntity.ok(blogService.getBlogById(id));
     }
 
@@ -59,6 +68,7 @@ public class BlogController {
     public ResponseEntity<APIResponse> searchBlog(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) throws Exception {
+        auditLogService.addLog(username,"SEARCH","Search blog keyword "+keyword);
         return ResponseEntity.ok(blogService.searchBlog(keyword, page,size));
     }
 
@@ -77,18 +87,21 @@ public class BlogController {
     public ResponseEntity<APIResponse> updateBlog(@PathVariable Long id, @Valid @RequestPart(value = "blog") BlogDTO blogDTO,
                                                @RequestPart(value = "img",required = false) MultipartFile img,
                                                @RequestPart(value = "video",required = false) MultipartFile video) throws Exception {
+        auditLogService.addLog(username,"UPDATE","Update blog");
         return ResponseEntity.ok(blogService.updateBlog(id, blogDTO, img, video));
     }
 
     @DeleteMapping("/delete/{id}/{userId}")
     public ResponseEntity<APIResponse> deleteBlog(@PathVariable Long id,
                                                   @PathVariable Long userId) throws Exception {
+        auditLogService.addLog(username,"DELETE","Delete blog "+id);
         return ResponseEntity.ok(blogService.deleteBlog(id,userId));
     }
 
     @PutMapping("/restore/{id}/{userId}")
     public ResponseEntity<APIResponse> restoreBlog(@PathVariable Long id,
                                                    @PathVariable Long userId) throws Exception {
+        auditLogService.addLog(username,"RESTORE","Restore blog "+id);
         return ResponseEntity.ok(blogService.restoreBlog(id, userId));
     }
 }
