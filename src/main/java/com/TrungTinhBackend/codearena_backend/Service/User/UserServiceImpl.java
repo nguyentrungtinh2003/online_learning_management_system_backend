@@ -105,16 +105,11 @@ public class UserServiceImpl implements UserService{
             ip = request.getRemoteAddr();
         }
 
-        String message = "";
-        boolean success = false;
-        String jwt = null;
-        User user = null;
-
         try {
-            user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username);
             if (user == null) {
-                message = "Username does not exist";
-                // Không throw ngay, để ghi log message đúng
+                String message = "Username does not exist";
+                loginLogService.save(new LoginLog(username, ip, false, message));
                 throw new UsernameNotFoundException(message);
             }
 
@@ -122,7 +117,7 @@ public class UserServiceImpl implements UserService{
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            jwt = jwtUtils.generateToken(user);
+            String jwt = jwtUtils.generateToken(user);
             String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             refreshTokenService.createRefreshToken(refreshToken, user);
 
@@ -136,40 +131,34 @@ public class UserServiceImpl implements UserService{
 
             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-            message = "Login success";
-            success = true;
+            loginLogService.save(new LoginLog(username, ip, true, "Login success"));
 
             apiResponse.setStatusCode(200L);
-            apiResponse.setMessage(message);
+            apiResponse.setMessage("Login success");
             apiResponse.setToken(jwt);
             apiResponse.setData(user);
             apiResponse.setTimestamp(LocalDateTime.now());
-
             return apiResponse;
 
-        } catch (UsernameNotFoundException ex) {
-            // message đã set ở trên
-            success = false;
-            // Không throw ở đây mà để ngoài finally xử lý
         } catch (BadCredentialsException ex) {
-            message = "Wrong password";
-            success = false;
+            String message = "Wrong password";
+            loginLogService.save(new LoginLog(username, ip, false, message));
+            throw new Exception(message);
         } catch (DisabledException ex) {
-            message = "Account is disabled";
-            success = false;
+            String message = "Account is disabled";
+            loginLogService.save(new LoginLog(username, ip, false, message));
+            throw new Exception(message);
         } catch (LockedException ex) {
-            message = "Account is locked";
-            success = false;
+            String message = "Account is locked";
+            loginLogService.save(new LoginLog(username, ip, false, message));
+            throw new Exception(message);
         } catch (AuthenticationException ex) {
-            message = "Authentication failed: " + ex.getMessage();
-            success = false;
-        } finally {
-            loginLogService.save(new LoginLog(username, ip, success, message));
+            String message = "Authentication failed: " + ex.getMessage();
+            loginLogService.save(new LoginLog(username, ip, false, message));
+            throw new Exception(message);
         }
-
-        // Nếu tới đây là lỗi, throw Exception để client biết
-        throw new Exception(message);
     }
+
 
     @Override
     public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception {
