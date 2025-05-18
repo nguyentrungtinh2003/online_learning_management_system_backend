@@ -96,9 +96,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public APIResponse login(UserLoginDTO userLoginDTO, HttpServletResponse response, HttpServletRequest request) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        String username = userLoginDTO.getUsername();
-        String password = userLoginDTO.getPassword();
-        String ip = request.getRemoteAddr();
+        String username = userLoginDTO != null ? userLoginDTO.getUsername() : "UNKNOWN";
+        String password = userLoginDTO != null ? userLoginDTO.getPassword() : "";
+        String ip = request != null ? request.getRemoteAddr() : "UNKNOWN";
         String message = "";
         boolean success = false;
 
@@ -106,7 +106,6 @@ public class UserServiceImpl implements UserService{
             var user = userRepository.findByUsername(username);
             if (user == null) {
                 message = "Username does not exist";
-                loginLogService.save(new LoginLog(username, ip, false, message));
                 throw new UsernameNotFoundException(message);
             }
 

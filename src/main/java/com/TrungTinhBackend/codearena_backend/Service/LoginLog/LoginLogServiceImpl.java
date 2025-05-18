@@ -21,7 +21,15 @@ public class LoginLogServiceImpl implements LoginLogService{
 
     @Override
     public void save(LoginLog loginLog) {
-        loginLogRepository.save(loginLog);
+        LoginLog loginLog1 = new LoginLog();
+
+        loginLog1.setUsername(loginLog.getUsername());
+        loginLog1.setIpAddress(loginLog.getIpAddress());
+        loginLog1.setMessage(loginLog.getMessage());
+        loginLog1.setSuccess(loginLog.isSuccess());
+        loginLog1.setTimestamp(LocalDateTime.now());
+
+        loginLogRepository.save(loginLog1);
     }
 
     @Override
