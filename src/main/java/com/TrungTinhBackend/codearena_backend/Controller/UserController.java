@@ -43,10 +43,10 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<APIResponse> login(@Valid @RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response) throws Exception {
+    public ResponseEntity<APIResponse> login(@Valid @RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response,  HttpServletRequest request) throws Exception {
         String username = SecurityUtils.getCurrentUsername();
         auditLogService.addLog(userLoginDTO.getUsername(),"LOGIN","Login account");
-        return ResponseEntity.ok(userService.login(userLoginDTO,response));
+        return ResponseEntity.ok(userService.login(userLoginDTO,response, request));
     }
     //--google ----
     @GetMapping("user-google")
