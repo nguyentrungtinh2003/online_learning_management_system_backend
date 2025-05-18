@@ -125,8 +125,8 @@ public class UserServiceImpl implements UserService{
                     .httpOnly(true)
                     .secure(true)
                     .sameSite("None")
-                    .path("/")
-                    .maxAge(7 * 24 * 60 * 60)
+                    .path("/")         // PHẢI giống với logout
+                    .maxAge(7 * 24 * 60 * 60) // 7 ngày
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
@@ -573,7 +573,7 @@ public class UserServiceImpl implements UserService{
         }
 
         // Xóa cookie JSESSIONID
-        ResponseCookie jsessionCookie = ResponseCookie.from("JSESSIONID", null)
+        ResponseCookie jsessionCookie = ResponseCookie.from("JSESSIONID", "")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
@@ -584,12 +584,12 @@ public class UserServiceImpl implements UserService{
         response.addHeader(HttpHeaders.SET_COOKIE, jsessionCookie.toString());
 
         // Xóa cookie authToken (JWT)
-        ResponseCookie jwtCookie = ResponseCookie.from("authToken", null)
+        ResponseCookie jwtCookie = ResponseCookie.from("authToken", "")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
-                .path("/")
-                .maxAge(0)
+                .path("/")         // PHẢI giống với login
+                .maxAge(0)         // XÓA cookie
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
