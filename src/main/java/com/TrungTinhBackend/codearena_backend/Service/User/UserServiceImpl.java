@@ -584,19 +584,26 @@ public class UserServiceImpl implements UserService{
         }
 
         // Xóa cookie JSESSIONID
-        Cookie jsessionCookie = new Cookie("JSESSIONID", null);
-        jsessionCookie.setPath("/");
-        jsessionCookie.setHttpOnly(true);
-        jsessionCookie.setMaxAge(0);
-        response.addCookie(jsessionCookie);
+        ResponseCookie jsessionCookie = ResponseCookie.from("JSESSIONID", null)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, jsessionCookie.toString());
 
         // Xóa cookie authToken (JWT)
-        Cookie authTokenCookie = new Cookie("authToken", null);
-        authTokenCookie.setPath("/");
-        authTokenCookie.setHttpOnly(true);
-        authTokenCookie.setSecure(true);
-        authTokenCookie.setMaxAge(0);
-        response.addCookie(authTokenCookie);
+        ResponseCookie jwtCookie = ResponseCookie.from("authToken", null)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
         // Invalidate session
         HttpSession session = request.getSession(false);
