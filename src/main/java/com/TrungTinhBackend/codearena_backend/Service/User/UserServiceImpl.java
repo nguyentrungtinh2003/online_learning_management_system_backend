@@ -18,6 +18,7 @@ import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
+import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -98,7 +99,12 @@ public class UserServiceImpl implements UserService{
         APIResponse apiResponse = new APIResponse();
         String username = userLoginDTO != null ? userLoginDTO.getUsername() : "UNKNOWN";
         String password = userLoginDTO != null ? userLoginDTO.getPassword() : "";
-        String ip = request != null ? request.getRemoteAddr() : "UNKNOWN";
+
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null) {
+            ip = request.getRemoteAddr();
+        }
+
         String message = "";
         boolean success = false;
 
@@ -154,6 +160,7 @@ public class UserServiceImpl implements UserService{
             loginLogService.save(new LoginLog(username, ip, success, message));
         }
     }
+
 
     @Override
     public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception {
