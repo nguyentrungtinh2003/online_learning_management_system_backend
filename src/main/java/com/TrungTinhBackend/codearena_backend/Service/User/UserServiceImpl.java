@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.User;
 
+import com.TrungTinhBackend.codearena_backend.Entity.LoginLog;
 import com.TrungTinhBackend.codearena_backend.Entity.RefreshToken;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
@@ -13,6 +14,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
+import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
@@ -28,12 +30,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -77,6 +79,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private WebSocketSender webSocketSender;
 
+    @Autowired
+    private LoginLogService loginLogService;
+
     public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, UserSpecification userSpecification) {
         this.userRepository = userRepository;
         this.imgService = imgService;
@@ -89,39 +94,66 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public APIResponse login(UserLoginDTO userLoginDTO, HttpServletResponse response) throws Exception {
+    public APIResponse login(UserLoginDTO userLoginDTO, HttpServletResponse response, HttpServletRequest request) throws Exception {
         APIResponse apiResponse = new APIResponse();
+        String username = userLoginDTO.getUsername();
+        String password = userLoginDTO.getPassword();
+        String ip = request.getRemoteAddr();
+        String message = "";
+        boolean success = false;
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword()));
-
-            var user = userRepository.findByUsername(userLoginDTO.getUsername());
+        try {
+            var user = userRepository.findByUsername(username);
             if (user == null) {
-                throw new NotFoundException("User not found by username " + userLoginDTO.getUsername());
+                message = "Username does not exist";
+                loginLogService.save(new LoginLog(username, ip, false, message));
+                throw new UsernameNotFoundException(message);
             }
 
-            var jwt = jwtUtils.generateToken(user);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
 
-            refreshTokenService.createRefreshToken(refreshToken,user);
+            String jwt = jwtUtils.generateToken(user);
+            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            refreshTokenService.createRefreshToken(refreshToken, user);
 
-            // Tạo cookie chứa JWT token
             ResponseCookie jwtCookie = ResponseCookie.from("authToken", jwt)
                     .httpOnly(true)
-                    .secure(true)// Cookie không thể truy cập từ JavaScript để bảo mật
+                    .secure(true)
                     .sameSite("None")
-                    .path("/") // Có hiệu lực trên toàn bộ ứng dụng
+                    .path("/")
                     .maxAge(7 * 24 * 60 * 60)
-                    .build();// Thêm cookie vào phản hồi
+                    .build();
 
-        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-        apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("Login success !");
+            message = "Login success";
+            success = true;
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage(message);
             apiResponse.setToken(jwt);
             apiResponse.setData(user);
             apiResponse.setTimestamp(LocalDateTime.now());
 
             return apiResponse;
+
+        } catch (BadCredentialsException ex) {
+            message = "Wrong password";
+            throw new BadCredentialsException(message);
+        } catch (DisabledException ex) {
+            message = "Account is disabled";
+            throw new DisabledException(message);
+        } catch (LockedException ex) {
+            message = "Account is locked";
+            throw new LockedException(message);
+        } catch (AuthenticationException ex) {
+            message = "Authentication failed: " + ex.getMessage();
+            throw new Exception(message);
+        } finally {
+            loginLogService.save(new LoginLog(username, ip, success, message));
+        }
     }
 
     @Override

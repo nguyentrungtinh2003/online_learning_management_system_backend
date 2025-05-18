@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     public APIResponse login(UserLoginDTO userLoginDTO,
-                             HttpServletResponse response) throws Exception;
+                             HttpServletResponse response, HttpServletRequest request) throws Exception;
 
     public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception;
 
