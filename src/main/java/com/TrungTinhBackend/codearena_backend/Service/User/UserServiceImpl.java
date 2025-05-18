@@ -583,12 +583,20 @@ public class UserServiceImpl implements UserService{
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
 
-        // Xóa cookie JSESSIONID (nếu có)
-        Cookie cookie = new Cookie("JSESSIONID", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // xóa ngay
-        response.addCookie(cookie);
+        // Xóa cookie JSESSIONID
+        Cookie jsessionCookie = new Cookie("JSESSIONID", null);
+        jsessionCookie.setPath("/");
+        jsessionCookie.setHttpOnly(true);
+        jsessionCookie.setMaxAge(0);
+        response.addCookie(jsessionCookie);
+
+        // Xóa cookie authToken (JWT)
+        Cookie authTokenCookie = new Cookie("authToken", null);
+        authTokenCookie.setPath("/");
+        authTokenCookie.setHttpOnly(true);
+        authTokenCookie.setSecure(true);
+        authTokenCookie.setMaxAge(0);
+        response.addCookie(authTokenCookie);
 
         // Invalidate session
         HttpSession session = request.getSession(false);
