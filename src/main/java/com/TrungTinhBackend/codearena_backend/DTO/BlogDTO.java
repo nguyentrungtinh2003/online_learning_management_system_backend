@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -25,6 +26,8 @@ public class BlogDTO {
     private String username;
 
     private String userImg;
+
+    private LocalDateTime date;
 
     private Set<Long> likedUsers;
 

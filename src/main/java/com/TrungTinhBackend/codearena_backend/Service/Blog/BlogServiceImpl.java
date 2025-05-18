@@ -207,6 +207,7 @@ public class BlogServiceImpl implements BlogService{
                             blogDTO.setDescription(blog.getDescription());
                             blogDTO.setImg(blog.getImg());
                             blogDTO.setVideo(blog.getVideo());
+                            blogDTO.setDate(blog.getDate());
                             blogDTO.setLikedUsers(blog.getLikedUsers().stream().map(User::getId).collect(Collectors.toSet()));
                             return blogDTO;
                         }
