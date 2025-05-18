@@ -107,11 +107,14 @@ public class UserServiceImpl implements UserService{
 
         String message = "";
         boolean success = false;
+        String jwt = null;
+        User user = null;
 
         try {
-            var user = userRepository.findByUsername(username);
+            user = userRepository.findByUsername(username);
             if (user == null) {
                 message = "Username does not exist";
+                // Không throw ngay, để ghi log message đúng
                 throw new UsernameNotFoundException(message);
             }
 
@@ -119,7 +122,7 @@ public class UserServiceImpl implements UserService{
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            String jwt = jwtUtils.generateToken(user);
+            jwt = jwtUtils.generateToken(user);
             String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             refreshTokenService.createRefreshToken(refreshToken, user);
 
@@ -144,23 +147,29 @@ public class UserServiceImpl implements UserService{
 
             return apiResponse;
 
+        } catch (UsernameNotFoundException ex) {
+            // message đã set ở trên
+            success = false;
+            // Không throw ở đây mà để ngoài finally xử lý
         } catch (BadCredentialsException ex) {
             message = "Wrong password";
-            throw new BadCredentialsException(message);
+            success = false;
         } catch (DisabledException ex) {
             message = "Account is disabled";
-            throw new DisabledException(message);
+            success = false;
         } catch (LockedException ex) {
             message = "Account is locked";
-            throw new LockedException(message);
+            success = false;
         } catch (AuthenticationException ex) {
             message = "Authentication failed: " + ex.getMessage();
-            throw new Exception(message);
+            success = false;
         } finally {
             loginLogService.save(new LoginLog(username, ip, success, message));
         }
-    }
 
+        // Nếu tới đây là lỗi, throw Exception để client biết
+        throw new Exception(message);
+    }
 
     @Override
     public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception {
