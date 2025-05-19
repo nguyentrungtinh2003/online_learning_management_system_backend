@@ -28,14 +28,16 @@ import java.util.stream.Collectors;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
+    private final LoginLogService loginLogService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    private LoginLogService loginLogService;
-
-    @Autowired
-    private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+    public JwtAuthFilter(JwtUtils jwtUtils, LoginLogService loginLogService, UserDetailsService userDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.loginLogService = loginLogService;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

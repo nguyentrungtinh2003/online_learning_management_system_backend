@@ -6,6 +6,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
 import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -30,13 +31,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private final JwtUtils jwtUtils;
-    private final LoginLogService loginLogService;
 
-    public SecurityConfig(UserDetailsService userDetailsService, JwtUtils jwtUtils, LoginLogService loginLogService) {
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter) {
         this.userDetailsService = userDetailsService;
-        this.jwtUtils = jwtUtils;
-        this.loginLogService = loginLogService;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -68,7 +69,7 @@ public class SecurityConfig {
                         })
                 )
                 // 🔹 Sử dụng Bean thay vì tạo mới instance
-                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth -> oauth.defaultSuccessUrl("https://codearena-frontend-dev.vercel.app/", true));
         return http.build();
     }
@@ -76,11 +77,6 @@ public class SecurityConfig {
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         return new MappingJackson2HttpMessageConverter();
-    }
-
-    @Bean
-    public JwtAuthFilter jwtAuthFilter() {
-        return new JwtAuthFilter(jwtUtils,loginLogService, userDetailsService);
     }
 
     @Bean
