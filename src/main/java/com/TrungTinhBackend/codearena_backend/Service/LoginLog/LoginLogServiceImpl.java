@@ -27,6 +27,7 @@ public class LoginLogServiceImpl implements LoginLogService{
         loginLog1.setIpAddress(loginLog.getIpAddress());
         loginLog1.setMessage(loginLog.getMessage());
         loginLog1.setSuccess(loginLog.isSuccess());
+        loginLog1.setUserAgent(loginLog.getUserAgent());
         loginLog1.setTimestamp(LocalDateTime.now());
 
         loginLogRepository.save(loginLog1);

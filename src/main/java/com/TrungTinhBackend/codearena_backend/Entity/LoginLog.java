@@ -26,12 +26,14 @@ public class LoginLog {
     private String ipAddress;
     private boolean success;
     private String message;
+    private String userAgent;
     private LocalDateTime timestamp;
 
-    public LoginLog(String username, String ipAddress, boolean success, String message) {
+    public LoginLog(String username, String ipAddress, boolean success, String message, String userAgent) {
         this.username = username;
         this.ipAddress = ipAddress;
         this.success = success;
         this.message = message;
+        this.userAgent = userAgent;
     }
 }

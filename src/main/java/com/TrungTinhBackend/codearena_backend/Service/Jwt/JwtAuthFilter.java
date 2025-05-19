@@ -85,6 +85,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         String method = request.getMethod();
+        String userAgent = request.getHeader("User-Agent");
         String details = "Accessed endpoint: " + method + " " + uri;
 
         String ipAddress = request.getHeader("X-Forwarded-For");
@@ -96,7 +97,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             boolean success = true;
             // Chỉ log nếu là endpoint quan trọng
             if (!uri.startsWith("/ws") && !uri.contains("websocket")) {
-                loginLogService.save(new LoginLog(username, ipAddress, success, details));
+                loginLogService.save(new LoginLog(username, ipAddress, success, details, userAgent));
             }
         }
 
