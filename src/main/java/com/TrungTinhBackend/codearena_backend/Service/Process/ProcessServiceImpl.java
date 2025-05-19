@@ -67,17 +67,17 @@ public class ProcessServiceImpl implements ProcessService{
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course not found!"));
 
-        // 2. Tạo process cho khóa học (lesson = null) nếu chưa có
-        Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
-        if (courseProcess == null) {
-            courseProcess = new Process();
-            courseProcess.setUser(user);
-            courseProcess.setCourse(course);
-            courseProcess.setLesson(null);
-            courseProcess.setCompletionPercent(0);
-            courseProcess.setStatus(ProcessEnum.IN_PROGRESS);
-            processRepository.save(courseProcess);
-        }
+//        // 2. Tạo process cho khóa học (lesson = null) nếu chưa có
+//        Process courseProcess = processRepository.findByUserIdAndCourseIdAndLessonIsNull(userId, courseId);
+//        if (courseProcess == null) {
+//            courseProcess = new Process();
+//            courseProcess.setUser(user);
+//            courseProcess.setCourse(course);
+//            courseProcess.setLesson(null);
+//            courseProcess.setCompletionPercent(0);
+//            courseProcess.setStatus(ProcessEnum.IN_PROGRESS);
+//            processRepository.save(courseProcess);
+//        }
 
         // 3. Tạo process cho từng bài học nếu chưa có
         List<Lesson> lessons = course.getLessons();
