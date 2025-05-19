@@ -126,9 +126,9 @@ public class LessonServiceImpl implements LessonService{
     public APIResponse updateLesson(Long id, LessonDTO lessonDTO, MultipartFile img, MultipartFile video) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Course course = courseRepository.findById(lessonDTO.getCourseId()).orElseThrow(
-                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourseId())
-            );
+//            Course course = courseRepository.findById(lessonDTO.getCourseId()).orElseThrow(
+//                    () -> new NotFoundException("Course not found by id " + lessonDTO.getCourseId())
+//            );
 
             Lesson lesson = lessonRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Lesson not found by id " + id)
@@ -146,9 +146,9 @@ public class LessonServiceImpl implements LessonService{
             if(video != null && !video.isEmpty()) {
                 lesson.setVideoURL(videoService.updateVideo(lesson.getVideoURL(),video));
             }
-            if(lessonDTO.getCourseId() != null) {
-                lesson.setCourse(course);
-            }
+//            if(lessonDTO.getCourseId() != null) {
+//                lesson.setCourse(course);
+//            }
         if (lessonDTO.getQuizzes() != null && !lessonDTO.getQuizzes().isEmpty()) {
             List<Quiz> quizList = quizRepository.findAllById(lessonDTO.getQuizzes());
 

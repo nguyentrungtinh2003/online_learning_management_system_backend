@@ -75,9 +75,9 @@ public class QuestionServiceImpl implements QuestionService{
     public APIResponse updateQuestion(Long id, QuestionDTO questionDTO, MultipartFile img) throws Exception {
         APIResponse apiResponse = new APIResponse();
 
-            Quiz quiz = quizRepository.findById(questionDTO.getQuizId()).orElseThrow(
-                    () -> new NotFoundException("Quiz not found by id " + questionDTO.getQuizId())
-            );
+//            Quiz quiz = quizRepository.findById(questionDTO.getQuizId()).orElseThrow(
+//                    () -> new NotFoundException("Quiz not found by id " + questionDTO.getQuizId())
+//            );
 
             Question question = questionRepository.findById(id).orElseThrow(
                     () -> new NotFoundException("Question not found by id " + id)
@@ -104,9 +104,9 @@ public class QuestionServiceImpl implements QuestionService{
             if(img != null) {
                 question.setImg(imgService.updateImg(question.getImg(),img));
             }
-            if(quiz != null) {
-                question.setQuiz(quiz);
-            }
+//            if(quiz != null) {
+//                question.setQuiz(quiz);
+//            }
 
             questionRepository.save(question);
 
