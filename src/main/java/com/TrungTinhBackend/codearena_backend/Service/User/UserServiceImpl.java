@@ -77,10 +77,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private WebSocketSender webSocketSender;
 
-    @Autowired
-    private LoginLogService loginLogService;
-
-    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, LoginLogService loginLogService) {
+    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender) {
         this.userRepository = userRepository;
         this.imgService = imgService;
         this.emailService = emailService;
@@ -90,26 +87,17 @@ public class UserServiceImpl implements UserService{
         this.refreshTokenService = refreshTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.webSocketSender = webSocketSender;
-        this.loginLogService = loginLogService;
     }
 
     @Override
     public APIResponse login(UserLoginDTO userLoginDTO, HttpServletResponse response, HttpServletRequest request) throws Exception {
         APIResponse apiResponse = new APIResponse();
-        String username = userLoginDTO != null ? userLoginDTO.getUsername() : "UNKNOWN";
+        String username = userLoginDTO != null ? userLoginDTO.getUsername() : SecurityUtils.getCurrentUsername();
         String password = userLoginDTO != null ? userLoginDTO.getPassword() : "";
 
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null) {
-            ip = request.getRemoteAddr();
-        }
-
-        try {
             User user = userRepository.findByUsername(username);
             if (user == null) {
-                String message = "Username does not exist";
-                loginLogService.save(new LoginLog(username, ip, false, message));
-                throw new UsernameNotFoundException(message);
+                throw new NotFoundException("User not found !");
             }
 
             authenticationManager.authenticate(
@@ -130,8 +118,6 @@ public class UserServiceImpl implements UserService{
 
             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
-            loginLogService.save(new LoginLog(username, ip, true, "Login success"));
-
             apiResponse.setStatusCode(200L);
             apiResponse.setMessage("Login success");
             apiResponse.setToken(jwt);
@@ -139,24 +125,8 @@ public class UserServiceImpl implements UserService{
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
 
-        } catch (BadCredentialsException ex) {
-            String message = "Wrong password";
-            loginLogService.save(new LoginLog(username, ip, false, message));
-            throw new Exception(message);
-        } catch (DisabledException ex) {
-            String message = "Account is disabled";
-            loginLogService.save(new LoginLog(username, ip, false, message));
-            throw new Exception(message);
-        } catch (LockedException ex) {
-            String message = "Account is locked";
-            loginLogService.save(new LoginLog(username, ip, false, message));
-            throw new Exception(message);
-        } catch (AuthenticationException ex) {
-            String message = "Authentication failed: " + ex.getMessage();
-            loginLogService.save(new LoginLog(username, ip, false, message));
-            throw new Exception(message);
-        }
     }
+
 
 
     @Override

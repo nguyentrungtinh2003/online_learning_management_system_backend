@@ -1,5 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.Jwt;
 
+import com.TrungTinhBackend.codearena_backend.Entity.LoginLog;
+import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,11 +30,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private LoginLogService loginLogService;
+
     @Autowired
     private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
-    public JwtAuthFilter(JwtUtils jwtUtils, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
+    public JwtAuthFilter(JwtUtils jwtUtils, LoginLogService loginLogService, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
+        this.loginLogService = loginLogService;
         this.userDetailsService = userDetailsService;
     }
 
@@ -79,6 +86,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
+
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        String action = "Accessed endpoint: " + method + " " + uri;
+
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null) {
+            ip = request.getRemoteAddr();
+        }
+
+        if (username != null) {
+            loginLogService.save(new LoginLog(username, ip, true, action));
+        }
+
         filterChain.doFilter(request, response);
     }
 
