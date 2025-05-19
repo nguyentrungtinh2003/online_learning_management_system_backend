@@ -3,6 +3,7 @@ package com.TrungTinhBackend.codearena_backend.Config;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtAuthFilter;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
+import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +31,12 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
+    private final LoginLogService loginLogService;
 
-    public SecurityConfig(UserDetailsService userDetailsService, JwtUtils jwtUtils) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtUtils jwtUtils, LoginLogService loginLogService) {
         this.userDetailsService = userDetailsService;
         this.jwtUtils = jwtUtils;
+        this.loginLogService = loginLogService;
     }
 
     @Bean
@@ -77,7 +80,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
-        return new JwtAuthFilter(jwtUtils, userDetailsService);
+        return new JwtAuthFilter(jwtUtils,loginLogService, userDetailsService);
     }
 
     @Bean
