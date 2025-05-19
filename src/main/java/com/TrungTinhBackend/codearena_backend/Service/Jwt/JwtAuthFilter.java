@@ -94,7 +94,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (username != null) {
             boolean success = true;
-            loginLogService.save(new LoginLog(username, ipAddress, success, details));
+            // Chỉ log nếu là endpoint quan trọng
+            if (!uri.startsWith("/api/ws") && !uri.contains("websocket")) {
+                loginLogService.save(new LoginLog(username, ipAddress, success, details));
+            }
         }
 
         filterChain.doFilter(request, response);
