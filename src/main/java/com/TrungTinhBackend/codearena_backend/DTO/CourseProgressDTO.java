@@ -1,8 +1,12 @@
 package com.TrungTinhBackend.codearena_backend.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseProgressDTO {
     private Long courseId;
     private String courseName;
@@ -11,13 +15,4 @@ public class CourseProgressDTO {
     private int completedLessons;
     private int totalLessons;
     private int progressPercent;
-
-    public CourseProgressDTO(Long id, String courseName, int completedLessons, int totalLessons, int percent) {
-    }
-
-    public CourseProgressDTO() {
-    }
-
-    public CourseProgressDTO(Long id, String courseName, String description, String img, int completedLessons, int totalLessons, int percent) {
-    }
 }

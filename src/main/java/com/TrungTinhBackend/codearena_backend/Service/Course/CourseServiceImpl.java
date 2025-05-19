@@ -304,33 +304,53 @@ public class CourseServiceImpl implements CourseService{
     public APIResponse getCoursesProgress(Long userId) {
         APIResponse apiResponse = new APIResponse();
 
-        // Retrieve enrolled courses for the user
-        List<EnrollmentDTO> enrollmentDTOS =(List<EnrollmentDTO>) enrollmentService.getEnrollByUserId(userId).getData();
+        // Lấy danh sách khóa học đã đăng ký
+        List<EnrollmentDTO> enrollments =
+                (List<EnrollmentDTO>) enrollmentService.getEnrollByUserId(userId).getData();
 
-        // Map the courses to a list of CourseProgressDTO
-        List<CourseProgressDTO> courseProgressList = enrollmentDTOS.stream().map(enroll -> {
-            List<Lesson> lessons = lessonRepository.findByCourseId(enroll.getCourseId());
-            List<Process> processes = processRepository.findByUserIdAndCourseId(userId, enroll.getCourseId());
+        // Map thành danh sách CourseProgressDTO
+        List<CourseProgressDTO> courseProgressList = enrollments.stream().map(enroll -> {
+            Long courseId = enroll.getCourseId();
 
+            // Lấy danh sách bài học
+            List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
+            int totalLessons = lessons.size();
+
+            // Lấy danh sách process của user trong course
+            List<Process> processes = processRepository.findByUserIdAndCourseId(userId, courseId);
+
+            // Đếm số lesson hoàn thành
             long completedLessons = lessons.stream()
                     .filter(lesson -> processes.stream()
-                            .anyMatch(p ->p.getLesson() != null && p.getLesson().getId() != null && p.getLesson().getId().equals(lesson.getId()) && p.getCompletionPercent() >= 100))
+                            .anyMatch(p -> p.getLesson() != null &&
+                                    p.getLesson().getId() != null &&
+                                    p.getLesson().getId().equals(lesson.getId()) &&
+                                    p.getCompletionPercent() != null &&
+                                    p.getCompletionPercent() >= 100))
                     .count();
 
-            int totalLessons = lessons.size();
             int percent = totalLessons > 0 ? (int) ((completedLessons * 100.0) / totalLessons) : 0;
 
-            // Return CourseProgressDTO with the calculated progress
-            return new CourseProgressDTO(enroll.getId(), enroll.getCourseName(),enroll.getDescription(),enroll.getImg(), (int) completedLessons, totalLessons, percent);
+            // Tạo DTO trả về
+            return new CourseProgressDTO(
+                    courseId,
+                    enroll.getCourseName(),
+                    enroll.getDescription(),
+                    enroll.getImg(),
+                    (int) completedLessons,
+                    totalLessons,
+                    percent
+            );
         }).collect(Collectors.toList());
 
-        // Set the API response details
+        // Trả về kết quả
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Retrieve course progress success!");
-        apiResponse.setData(courseProgressList); // Set the data to the course progress list
+        apiResponse.setData(courseProgressList);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
     }
+
 
 }
