@@ -28,6 +28,10 @@ public class LoginLog {
     private String message;
     private LocalDateTime timestamp;
 
-    public LoginLog(String username, String ip, boolean b, String message) {
+    public LoginLog(String username, String ipAddress, boolean success, String message) {
+        this.username = username;
+        this.ipAddress = ipAddress;
+        this.success = success;
+        this.message = message;
     }
 }
