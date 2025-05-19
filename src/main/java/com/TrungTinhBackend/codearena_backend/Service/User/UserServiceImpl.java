@@ -75,15 +75,12 @@ public class UserServiceImpl implements UserService{
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    private UserSpecification userSpecification;
-
-    @Autowired
     private WebSocketSender webSocketSender;
 
     @Autowired
     private LoginLogService loginLogService;
 
-    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, UserSpecification userSpecification) {
+    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, LoginLogService loginLogService) {
         this.userRepository = userRepository;
         this.imgService = imgService;
         this.emailService = emailService;
@@ -91,7 +88,9 @@ public class UserServiceImpl implements UserService{
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.refreshTokenService = refreshTokenService;
-        this.userSpecification = userSpecification;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.webSocketSender = webSocketSender;
+        this.loginLogService = loginLogService;
     }
 
     @Override
