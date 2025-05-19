@@ -89,15 +89,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         String method = request.getMethod();
-        String action = "Accessed endpoint: " + method + " " + uri;
+        String details = "Accessed endpoint: " + method + " " + uri;
 
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null) {
-            ip = request.getRemoteAddr();
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
         }
 
         if (username != null) {
-            loginLogService.save(new LoginLog(username, ip, true, action));
+            boolean success = true;
+            loginLogService.save(new LoginLog(username, ipAddress, success, details));
         }
 
         filterChain.doFilter(request, response);
