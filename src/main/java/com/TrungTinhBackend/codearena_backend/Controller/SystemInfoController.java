@@ -29,7 +29,7 @@ public class SystemInfoController {
         return ResponseEntity.ok(systemInfoService.addSystemInfo(systemInfoDTO,img));
     }
 
-    @GetMapping("/admin/system-info/{id}")
+    @GetMapping("/system-info/{id}")
     public ResponseEntity<APIResponse> getSystemInfo(@PathVariable Long id) throws Exception {
 //        String username = SecurityUtils.getCurrentUsername();
 //        auditLogService.addLog(username,"VIEW","View system info");
