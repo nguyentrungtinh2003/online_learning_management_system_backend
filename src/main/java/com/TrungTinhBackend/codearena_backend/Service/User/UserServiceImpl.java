@@ -466,31 +466,34 @@ public class UserServiceImpl implements UserService{
         }
 
         Map<String, Object> attributes = oAuth2Token.getPrincipal().getAttributes();
-
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
         String profilePicture = (String) attributes.get("picture");
 
-        User existingUser = userRepository.findByEmail(email);
-        if (existingUser == null) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setUsername(name);
-            newUser.setImg(profilePicture);
-            newUser.setProvider("GOOGLE");
-            newUser.setPoint(0L);
-            newUser.setCoin(0.0);
-            newUser.setRoleEnum(RoleEnum.STUDENT);
-            newUser.setRankEnum(RankEnum.BRONZE);
-            userRepository.save(newUser);
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setUsername(name);
+            user.setImg(profilePicture);
+            user.setProvider("GOOGLE");
+            user.setPoint(0L);
+            user.setCoin(0.0);
+            user.setRoleEnum(RoleEnum.STUDENT);
+            user.setRankEnum(RankEnum.BRONZE);
+            userRepository.save(user);
         }
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Login Google success");
         apiResponse.setData(Map.of(
-                "email", email,
-                "name", name,
-                "picture", profilePicture
+                "id", user.getId(),
+                "email", user.getEmail(),
+                "username", user.getUsername(),
+                "img", user.getImg(),
+                "coin", user.getCoin(),
+                "point", user.getPoint(),
+                "roleEnum", user.getRoleEnum()
         ));
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
