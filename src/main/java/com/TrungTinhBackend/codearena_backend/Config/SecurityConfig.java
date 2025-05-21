@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -134,17 +135,20 @@ public class SecurityConfig {
                             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
 
                             // Trả response JSON kèm token
-                            response.setContentType("application/json");
-                            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
-                                    "id", user.getId(),
-                                    "token", jwt,
-                                    "email", email,
-                                    "username", user.getUsername(),
-                                    "img", user.getImg(),
-                                    "coin", user.getCoin(),
-                                    "role", user.getRoleEnum(),
-                                    "point", user.getPoint()
-                            )));
+                            // Chuyển từ response.getWriter().write(...) thành redirect
+                            String redirectUrl = UriComponentsBuilder.fromUriString("https://codearena-frontend-dev.vercel.app/oauth-success")
+                                    .queryParam("token", jwt)
+                                    .queryParam("id", user.getId())
+                                    .queryParam("username", user.getUsername())
+                                    .queryParam("email", email)
+                                    .queryParam("img", user.getImg())
+                                    .queryParam("coin", user.getCoin())
+                                    .queryParam("role", user.getRoleEnum())
+                                    .queryParam("point", user.getPoint())
+                                    .build().toUriString();
+
+                            response.sendRedirect(redirectUrl);
+
                         })
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
