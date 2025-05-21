@@ -78,6 +78,9 @@ public class CodearenaBackendApplication {
 		System.setProperty("vnp_Url", System.getenv("vnp_Url"));
 		System.setProperty("VNP_RETURN_URL", System.getenv("VNP_RETURN_URL"));
 
+		System.setProperty("apiKey", System.getenv("apiKey"));
+		System.setProperty("apiHost", System.getenv("apiHost"));
+
 
 		SpringApplication.run(CodearenaBackendApplication.class, args);
 	}
