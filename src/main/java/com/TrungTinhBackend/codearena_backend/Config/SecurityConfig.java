@@ -1,14 +1,21 @@
 package com.TrungTinhBackend.codearena_backend.Config;
 
+import com.TrungTinhBackend.codearena_backend.Entity.User;
+import com.TrungTinhBackend.codearena_backend.Enum.RankEnum;
+import com.TrungTinhBackend.codearena_backend.Enum.RoleEnum;
+import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtAuthFilter;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.UserDetailsService;
 import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
+import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,8 +29,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -35,9 +46,21 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter) {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    public SecurityConfig(UserDetailsService userDetailsService, JwtAuthFilter jwtAuthFilter, UserRepository userRepository, RefreshTokenService refreshTokenService, JwtUtils jwtUtils) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthFilter = jwtAuthFilter;
+        this.userRepository = userRepository;
+        this.refreshTokenService = refreshTokenService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Bean
@@ -69,7 +92,61 @@ public class SecurityConfig {
                         })
                 )
                 // 🔹 Sử dụng Bean thay vì tạo mới instance
-                .oauth2Login(oauth -> oauth.defaultSuccessUrl("https://codearena-frontend-dev.vercel.app/", true))
+                .oauth2Login(oauth -> oauth
+                        .successHandler((request, response, authentication) -> {
+                            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+
+                            // Lấy thông tin user từ oauthToken
+                            Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
+                            String email = (String) attributes.get("email");
+                            String name = (String) attributes.get("name");
+                            String picture = (String) attributes.get("picture");
+
+                            // Kiểm tra user đã có trong DB chưa
+                            User user = userRepository.findByEmail(email);
+                            if (user == null) {
+                                user = new User();
+                                user.setEmail(email);
+                                user.setUsername(name);
+                                user.setImg(picture);
+                                user.setProvider("GOOGLE");
+                                user.setPoint(0L);
+                                user.setCoin(0.0);
+                                user.setRoleEnum(RoleEnum.STUDENT);
+                                user.setRankEnum(RankEnum.BRONZE);
+
+                                userRepository.save(user);
+                            }
+
+                            // Tạo JWT token (giả sử jwtUtils.generateToken nhận UserDetails hoặc username)
+                            String jwt = jwtUtils.generateToken(user);
+                            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+                            refreshTokenService.createRefreshToken(refreshToken, user);
+
+                            ResponseCookie jwtCookie = ResponseCookie.from("authToken", jwt)
+                                    .httpOnly(true)
+                                    .secure(true)
+                                    .sameSite("None")
+                                    .path("/")         // PHẢI giống với logout
+                                    .maxAge(7 * 24 * 60 * 60) // 7 ngày
+                                    .build();
+
+                            response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+                            // Trả response JSON kèm token
+                            response.setContentType("application/json");
+                            response.getWriter().write(new ObjectMapper().writeValueAsString(Map.of(
+                                    "id", user.getId(),
+                                    "token", jwt,
+                                    "email", email,
+                                    "username", user.getUsername(),
+                                    "img", user.getImg(),
+                                    "coin", user.getCoin(),
+                                    "role", user.getRoleEnum(),
+                                    "point", user.getPoint()
+                            )));
+                        })
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
