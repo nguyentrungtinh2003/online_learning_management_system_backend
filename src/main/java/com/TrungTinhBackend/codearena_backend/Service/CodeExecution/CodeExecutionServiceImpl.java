@@ -8,6 +8,7 @@ import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CodeExecutionRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -46,52 +48,71 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
                 () -> new NotFoundException("User not found!")
         );
 
-        // Call Judge0 API
+        // Gọi Judge0 API
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-RapidAPI-Key", apiKey); // Replace with your key
         headers.set("X-RapidAPI-Host", apiHost);
+        headers.set("X-RapidAPI-Key", apiKey);
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("source_code", dto.getCode());
-        request.put("language_id", Integer.parseInt(dto.getLanguage()));
+        Map<String, Object> body = new HashMap<>();
+        body.put("language_id", Integer.parseInt(dto.getLanguage()));
+        body.put("source_code", dto.getCode());
+        body.put("stdin", "");
 
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
                 "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
                 entity,
-                Map.class
+                String.class
         );
 
         APIResponse apiResponse = new APIResponse();
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> responseBody = response.getBody();
-            String output = (String) responseBody.get("stdout");
-            String stderr = (String) responseBody.get("stderr");
-            String finalOutput = output != null ? output : (stderr != null ? stderr : "No output");
+            try {
+                // Parse JSON từ String thành Map
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> responseBody = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
 
-            // Save execution to DB
-            CodeExecution execution = CodeExecution.builder()
-                    .language(dto.getLanguage())
-                    .code(dto.getCode())
-                    .output(finalOutput)
-                    .executedAt(LocalDateTime.now())
-                    .user(user)
-                    .build();
+                String output = (String) responseBody.get("stdout");
+                String stderr = (String) responseBody.get("stderr");
+                String compileOutput = (String) responseBody.get("compile_output");
 
-            codeExecutionRepository.save(execution);
+                String finalOutput = output != null ? output :
+                        stderr != null ? stderr :
+                                compileOutput != null ? compileOutput :
+                                        "No output";
 
-            apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("Code executed successfully");
-            apiResponse.setData(finalOutput);
-            apiResponse.setTimestamp(LocalDateTime.now());
-            return apiResponse;
+                // Save vào DB
+                CodeExecution execution = CodeExecution.builder()
+                        .language(dto.getLanguage())
+                        .code(dto.getCode())
+                        .output(finalOutput)
+                        .executedAt(LocalDateTime.now())
+                        .user(user)
+                        .build();
+
+                codeExecutionRepository.save(execution);
+
+                apiResponse.setStatusCode(200L);
+                apiResponse.setMessage("Code executed successfully");
+                apiResponse.setData(finalOutput);
+                apiResponse.setTimestamp(LocalDateTime.now());
+                return apiResponse;
+            } catch (Exception e) {
+                e.printStackTrace();
+                apiResponse.setStatusCode(500L);
+                apiResponse.setMessage("Error parsing Judge0 response: " + e.getMessage());
+                apiResponse.setData(null);
+                apiResponse.setTimestamp(LocalDateTime.now());
+                return apiResponse;
+            }
         }
 
         apiResponse.setStatusCode(500L);
-        apiResponse.setMessage("Error executing code");
+        apiResponse.setMessage("Error executing code (non-OK response)");
         apiResponse.setData(null);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
