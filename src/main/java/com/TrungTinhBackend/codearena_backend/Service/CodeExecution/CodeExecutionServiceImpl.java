@@ -24,18 +24,21 @@ import java.util.Map;
 @Service
 public class CodeExecutionServiceImpl implements CodeExecutionService {
 
-    @Autowired
-    private CodeExecutionRepository codeExecutionRepository;
+    private final CodeExecutionRepository codeExecutionRepository;
+    private final UserRepository userRepository;
+    private final String apiKey;
+    private final String apiHost;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Value("${apiKey}")
-    private String apiKey;
-
-    @Value("${apiHost}")
-    private String apiHost;
-
+    public CodeExecutionServiceImpl(CodeExecutionRepository codeExecutionRepository,
+                                    UserRepository userRepository,
+                                    @Value("${apiKey}") String apiKey,
+                                    @Value("${apiHost}") String apiHost) {
+        this.codeExecutionRepository = codeExecutionRepository;
+        this.userRepository = userRepository;
+        this.apiKey = apiKey;
+        this.apiHost = apiHost;
+    }
 
     @Override
     public APIResponse executeCode(CodeExecutionDTO dto) {
