@@ -457,38 +457,43 @@ public class UserServiceImpl implements UserService{
     @Override
     public APIResponse getCurrentUser(Authentication authentication) throws Exception {
         APIResponse apiResponse = new APIResponse();
-            // Lấy thông tin từ Authentication
-            OAuth2AuthenticationToken oAuth2Token = (OAuth2AuthenticationToken) authentication;
-            Map<String, Object> attributes = oAuth2Token.getPrincipal().getAttributes();
 
-            String email = (String) attributes.get("email");
-            String name = (String) attributes.get("name");
-            String profilePicture = (String) attributes.get("picture");
-
-            // Kiểm tra và lưu vào DB nếu cần
-            User existingUser = userRepository.findByEmail(email);
-            if (existingUser == null) {
-                User newUser = new User();
-                newUser.setEmail(email);
-                newUser.setUsername(name);
-                newUser.setImg(profilePicture);
-                newUser.setProvider("GOOGLE");
-                newUser.setPoint(0L);
-                newUser.setCoin(0.0);
-                newUser.setRoleEnum(RoleEnum.STUDENT);
-                newUser.setRankEnum(RankEnum.BRONZE);
-                userRepository.save(newUser); // Lưu vào DB
-            }
-
-            apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("Login google success");
-            apiResponse.setData(Map.of(
-                    "email", email,
-                    "name", name,
-                    "picture", profilePicture
-            ));
+        if (!(authentication instanceof OAuth2AuthenticationToken oAuth2Token)) {
+            apiResponse.setStatusCode(400L);
+            apiResponse.setMessage("Authentication is not from Google OAuth2");
             apiResponse.setTimestamp(LocalDateTime.now());
             return apiResponse;
+        }
+
+        Map<String, Object> attributes = oAuth2Token.getPrincipal().getAttributes();
+
+        String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+        String profilePicture = (String) attributes.get("picture");
+
+        User existingUser = userRepository.findByEmail(email);
+        if (existingUser == null) {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setUsername(name);
+            newUser.setImg(profilePicture);
+            newUser.setProvider("GOOGLE");
+            newUser.setPoint(0L);
+            newUser.setCoin(0.0);
+            newUser.setRoleEnum(RoleEnum.STUDENT);
+            newUser.setRankEnum(RankEnum.BRONZE);
+            userRepository.save(newUser);
+        }
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Login Google success");
+        apiResponse.setData(Map.of(
+                "email", email,
+                "name", name,
+                "picture", profilePicture
+        ));
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
     }
 
     @Override
