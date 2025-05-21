@@ -44,16 +44,15 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
 
     @Override
     public APIResponse executeCode(CodeExecutionDTO dto) {
-        User user = userRepository.findById(dto.getUser().getId()).orElseThrow(
-                () -> new NotFoundException("User not found!")
-        );
+        User user = userRepository.findById(dto.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("User not found!"));
 
-        // Gọi Judge0 API
+        // Gọi API Judge0
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-RapidAPI-Host", apiHost);
-        headers.set("X-RapidAPI-Key", apiKey);
+        headers.set("X-RapidAPI-Key", apiKey); // thay bằng key thật
 
         Map<String, Object> body = new HashMap<>();
         body.put("language_id", Integer.parseInt(dto.getLanguage()));
@@ -71,52 +70,55 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         APIResponse apiResponse = new APIResponse();
 
         if (response.getStatusCode() == HttpStatus.OK) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseBody;
+
             try {
-                // Parse JSON từ String thành Map
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> responseBody = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
-
-                String output = (String) responseBody.get("stdout");
-                String stderr = (String) responseBody.get("stderr");
-                String compileOutput = (String) responseBody.get("compile_output");
-
-                String finalOutput = output != null ? output :
-                        stderr != null ? stderr :
-                                compileOutput != null ? compileOutput :
-                                        "No output";
-
-                // Save vào DB
-                CodeExecution execution = CodeExecution.builder()
-                        .language(dto.getLanguage())
-                        .code(dto.getCode())
-                        .output(finalOutput)
-                        .executedAt(LocalDateTime.now())
-                        .user(user)
-                        .build();
-
-                codeExecutionRepository.save(execution);
-
-                apiResponse.setStatusCode(200L);
-                apiResponse.setMessage("Code executed successfully");
-                apiResponse.setData(finalOutput);
-                apiResponse.setTimestamp(LocalDateTime.now());
-                return apiResponse;
+                responseBody = objectMapper.readValue(
+                        response.getBody(),
+                        new TypeReference<Map<String, Object>>() {}
+                );
             } catch (Exception e) {
-                e.printStackTrace();
                 apiResponse.setStatusCode(500L);
-                apiResponse.setMessage("Error parsing Judge0 response: " + e.getMessage());
-                apiResponse.setData(null);
+                apiResponse.setMessage("Failed to parse response from Judge0 API");
                 apiResponse.setTimestamp(LocalDateTime.now());
+                apiResponse.setData(e.getMessage());
                 return apiResponse;
             }
+
+            String output = (String) responseBody.get("stdout");
+            String stderr = (String) responseBody.get("stderr");
+            String compileOutput = (String) responseBody.get("compile_output");
+
+            String finalOutput = output != null ? output :
+                    (stderr != null ? stderr :
+                            (compileOutput != null ? compileOutput : "No output"));
+
+            // Lưu vào DB
+            CodeExecution execution = CodeExecution.builder()
+                    .language(dto.getLanguage())
+                    .code(dto.getCode())
+                    .output(finalOutput)
+                    .executedAt(LocalDateTime.now())
+                    .user(user)
+                    .build();
+
+            codeExecutionRepository.save(execution);
+
+            apiResponse.setStatusCode(200L);
+            apiResponse.setMessage("Code executed successfully");
+            apiResponse.setData(finalOutput);
+            apiResponse.setTimestamp(LocalDateTime.now());
+            return apiResponse;
         }
 
         apiResponse.setStatusCode(500L);
-        apiResponse.setMessage("Error executing code (non-OK response)");
-        apiResponse.setData(null);
+        apiResponse.setMessage("Error calling Judge0 API");
         apiResponse.setTimestamp(LocalDateTime.now());
+        apiResponse.setData(response.getBody());
         return apiResponse;
     }
+
 
     @Override
     public APIResponse getExecuteCodeById(Long id) {
