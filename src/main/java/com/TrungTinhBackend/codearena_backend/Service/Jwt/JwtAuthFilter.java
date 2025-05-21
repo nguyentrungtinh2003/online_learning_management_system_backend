@@ -54,9 +54,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String username = jwtUtils.extractUsername(jwtToken);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof OAuth2AuthenticationToken) {
+        Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
+        if (username != null && !(existingAuth instanceof OAuth2AuthenticationToken)) {
+            if (existingAuth != null && existingAuth.isAuthenticated()) {
                 filterChain.doFilter(request, response);
                 return;
             }
