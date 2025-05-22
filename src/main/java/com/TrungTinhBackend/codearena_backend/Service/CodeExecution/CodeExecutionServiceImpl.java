@@ -48,6 +48,18 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new NotFoundException("User not found!"));
 
+        if (dto.getCode() == null || dto.getCode().trim().isEmpty()) {
+            throw new IllegalArgumentException("Code cannot be null or empty");
+        }
+
+        if (dto.getLanguage() == null || dto.getLanguage().trim().isEmpty()) {
+            throw new IllegalArgumentException("Language cannot be null or empty");
+        }
+
+        System.out.println("code "+dto.getCode());
+        System.out.println("language "+dto.getLanguage());
+        System.out.println("userId "+dto.getUserId());
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,6 +71,8 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         body.put("source_code", dto.getCode());
         body.put("stdin", "");
 
+        System.out.println("body "+body);
+
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -66,6 +80,8 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
                 entity,
                 String.class
         );
+
+        System.out.println("response status "+response.getStatusCode());
 
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException("Judge0 API error: " +
