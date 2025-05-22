@@ -73,7 +73,10 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
 
         System.out.println("body "+body);
 
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonBody = mapper.writeValueAsString(body);
+
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(
                 "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
