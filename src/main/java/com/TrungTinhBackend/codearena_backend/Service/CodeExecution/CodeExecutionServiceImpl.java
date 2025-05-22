@@ -68,7 +68,8 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         );
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("Judge0 API error: " + response.getStatusCodeValue() + " - " + response.getBody());
+            throw new RuntimeException("Judge0 API error: " +
+                    response.getStatusCode().value() + " - " + response.getBody());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
