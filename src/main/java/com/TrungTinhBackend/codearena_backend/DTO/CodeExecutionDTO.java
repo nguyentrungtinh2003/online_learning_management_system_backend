@@ -24,5 +24,5 @@ public class CodeExecutionDTO {
 
     private LocalDateTime executedAt;
 
-    private User user;
+    private Long userId;
 }

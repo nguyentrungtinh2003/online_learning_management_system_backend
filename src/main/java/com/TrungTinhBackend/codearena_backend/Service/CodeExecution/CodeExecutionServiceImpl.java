@@ -45,7 +45,7 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
 
     @Override
     public APIResponse executeCode(CodeExecutionDTO dto) throws JsonProcessingException {
-        User user = userRepository.findById(dto.getUser().getId())
+        User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new NotFoundException("User not found!"));
 
         RestTemplate restTemplate = new RestTemplate();
