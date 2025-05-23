@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -129,8 +130,21 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         );
 
         apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("Get execute code success !");
+        apiResponse.setMessage("Get execute code by id success !");
         apiResponse.setData(codeExecution);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse getExecuteCodeByUserId(Long userId) {
+        APIResponse apiResponse = new APIResponse();
+
+        List<CodeExecution> codeExecutions = codeExecutionRepository.findByUserId(userId);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Get execute code by userId success !");
+        apiResponse.setData(codeExecutions);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }

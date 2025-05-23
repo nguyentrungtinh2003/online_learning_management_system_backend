@@ -7,4 +7,5 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public interface CodeExecutionService {
     public APIResponse executeCode(CodeExecutionDTO codeExecutionDTO) throws JsonProcessingException;
     public APIResponse getExecuteCodeById(Long id);
+    public APIResponse getExecuteCodeByUserId(Long userId);
 }

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/execution-code")
+@RequestMapping("api/code")
 public class CodeExecutionController {
 
     @Autowired
@@ -24,5 +24,10 @@ public class CodeExecutionController {
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse> getExecuteCodeById(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(codeExecutionService.getExecuteCodeById(id));
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<APIResponse> getExecuteCodeByUserId(@PathVariable Long userId) throws Exception {
+        return ResponseEntity.ok(codeExecutionService.getExecuteCodeByUserId(userId));
     }
 }
