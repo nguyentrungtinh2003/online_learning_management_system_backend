@@ -26,7 +26,7 @@ public class CodeExecutionController {
         return ResponseEntity.ok(codeExecutionService.getExecuteCodeById(id));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<APIResponse> getExecuteCodeByUserId(@PathVariable Long userId) throws Exception {
         return ResponseEntity.ok(codeExecutionService.getExecuteCodeByUserId(userId));
     }
