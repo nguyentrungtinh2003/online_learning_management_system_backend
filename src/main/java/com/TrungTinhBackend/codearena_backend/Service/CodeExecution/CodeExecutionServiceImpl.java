@@ -57,10 +57,7 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
             throw new IllegalArgumentException("Language cannot be null or empty");
         }
 
-        System.out.println("code "+dto.getCode());
-        System.out.println("language "+dto.getLanguage());
-        System.out.println("userId "+dto.getUserId());
-
+        // Gọi Judge0 API
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,11 +69,8 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         body.put("source_code", dto.getCode());
         body.put("stdin", "");
 
-        System.out.println("body "+body);
-
         ObjectMapper mapper = new ObjectMapper();
         String jsonBody = mapper.writeValueAsString(body);
-
         HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -84,8 +78,6 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
                 entity,
                 String.class
         );
-
-        System.out.println("response status "+response.getStatusCode());
 
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException("Judge0 API error: " +
@@ -100,16 +92,28 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         String compileOutput = (String) responseBody.get("compile_output");
 
         String finalOutput = output != null ? output :
-                (stderr != null ? stderr :
-                        (compileOutput != null ? compileOutput : "No output"));
+                (stderr != null ? stderr : (compileOutput != null ? compileOutput : "No output"));
 
-        CodeExecution execution = CodeExecution.builder()
-                .language(dto.getLanguage())
-                .code(dto.getCode())
-                .output(finalOutput)
-                .executedAt(LocalDateTime.now())
-                .user(user)
-                .build();
+        CodeExecution execution;
+
+        if (dto.getId() != null) {
+            // Cập nhật bản ghi cũ
+            execution = codeExecutionRepository.findById(dto.getId())
+                    .orElseThrow(() -> new NotFoundException("Code execution not found!"));
+
+            execution.setCode(dto.getCode());
+            execution.setOutput(finalOutput);
+            execution.setUpdateDate(LocalDateTime.now());
+        } else {
+            // Tạo mới bản ghi
+            execution = CodeExecution.builder()
+                    .language(dto.getLanguage())
+                    .code(dto.getCode())
+                    .output(finalOutput)
+                    .executedAt(LocalDateTime.now())
+                    .user(user)
+                    .build();
+        }
 
         codeExecutionRepository.save(execution);
 
@@ -120,6 +124,7 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
+
 
     @Override
     public APIResponse getExecuteCodeById(Long id) {
