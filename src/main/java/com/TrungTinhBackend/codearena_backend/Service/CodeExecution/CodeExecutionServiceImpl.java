@@ -148,4 +148,44 @@ public class CodeExecutionServiceImpl implements CodeExecutionService {
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
+
+    @Override
+    public APIResponse updateCodeExecution(Long id, CodeExecutionDTO codeExecutionDTO) {
+        APIResponse apiResponse = new APIResponse();
+
+        CodeExecution codeExecution = codeExecutionRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Code execution not found !")
+        );
+
+        if(codeExecutionDTO.getCode() != null) {
+            codeExecution.setCode(codeExecutionDTO.getCode());
+        }
+
+        codeExecution.setUpdateDate(LocalDateTime.now());
+
+        codeExecutionRepository.save(codeExecution);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Update execute code success !");
+        apiResponse.setData(codeExecution);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse deleteCodeExecution(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        CodeExecution codeExecution = codeExecutionRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Code execution not found !")
+        );
+
+       codeExecutionRepository.delete(codeExecution);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Delete execute code success !");
+        apiResponse.setData(codeExecution);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
 }

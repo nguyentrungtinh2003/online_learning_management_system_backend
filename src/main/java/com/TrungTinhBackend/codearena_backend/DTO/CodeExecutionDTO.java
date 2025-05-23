@@ -23,6 +23,7 @@ public class CodeExecutionDTO {
     private String output;
 
     private LocalDateTime executedAt;
+    private LocalDateTime updateDate;
 
     private Long userId;
 

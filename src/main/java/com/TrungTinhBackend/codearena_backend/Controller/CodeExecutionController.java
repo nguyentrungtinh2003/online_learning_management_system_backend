@@ -30,4 +30,15 @@ public class CodeExecutionController {
     public ResponseEntity<APIResponse> getExecuteCodeByUserId(@PathVariable Long userId) throws Exception {
         return ResponseEntity.ok(codeExecutionService.getExecuteCodeByUserId(userId));
     }
+
+    @PutMapping("/user/update/{id}")
+    public ResponseEntity<APIResponse> updateExecuteCodeByUserId(@PathVariable Long id,
+                                                                 @RequestBody CodeExecutionDTO codeExecutionDTO) throws Exception {
+        return ResponseEntity.ok(codeExecutionService.updateCodeExecution(id,codeExecutionDTO));
+    }
+
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<APIResponse> deleteExecuteCodeByUserId(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok(codeExecutionService.deleteCodeExecution(id));
+    }
 }

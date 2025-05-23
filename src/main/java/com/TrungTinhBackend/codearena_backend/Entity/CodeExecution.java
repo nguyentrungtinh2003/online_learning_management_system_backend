@@ -28,6 +28,7 @@ public class CodeExecution {
     private String output;
 
     private LocalDateTime executedAt;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -8,4 +8,6 @@ public interface CodeExecutionService {
     public APIResponse executeCode(CodeExecutionDTO codeExecutionDTO) throws JsonProcessingException;
     public APIResponse getExecuteCodeById(Long id);
     public APIResponse getExecuteCodeByUserId(Long userId);
+    public APIResponse updateCodeExecution(Long id,CodeExecutionDTO codeExecutionDTO );
+    public APIResponse deleteCodeExecution(Long id);
 }
