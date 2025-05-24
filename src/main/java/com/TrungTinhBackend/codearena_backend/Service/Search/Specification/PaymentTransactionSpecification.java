@@ -14,7 +14,6 @@ public class PaymentTransactionSpecification {
             }
             String pattern = "%" + keyword.toLowerCase() + "%";
             return cb.or(
-                    cb.like(cb.lower(root.get("status").as(String.class)), pattern),
                     cb.like(cb.lower(root.get("user").get("username")), pattern)
             );
         };
