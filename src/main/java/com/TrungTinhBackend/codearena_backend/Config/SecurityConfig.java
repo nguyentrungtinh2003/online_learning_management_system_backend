@@ -133,22 +133,6 @@ public class SecurityConfig {
                                     .build();
 
                             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-
-                            // Trả response JSON kèm token
-                            // Chuyển từ response.getWriter().write(...) thành redirect
-                            String redirectUrl = UriComponentsBuilder.fromUriString("https://codearena-frontend-dev.vercel.app/oauth-success")
-                                    .queryParam("token", jwt)
-                                    .queryParam("id", user.getId())
-                                    .queryParam("username", user.getUsername())
-                                    .queryParam("email", email)
-                                    .queryParam("img", user.getImg())
-                                    .queryParam("coin", user.getCoin())
-                                    .queryParam("role", user.getRoleEnum())
-                                    .queryParam("point", user.getPoint())
-                                    .build().toUriString();
-
-                            response.sendRedirect(redirectUrl);
-
                         })
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
