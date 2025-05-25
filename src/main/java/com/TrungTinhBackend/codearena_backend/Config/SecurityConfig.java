@@ -97,13 +97,11 @@ public class SecurityConfig {
                         .successHandler((request, response, authentication) -> {
                             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
 
-                            // Lấy thông tin user từ oauthToken
                             Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
                             String email = (String) attributes.get("email");
                             String name = (String) attributes.get("name");
                             String picture = (String) attributes.get("picture");
 
-                            // Kiểm tra user đã có trong DB chưa
                             User user = userRepository.findByEmail(email);
                             if (user == null) {
                                 user = new User();
@@ -115,11 +113,9 @@ public class SecurityConfig {
                                 user.setCoin(0.0);
                                 user.setRoleEnum(RoleEnum.STUDENT);
                                 user.setRankEnum(RankEnum.BRONZE);
-
                                 userRepository.save(user);
                             }
 
-                            // Tạo JWT token (giả sử jwtUtils.generateToken nhận UserDetails hoặc username)
                             String jwt = jwtUtils.generateToken(user);
                             String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
                             refreshTokenService.createRefreshToken(refreshToken, user);
@@ -128,11 +124,14 @@ public class SecurityConfig {
                                     .httpOnly(true)
                                     .secure(true)
                                     .sameSite("None")
-                                    .path("/")         // PHẢI giống với logout
-                                    .maxAge(7 * 24 * 60 * 60) // 7 ngày
+                                    .path("/")
+                                    .maxAge(7 * 24 * 60 * 60)
                                     .build();
 
                             response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+                            // ✅ Chuyển hướng về frontend sau khi đăng nhập thành công
+                            response.sendRedirect("https://codearena-frontend-dev.vercel.app/");
                         })
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
