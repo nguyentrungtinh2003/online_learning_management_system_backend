@@ -82,6 +82,7 @@ public class User implements UserDetails {
 //    private Quiz quiz;
 
     @ManyToMany(mappedBy = "userSubmit")
+    @JsonIgnore()
     private List<Quiz> submittedQuizzes = new ArrayList<>();
 
 
