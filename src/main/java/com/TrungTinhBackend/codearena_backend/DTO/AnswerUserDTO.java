@@ -6,9 +6,5 @@ import java.util.List;
 
 @Data
 public class AnswerUserDTO {
-    private Long quizId;
-
-    private Long userId;
-
     private List<String> answersUser;
 }
