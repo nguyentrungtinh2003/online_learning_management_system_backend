@@ -152,8 +152,6 @@ public class BlogServiceImpl implements BlogService{
             apiResponse.setData(blog);
             apiResponse.setTimestamp(LocalDateTime.now());
 
-        webSocketSender.sendUserInfo(user);
-
             return apiResponse;
     }
 
@@ -369,10 +367,7 @@ public class BlogServiceImpl implements BlogService{
 
         blogRepository.save(blog);
 
-        user.setPoint(user.getPoint() + 5);
-        user.setRankEnum(userService.calculateRank(user.getPoint()));
-        userRepository.save(user);
-        webSocketSender.sendUserInfo(user);
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),5L));
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Restore blog success !");

@@ -50,6 +50,11 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         );
 
         user.setPoint(user.getPoint() + userPointHistoryDTO.getPoint());
+        // Ngăn không cho point bị âm
+        if (user.getPoint() < 0) {
+            throw new IllegalArgumentException("Tổng điểm không được âm");
+        }
+
         user.setRankEnum(userService.calculateRank(user.getPoint()));
         userRepository.save(user);
 
