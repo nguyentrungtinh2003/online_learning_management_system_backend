@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,6 +48,12 @@ public class Quiz {
     @JsonManagedReference()
     private List<Question> questions;
 
-    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> userSubmit;
+    @ManyToMany
+    @JoinTable(
+            name = "quiz_user_submit",
+            joinColumns = @JoinColumn(name = "quiz_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> userSubmit = new ArrayList<>();
+
 }

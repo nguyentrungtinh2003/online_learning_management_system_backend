@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.Quiz;
 
 import com.TrungTinhBackend.codearena_backend.DTO.AnswerUserDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Entity.Quiz;
@@ -15,6 +16,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
+import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,7 +55,10 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private UserService userService;
 
-    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService) {
+    @Autowired
+    private UserPointHistoryService userPointHistoryService;
+
+    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService, UserPointHistoryService userPointHistoryService) {
         this.quizRepository = quizRepository;
         this.imgService = imgService;
         this.lessonRepository = lessonRepository;
@@ -61,6 +66,7 @@ public class QuizServiceImpl implements QuizService{
         this.userRepository = userRepository;
         this.webSocketSender = webSocketSender;
         this.userService = userService;
+        this.userPointHistoryService = userPointHistoryService;
     }
 
     @Override
@@ -290,21 +296,15 @@ public class QuizServiceImpl implements QuizService{
                 () -> new NotFoundException("User not found !")
         );
 
-        if(quiz.getUserSubmit() != null && quiz.getUserSubmit().contains(user)) {
-            apiResponse.setStatusCode(200L);
-            apiResponse.setMessage("User has done quiz !");
-            apiResponse.setData(true);
-            apiResponse.setTimestamp(LocalDateTime.now());
-
-            return apiResponse;
-        }
+        boolean hasDone = quiz.getUserSubmit() != null && quiz.getUserSubmit().contains(user);
 
         apiResponse.setStatusCode(200L);
-        apiResponse.setMessage("User start quiz !");
-        apiResponse.setData(false);
+        apiResponse.setMessage(hasDone ? "User has done quiz !" : "User start quiz !");
+        apiResponse.setData(hasDone);
         apiResponse.setTimestamp(LocalDateTime.now());
 
         return apiResponse;
+
     }
 
     @Override
@@ -333,11 +333,7 @@ public class QuizServiceImpl implements QuizService{
         quiz.getUserSubmit().add(user);
         quizRepository.save(quiz);
 
-        user.setPoint(user.getPoint() + point);
-        user.setRankEnum(userService.calculateRank(user.getPoint()));
-        userRepository.save(user);
-
-        webSocketSender.sendUserInfo(user);
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),point));
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Submit quiz success !");

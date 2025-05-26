@@ -17,10 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -79,10 +76,14 @@ public class User implements UserDetails {
     @JsonIgnore()
     private List<Enrollment> enrollments;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "quiz_id")
-    @JsonIgnore()
-    private Quiz quiz;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "quiz_id")
+//    @JsonIgnore()
+//    private Quiz quiz;
+
+    @ManyToMany(mappedBy = "userSubmit")
+    private List<Quiz> submittedQuizzes = new ArrayList<>();
+
 
 //    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
 //    private List<Chat> chats;
