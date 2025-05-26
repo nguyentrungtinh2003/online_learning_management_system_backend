@@ -127,8 +127,6 @@ public class UserServiceImpl implements UserService{
 
     }
 
-
-
     @Override
     public APIResponse userRegister(UserRegisterDTO userRegisterDTO) throws Exception {
         APIResponse apiResponse = new APIResponse();
@@ -549,24 +547,13 @@ public class UserServiceImpl implements UserService{
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
 
-        // Xóa cookie JSESSIONID
-        ResponseCookie jsessionCookie = ResponseCookie.from("JSESSIONID", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(0)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, jsessionCookie.toString());
-
         // Xóa cookie authToken (JWT)
         ResponseCookie jwtCookie = ResponseCookie.from("authToken", "")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
-                .path("/")         // PHẢI giống với login
-                .maxAge(0)         // XÓA cookie
+                .path("/")
+                .maxAge(0) // xóa
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
