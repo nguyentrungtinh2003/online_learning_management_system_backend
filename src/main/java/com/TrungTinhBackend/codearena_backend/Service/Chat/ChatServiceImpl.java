@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.Chat;
 
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Chat;
 import com.TrungTinhBackend.codearena_backend.Entity.ChatRoom;
 import com.TrungTinhBackend.codearena_backend.Entity.User;
@@ -10,6 +11,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.DTO.ChatDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.Video.VideoService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +46,17 @@ public class ChatServiceImpl implements ChatService{
     @Autowired
     private WebSocketSender webSocketSender;
 
-    public ChatServiceImpl(ImgService imgService, VideoService videoService, ChatRepository chatRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository, WebSocketSender webSocketSender) {
+    @Autowired
+    private NotificationService notificationService;
+
+    public ChatServiceImpl(ImgService imgService, VideoService videoService, ChatRepository chatRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository, WebSocketSender webSocketSender, NotificationService notificationService) {
         this.imgService = imgService;
         this.videoService = videoService;
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.webSocketSender = webSocketSender;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -87,6 +93,9 @@ public class ChatServiceImpl implements ChatService{
 
 
             chatRepository.save(chat);
+
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(user2.getId(), user2.getUsername() +" vừa nhắn tin cho bạn ", "CHAT", 1L).getData();
+        webSocketSender.sendNotification(notificationDTO);
 
             chatDTO.setUser1Img(user1.getImg());
         chatDTO.setUser2Img(user2.getImg());

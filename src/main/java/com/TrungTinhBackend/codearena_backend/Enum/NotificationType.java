@@ -4,5 +4,6 @@ public enum NotificationType {
     COURSE,
     LESSON,
     QUIZ,
-    BLOG
+    BLOG,
+    CHAT
 }
