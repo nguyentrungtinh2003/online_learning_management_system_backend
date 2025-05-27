@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseMaterialServiceImpl implements CourseMaterialService{
@@ -79,9 +80,23 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
 
         List<CourseMaterial> courseMaterials = courseMaterialRepository.findAll();
 
+        List<CourseMaterialDTO> courseMaterialDTOS = courseMaterials.stream().map((courseMaterial -> {
+            CourseMaterialDTO courseMaterialDTO = new CourseMaterialDTO();
+
+            courseMaterialDTO.setId(courseMaterial.getId());
+            courseMaterialDTO.setTitle(courseMaterial.getTitle());
+            courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
+            courseMaterialDTO.setDescription(courseMaterial.getDescription());
+            courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
+            courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+
+            return courseMaterialDTO;
+        })).toList();
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get all course material success !");
-        apiResponse.setData(courseMaterials);
+        apiResponse.setData(courseMaterialDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
@@ -93,9 +108,23 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
         Pageable pageable = PageRequest.of(page,size);
         Page<CourseMaterial> courseMaterials = courseMaterialRepository.findAll(pageable);
 
+        Page<CourseMaterialDTO> courseMaterialDTOS = courseMaterials.map((courseMaterial -> {
+            CourseMaterialDTO courseMaterialDTO = new CourseMaterialDTO();
+
+            courseMaterialDTO.setId(courseMaterial.getId());
+            courseMaterialDTO.setTitle(courseMaterial.getTitle());
+            courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
+            courseMaterialDTO.setDescription(courseMaterial.getDescription());
+            courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
+            courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+
+            return courseMaterialDTO;
+        }));
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get course material by page success !");
-        apiResponse.setData(courseMaterials);
+        apiResponse.setData(courseMaterialDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
@@ -127,7 +156,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Update course material success !");
-        apiResponse.setData(courseMaterial);
+        apiResponse.setData(null);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
@@ -158,9 +187,23 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
         Specification<CourseMaterial> specification = CourseMaterialSpecification.searchByKeyword(keyword);
         Page<CourseMaterial> courseMaterials = courseMaterialRepository.findAll(specification,pageable);
 
+        Page<CourseMaterialDTO> courseMaterialDTOS = courseMaterials.map((courseMaterial -> {
+            CourseMaterialDTO courseMaterialDTO = new CourseMaterialDTO();
+
+            courseMaterialDTO.setId(courseMaterial.getId());
+            courseMaterialDTO.setTitle(courseMaterial.getTitle());
+            courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
+            courseMaterialDTO.setDescription(courseMaterial.getDescription());
+            courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
+            courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+
+            return courseMaterialDTO;
+        }));
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Search course material success !");
-        apiResponse.setData(courseMaterials);
+        apiResponse.setData(courseMaterialDTOS);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
@@ -173,9 +216,19 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
                 () -> new NotFoundException("Course material not found !")
         );
 
+        CourseMaterialDTO courseMaterialDTO = new CourseMaterialDTO();
+
+        courseMaterialDTO.setId(courseMaterial.getId());
+        courseMaterialDTO.setTitle(courseMaterial.getTitle());
+        courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+        courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
+        courseMaterialDTO.setDescription(courseMaterial.getDescription());
+        courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
+        courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get course material by id success !");
-        apiResponse.setData(courseMaterial);
+        apiResponse.setData(courseMaterialDTO);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
