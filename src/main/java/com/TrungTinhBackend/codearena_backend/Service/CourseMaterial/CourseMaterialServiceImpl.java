@@ -1,6 +1,8 @@
 package com.TrungTinhBackend.codearena_backend.Service.CourseMaterial;
 
+import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.CourseMaterial;
+import com.TrungTinhBackend.codearena_backend.Entity.User;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseMaterialRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
@@ -86,6 +88,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setId(courseMaterial.getId());
             courseMaterialDTO.setTitle(courseMaterial.getTitle());
             courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setFile(courseMaterial.getFile());
             courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
@@ -114,6 +117,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setId(courseMaterial.getId());
             courseMaterialDTO.setTitle(courseMaterial.getTitle());
             courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setFile(courseMaterial.getFile());
             courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
@@ -136,6 +140,15 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
         CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Course material not found !")
         );
+
+        Course course = courseRepository.findById(courseMaterialDTO.getCourseId()).orElseThrow(
+                () -> new NotFoundException("Course not found !")
+        );
+
+        User user = userRepository.findById(courseMaterialDTO.getId()).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
         courseMaterial.setTitle(courseMaterialDTO.getTitle());
         courseMaterial.setDescription(courseMaterialDTO.getDescription());
         courseMaterial.setDeleted(false);
@@ -180,6 +193,24 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
     }
 
     @Override
+    public APIResponse restoreCourseMaterial(Long id) {
+        APIResponse apiResponse = new APIResponse();
+
+        CourseMaterial courseMaterial = courseMaterialRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course material not found !")
+        );
+
+        courseMaterial.setDeleted(false);
+        courseMaterialRepository.save(courseMaterial);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Restore course material success !");
+        apiResponse.setData(courseMaterial);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
     public APIResponse searchCourseMaterial(String keyword, int page, int size) {
         APIResponse apiResponse = new APIResponse();
 
@@ -193,6 +224,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setId(courseMaterial.getId());
             courseMaterialDTO.setTitle(courseMaterial.getTitle());
             courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+            courseMaterialDTO.setFile(courseMaterial.getFile());
             courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
@@ -221,6 +253,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
         courseMaterialDTO.setId(courseMaterial.getId());
         courseMaterialDTO.setTitle(courseMaterial.getTitle());
         courseMaterialDTO.setCourseId(courseMaterial.getCourse().getId());
+        courseMaterialDTO.setFile(courseMaterial.getFile());
         courseMaterialDTO.setCourseName(courseMaterial.getCourse().getCourseName());
         courseMaterialDTO.setDescription(courseMaterial.getDescription());
         courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());

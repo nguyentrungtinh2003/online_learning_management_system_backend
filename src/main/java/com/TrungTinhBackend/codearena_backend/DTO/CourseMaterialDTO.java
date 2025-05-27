@@ -10,6 +10,8 @@ public class CourseMaterialDTO {
     private String title;
     private String description;
 
+    private String file;
+
     private Long courseId;
     private String courseName;
 

@@ -57,4 +57,9 @@ public class CourseMaterialController {
     public ResponseEntity<APIResponse> deleteCourseMaterial(@PathVariable Long id) {
         return ResponseEntity.ok(courseMaterialService.deleteCourseMaterial(id));
     }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<APIResponse> restoreCourseMaterial(@PathVariable Long id) {
+        return ResponseEntity.ok(courseMaterialService.restoreCourseMaterial(id));
+    }
 }
