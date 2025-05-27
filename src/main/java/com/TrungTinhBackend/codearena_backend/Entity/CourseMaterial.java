@@ -28,7 +28,6 @@ public class CourseMaterial {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonIgnore()
     private Course course;
 
     @ManyToOne
