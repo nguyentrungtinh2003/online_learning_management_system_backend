@@ -19,8 +19,10 @@ public class FileService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
-
-        Map<?,?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.asMap("resource_type", "raw")
+        );
         return uploadResult.get("url").toString();
     }
 
@@ -32,7 +34,9 @@ public class FileService {
             cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
         }
 
-        Map<?,?> uploadResult = cloudinary.uploader().upload(newFile.getBytes(), ObjectUtils.emptyMap());
+        Map<?,?> uploadResult = cloudinary.uploader().upload(newFile.getBytes(),
+                ObjectUtils.asMap("resource_type", "raw"));
+
         return uploadResult.get("url").toString();
     }
 
