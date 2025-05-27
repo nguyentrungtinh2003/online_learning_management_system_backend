@@ -141,19 +141,12 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
                 () -> new NotFoundException("Course material not found !")
         );
 
-        Course course = courseRepository.findById(courseMaterialDTO.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found !")
-        );
-
-        User user = userRepository.findById(courseMaterialDTO.getId()).orElseThrow(
-                () -> new NotFoundException("User not found !")
-        );
-
         courseMaterial.setTitle(courseMaterialDTO.getTitle());
         courseMaterial.setDescription(courseMaterialDTO.getDescription());
         courseMaterial.setDeleted(false);
         courseMaterial.setUploadDate(LocalDateTime.now());
-        if(file != null || file.isEmpty()) {
+
+        if (file != null && !file.isEmpty()) {
             courseMaterial.setFile(fileService.uploadFile(file));
         }
 
