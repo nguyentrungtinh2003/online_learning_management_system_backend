@@ -48,6 +48,14 @@ public class UserController {
         auditLogService.addLog(userLoginDTO.getUsername(),"LOGIN","Login account");
         return ResponseEntity.ok(userService.login(userLoginDTO,response, request));
     }
+
+    @PostMapping("/claim-reward/{id}/{point}")
+    public ResponseEntity<APIResponse> claimReward(@PathVariable Long id,
+                                                   @PathVariable Long point) throws Exception {
+        String username = SecurityUtils.getCurrentUsername();
+        auditLogService.addLog(username,"REWARD","Nhận thưởng từ khoá học");
+        return ResponseEntity.ok(userService.claimReward(id,point));
+    }
     //--google ----
     @GetMapping("user-google")
     public ResponseEntity<APIResponse> getCurrentUser(Authentication authentication) throws Exception {

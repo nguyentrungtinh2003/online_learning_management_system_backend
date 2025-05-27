@@ -15,8 +15,10 @@ import com.TrungTinhBackend.codearena_backend.Service.Email.EmailService;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
 import com.TrungTinhBackend.codearena_backend.Service.Jwt.JwtUtils;
 import com.TrungTinhBackend.codearena_backend.Service.LoginLog.LoginLogService;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.RefreshToken.RefreshTokenService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.UserSpecification;
+import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import jakarta.servlet.http.Cookie;
@@ -77,7 +79,13 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private WebSocketSender webSocketSender;
 
-    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender) {
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private UserPointHistoryService userPointHistoryService;
+
+    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, NotificationService notificationService, UserPointHistoryService userPointHistoryService) {
         this.userRepository = userRepository;
         this.imgService = imgService;
         this.emailService = emailService;
@@ -87,6 +95,8 @@ public class UserServiceImpl implements UserService{
         this.refreshTokenService = refreshTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.webSocketSender = webSocketSender;
+        this.notificationService = notificationService;
+        this.userPointHistoryService = userPointHistoryService;
     }
 
     @Override
@@ -631,6 +641,25 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByUsername(username);
         Optional<RefreshToken> refreshToken= refreshTokenRepository.findByUser(user);
         refreshToken.ifPresent(refreshTokenRepository::delete);
+
+        apiResponse.setStatusCode(200L);
+        apiResponse.setMessage("Logout success !");
+        apiResponse.setData(null);
+        apiResponse.setTimestamp(LocalDateTime.now());
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse claimReward(Long userId, Long point) {
+        APIResponse apiResponse = new APIResponse();
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User not found !")
+        );
+
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),point));
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(user.getId(), "Bạn vừa nhận phần thưởng : " + point, "COURSE", 1L).getData();
+        webSocketSender.sendNotification(notificationDTO);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Logout success !");

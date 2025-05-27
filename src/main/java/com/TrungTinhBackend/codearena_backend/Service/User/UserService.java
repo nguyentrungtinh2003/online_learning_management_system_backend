@@ -51,4 +51,6 @@ public interface UserService {
     public APIResponse verifyOtpAndChangePassword(UserResetPasswordDTO userResetPasswordDTO) throws Exception;
 
     public APIResponse logout(String username);
+
+    public APIResponse claimReward(Long userId, Long point);
 }
