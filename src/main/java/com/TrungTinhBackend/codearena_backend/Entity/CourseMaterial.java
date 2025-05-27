@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class CourseMaterial {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
+    @JsonIgnore()
     private Course course;
 
     @ManyToOne
