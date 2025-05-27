@@ -653,12 +653,8 @@ public class UserServiceImpl implements UserService{
     public APIResponse claimReward(Long userId, Long point) {
         APIResponse apiResponse = new APIResponse();
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("User not found !")
-        );
-
-        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),point));
-        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(user.getId(), "Bạn vừa nhận phần thưởng : " + point, "COURSE", 1L).getData();
+        userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(userId,point));
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(userId, "Bạn vừa nhận phần thưởng : " + point, "COURSE", 1L).getData();
         webSocketSender.sendNotification(notificationDTO);
 
         apiResponse.setStatusCode(200L);
