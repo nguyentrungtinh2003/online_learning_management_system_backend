@@ -9,7 +9,7 @@ public class CourseMaterialDTO {
     private String title;
     private String description;
 
-    private Course course;
+    private Long courseId;
 
-    private User lecturer;
+    private Long lecturerId;
 }

@@ -56,11 +56,11 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterial.setFile(fileService.uploadFile(file));
         }
 
-        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourse().getId()).orElseThrow(
+        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourseId()).orElseThrow(
                 () -> new NotFoundException("Course not found !")
         ));
 
-        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturer().getId()).orElseThrow(
+        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturerId()).orElseThrow(
                 () -> new NotFoundException("Lecturer not found !")
         ));
 
@@ -115,11 +115,11 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterial.setFile(fileService.uploadFile(file));
         }
 
-        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourse().getId()).orElseThrow(
+        courseMaterial.setCourse(courseRepository.findById(courseMaterialDTO.getCourseId()).orElseThrow(
                 () -> new NotFoundException("Course not found !")
         ));
 
-        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturer().getId()).orElseThrow(
+        courseMaterial.setLecturer(userRepository.findById(courseMaterialDTO.getLecturerId()).orElseThrow(
                 () -> new NotFoundException("Lecturer not found !")
         ));
 
