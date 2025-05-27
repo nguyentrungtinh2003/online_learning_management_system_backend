@@ -17,4 +17,6 @@ public class CourseMaterialDTO {
 
     private Long lecturerId;
     private String lecturerName;
+
+    private boolean isDeleted;
 }

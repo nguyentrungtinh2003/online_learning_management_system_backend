@@ -93,6 +93,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
             courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+            courseMaterialDTO.setDeleted(courseMaterial.isDeleted());
 
             return courseMaterialDTO;
         })).toList();
@@ -122,6 +123,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
             courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+            courseMaterialDTO.setDeleted(courseMaterial.isDeleted());
 
             return courseMaterialDTO;
         }));
@@ -222,6 +224,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
             courseMaterialDTO.setDescription(courseMaterial.getDescription());
             courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
             courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+            courseMaterialDTO.setDeleted(courseMaterial.isDeleted());
 
             return courseMaterialDTO;
         }));
@@ -251,6 +254,7 @@ public class CourseMaterialServiceImpl implements CourseMaterialService{
         courseMaterialDTO.setDescription(courseMaterial.getDescription());
         courseMaterialDTO.setLecturerId(courseMaterial.getLecturer().getId());
         courseMaterialDTO.setLecturerName(courseMaterial.getLecturer().getUsername());
+        courseMaterialDTO.setDeleted(courseMaterial.isDeleted());
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Get course material by id success !");
