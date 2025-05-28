@@ -1,11 +1,9 @@
 package com.TrungTinhBackend.codearena_backend.Service.Lesson;
 
 import com.TrungTinhBackend.codearena_backend.Entity.*;
+import com.TrungTinhBackend.codearena_backend.Entity.Process;
 import com.TrungTinhBackend.codearena_backend.Exception.NotFoundException;
-import com.TrungTinhBackend.codearena_backend.Repository.ChatRoomRepository;
-import com.TrungTinhBackend.codearena_backend.Repository.CourseRepository;
-import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
-import com.TrungTinhBackend.codearena_backend.Repository.QuizRepository;
+import com.TrungTinhBackend.codearena_backend.Repository.*;
 import com.TrungTinhBackend.codearena_backend.DTO.LessonDTO;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
@@ -42,12 +40,16 @@ public class LessonServiceImpl implements LessonService{
     @Autowired
     private QuizRepository quizRepository;
 
-    public LessonServiceImpl(LessonRepository lessonRepository, ImgService imgService, VideoService videoService, CourseRepository courseRepository, QuizRepository quizRepository) {
+    @Autowired
+    private ProcessRepository processRepository;
+
+    public LessonServiceImpl(LessonRepository lessonRepository, ImgService imgService, VideoService videoService, CourseRepository courseRepository, QuizRepository quizRepository, ProcessRepository processRepository) {
         this.lessonRepository = lessonRepository;
         this.imgService = imgService;
         this.videoService = videoService;
         this.courseRepository = courseRepository;
         this.quizRepository = quizRepository;
+        this.processRepository = processRepository;
     }
 
     @Override
@@ -265,4 +267,25 @@ public class LessonServiceImpl implements LessonService{
 
         return apiResponse;
     }
+
+    public APIResponse getCompletedLessons(Long userId, Long courseId) {
+        List<Process> completedLessons = processRepository.findByUserIdAndCourseId(userId, courseId);
+
+        List<Long> lessonCompleteIds =  completedLessons.stream()
+                .filter(p -> p.getLesson() != null &&
+                        p.getCompletionPercent() != null &&
+                        p.getCompletionPercent() >= 100)
+                .map(p -> p.getLesson().getId()
+                )
+                .toList();
+
+        APIResponse response = new APIResponse();
+        response.setStatusCode(200L);
+        response.setMessage("Get lesson complete by userId, courseId!");
+        response.setData(lessonCompleteIds);
+        response.setTimestamp(LocalDateTime.now());
+
+        return response;
+    }
+
 }

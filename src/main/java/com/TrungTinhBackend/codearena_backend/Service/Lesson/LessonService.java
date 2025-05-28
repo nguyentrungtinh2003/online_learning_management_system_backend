@@ -15,4 +15,5 @@ public interface LessonService {
     public APIResponse getLessonByCourseIdAndByPage(Long courseId,int page, int size);
     public APIResponse getAllLessonsByCourseId(Long CourseId);
     public APIResponse restoreLesson(Long id);
+    public APIResponse getCompletedLessons(Long userId, Long courseId);
 }

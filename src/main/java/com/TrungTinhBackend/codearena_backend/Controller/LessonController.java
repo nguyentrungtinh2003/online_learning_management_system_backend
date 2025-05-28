@@ -39,6 +39,12 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.getAllLesson());
     }
 
+    @GetMapping("/lessons/completed/{userId}/{courseId}")
+    public ResponseEntity<APIResponse> getLessonComplete(@PathVariable Long userId,
+                                                         @PathVariable Long courseId) {
+        return ResponseEntity.ok(lessonService.getCompletedLessons(userId,courseId));
+    }
+
     @GetMapping("lessons/{id}")
     public ResponseEntity<APIResponse> getLessonById(@PathVariable Long id) {
         String username = SecurityUtils.getCurrentUsername();
