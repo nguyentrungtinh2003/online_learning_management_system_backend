@@ -54,7 +54,6 @@ import java.util.*;
 public class UserServiceImpl implements UserService{
 
     @Autowired
-    @Lazy
     private UserRepository userRepository;
 
     @Autowired
@@ -85,6 +84,7 @@ public class UserServiceImpl implements UserService{
     private NotificationService notificationService;
 
     @Autowired
+    @Lazy
     private UserPointHistoryService userPointHistoryService;
 
     public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, NotificationService notificationService, UserPointHistoryService userPointHistoryService) {
