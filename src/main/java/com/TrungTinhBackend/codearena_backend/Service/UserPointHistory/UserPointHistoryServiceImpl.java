@@ -10,6 +10,7 @@ import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     private WebSocketSender webSocketSender;
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService) {
