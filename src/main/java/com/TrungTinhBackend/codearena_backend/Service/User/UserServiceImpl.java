@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
     @Lazy
     private UserPointHistoryService userPointHistoryService;
 
-    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, NotificationService notificationService, UserPointHistoryService userPointHistoryService) {
+    public UserServiceImpl(UserRepository userRepository, ImgService imgService, EmailService emailService, JwtUtils jwtUtils, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, WebSocketSender webSocketSender, NotificationService notificationService,  @Lazy UserPointHistoryService userPointHistoryService) {
         this.userRepository = userRepository;
         this.imgService = imgService;
         this.emailService = emailService;

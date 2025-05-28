@@ -36,7 +36,7 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
     @Lazy
     private UserService userService;
 
-    public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService) {
+    public UserPointHistoryServiceImpl(UserPointHistoryRepository userPointHistoryRepository, UserRepository userRepository, WebSocketSender webSocketSender,  @Lazy UserService userService) {
         this.userPointHistoryRepository = userPointHistoryRepository;
         this.userRepository = userRepository;
         this.webSocketSender = webSocketSender;
