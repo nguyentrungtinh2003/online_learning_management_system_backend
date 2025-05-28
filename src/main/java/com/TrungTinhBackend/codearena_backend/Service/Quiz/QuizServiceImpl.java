@@ -1,6 +1,7 @@
 package com.TrungTinhBackend.codearena_backend.Service.Quiz;
 
 import com.TrungTinhBackend.codearena_backend.DTO.AnswerUserDTO;
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
@@ -14,6 +15,7 @@ import com.TrungTinhBackend.codearena_backend.DTO.QuizDTO;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
 import com.TrungTinhBackend.codearena_backend.Service.Img.ImgService;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.Search.Specification.QuizSpecification;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
@@ -58,7 +60,10 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private UserPointHistoryService userPointHistoryService;
 
-    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService, UserPointHistoryService userPointHistoryService) {
+    @Autowired
+    private NotificationService notificationService;
+
+    public QuizServiceImpl(QuizRepository quizRepository, ImgService imgService, LessonRepository lessonRepository, QuestionRepository questionRepository, UserRepository userRepository, WebSocketSender webSocketSender, UserService userService, UserPointHistoryService userPointHistoryService, NotificationService notificationService) {
         this.quizRepository = quizRepository;
         this.imgService = imgService;
         this.lessonRepository = lessonRepository;
@@ -67,6 +72,7 @@ public class QuizServiceImpl implements QuizService{
         this.webSocketSender = webSocketSender;
         this.userService = userService;
         this.userPointHistoryService = userPointHistoryService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -334,6 +340,8 @@ public class QuizServiceImpl implements QuizService{
         quizRepository.save(quiz);
 
         userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(user.getId(),point));
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(userId, "Bạn vừa nhận được "+point+" point từ quiz", "QUIZ", 1L).getData();
+        webSocketSender.sendNotification(notificationDTO);
 
         apiResponse.setStatusCode(200L);
         apiResponse.setMessage("Submit quiz success !");

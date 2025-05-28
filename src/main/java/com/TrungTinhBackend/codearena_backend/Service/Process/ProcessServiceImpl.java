@@ -1,5 +1,6 @@
 package com.TrungTinhBackend.codearena_backend.Service.Process;
 
+import com.TrungTinhBackend.codearena_backend.DTO.NotificationDTO;
 import com.TrungTinhBackend.codearena_backend.DTO.UserPointHistoryDTO;
 import com.TrungTinhBackend.codearena_backend.Entity.Course;
 import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
@@ -12,6 +13,7 @@ import com.TrungTinhBackend.codearena_backend.Repository.LessonRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.ProcessRepository;
 import com.TrungTinhBackend.codearena_backend.Repository.UserRepository;
 import com.TrungTinhBackend.codearena_backend.Response.APIResponse;
+import com.TrungTinhBackend.codearena_backend.Service.Notification.NotificationService;
 import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import com.TrungTinhBackend.codearena_backend.Service.UserPointHistory.UserPointHistoryService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
@@ -47,13 +49,17 @@ public class ProcessServiceImpl implements ProcessService{
     @Autowired
     private UserPointHistoryService userPointHistoryService;
 
-    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository, UserService userService, WebSocketSender webSocketSender, UserPointHistoryService userPointHistoryService) {
+    @Autowired
+    private NotificationService notificationService;
+
+    public ProcessServiceImpl(ProcessRepository processRepository, UserRepository userRepository, CourseRepository courseRepository, UserService userService, WebSocketSender webSocketSender, UserPointHistoryService userPointHistoryService, NotificationService notificationService) {
         this.processRepository = processRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.userService = userService;
         this.webSocketSender = webSocketSender;
         this.userPointHistoryService = userPointHistoryService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -125,6 +131,8 @@ public class ProcessServiceImpl implements ProcessService{
             lessonProcess.setStatus(ProcessEnum.COMPLETED);
 
            userPointHistoryService.addUserPointHistory(new UserPointHistoryDTO(userId,1L));
+            NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(userId, "Bạn vừa nhận được 1 Point xem video", "LESSON", 1L).getData();
+            webSocketSender.sendNotification(notificationDTO);
 
             processRepository.saveAndFlush(lessonProcess);
         }
