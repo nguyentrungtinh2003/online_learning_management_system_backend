@@ -11,7 +11,9 @@ import com.TrungTinhBackend.codearena_backend.Service.User.UserService;
 import com.TrungTinhBackend.codearena_backend.Service.WebSocket.WebSocketSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -117,6 +119,42 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         return apiResponse;
     }
 
+    //Plus point date
+    @Scheduled(cron = "0 0 0 * * ?") // chạy lúc 00:00 mỗi ngày
+    public void rewardTop3Daily() {
+        LocalDate date = LocalDate.now().minusDays(1); // lấy dữ liệu ngày hôm qua
+
+        List<UserPointHistory> top3 = userPointHistoryRepository.findTop10ByDateOrderByPointDesc(date).stream()
+                .collect(Collectors.groupingBy(h -> h.getUser().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.reducing((h1, h2) -> {
+                                    h1.setPoint(h1.getPoint() + h2.getPoint());
+                                    return h1;
+                                }),
+                                Optional::get
+                        )))
+                .values().stream()
+                .sorted(Comparator.comparingLong(UserPointHistory::getPoint).reversed())
+                .limit(3)
+                .toList();
+
+        Long[] rewards = {10L, 8L, 5L};
+
+        for (int i = 0; i < top3.size(); i++) {
+            User user = top3.get(i).getUser();
+            user.setPoint(user.getPoint() + rewards[i]);
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
+            userRepository.save(user);
+            webSocketSender.sendUserInfo(user);
+
+            UserPointHistory rewardHistory = new UserPointHistory();
+            rewardHistory.setUser(user);
+            rewardHistory.setPoint(rewards[i]);
+            rewardHistory.setDate(LocalDate.now()); // ngày cộng thưởng
+            userPointHistoryRepository.save(rewardHistory);
+        }
+    }
+
     @Override
     public APIResponse getTop10ByWeek(LocalDate startDate, LocalDate endDate) {
         APIResponse apiResponse = new APIResponse();
@@ -143,6 +181,42 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         apiResponse.setData(userPointHistories);
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
+    }
+
+    @Scheduled(cron = "0 0 0 * * MON") // 00:00 mỗi thứ Hai
+    public void rewardTop3Weekly() {
+        LocalDate endDate = LocalDate.now().minusDays(1); // hôm qua (chủ nhật)
+        LocalDate startDate = endDate.minusDays(6); // từ thứ hai trước
+
+        List<UserPointHistory> top3 = userPointHistoryRepository.findTop10ByWeek(startDate, endDate).stream()
+                .collect(Collectors.groupingBy(h -> h.getUser().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.reducing((h1, h2) -> {
+                                    h1.setPoint(h1.getPoint() + h2.getPoint());
+                                    return h1;
+                                }),
+                                Optional::get
+                        )))
+                .values().stream()
+                .sorted(Comparator.comparingLong(UserPointHistory::getPoint).reversed())
+                .limit(3)
+                .toList();
+
+        Long[] rewards = {30L, 25L, 20L};
+
+        for (int i = 0; i < top3.size(); i++) {
+            User user = top3.get(i).getUser();
+            user.setPoint(user.getPoint() + rewards[i]);
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
+            userRepository.save(user);
+            webSocketSender.sendUserInfo(user);
+
+            UserPointHistory rewardHistory = new UserPointHistory();
+            rewardHistory.setUser(user);
+            rewardHistory.setPoint(rewards[i]);
+            rewardHistory.setDate(LocalDate.now());
+            userPointHistoryRepository.save(rewardHistory);
+        }
     }
 
     @Override
@@ -172,4 +246,42 @@ public class UserPointHistoryServiceImpl implements UserPointHistoryService{
         apiResponse.setTimestamp(LocalDateTime.now());
         return apiResponse;
     }
+
+    @Scheduled(cron = "0 0 0 1 * ?") // 00:00 ngày 1 mỗi tháng
+    public void rewardTop3Monthly() {
+        LocalDate now = LocalDate.now().minusDays(1); // hôm qua là cuối tháng
+        int month = now.getMonthValue();
+        int year = now.getYear();
+
+        List<UserPointHistory> top3 = userPointHistoryRepository.findTop10ByMonth(month, year).stream()
+                .collect(Collectors.groupingBy(h -> h.getUser().getId(),
+                        Collectors.collectingAndThen(
+                                Collectors.reducing((h1, h2) -> {
+                                    h1.setPoint(h1.getPoint() + h2.getPoint());
+                                    return h1;
+                                }),
+                                Optional::get
+                        )))
+                .values().stream()
+                .sorted(Comparator.comparingLong(UserPointHistory::getPoint).reversed())
+                .limit(3)
+                .toList();
+
+        Long[] rewards = {50L, 40L, 30L};
+
+        for (int i = 0; i < top3.size(); i++) {
+            User user = top3.get(i).getUser();
+            user.setPoint(user.getPoint() + rewards[i]);
+            user.setRankEnum(userService.calculateRank(user.getPoint()));
+            userRepository.save(user);
+            webSocketSender.sendUserInfo(user);
+
+            UserPointHistory rewardHistory = new UserPointHistory();
+            rewardHistory.setUser(user);
+            rewardHistory.setPoint(rewards[i]);
+            rewardHistory.setDate(LocalDate.now());
+            userPointHistoryRepository.save(rewardHistory);
+        }
+    }
+
 }

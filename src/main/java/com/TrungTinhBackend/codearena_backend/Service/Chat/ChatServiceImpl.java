@@ -94,7 +94,7 @@ public class ChatServiceImpl implements ChatService{
 
             chatRepository.save(chat);
 
-        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(user2.getId(), user2.getUsername() +" vừa nhắn tin cho bạn ", "CHAT", 1L).getData();
+        NotificationDTO notificationDTO = (NotificationDTO) notificationService.sendSystemNotification(user2.getId(), user2.getUsername() +" vừa nhắn tin cho bạn ", "COURSE", 1L).getData();
         webSocketSender.sendNotification(notificationDTO);
 
             chatDTO.setUser1Img(user1.getImg());
