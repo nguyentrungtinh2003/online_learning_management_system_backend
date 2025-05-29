@@ -4,12 +4,16 @@ import com.TrungTinhBackend.codearena_backend.Entity.Lesson;
 import com.TrungTinhBackend.codearena_backend.Entity.Question;
 import com.TrungTinhBackend.codearena_backend.Enum.QuizEnum;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuizDTO {
 
     private Long id;

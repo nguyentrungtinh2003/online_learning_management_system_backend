@@ -92,7 +92,7 @@ public class QuizServiceImpl implements QuizService{
             quiz.setQuizEnum(quizDTO.getQuizEnum());
             quiz.setDeleted(false);
             quiz.setDate(LocalDateTime.now());
-        quiz.setUserSubmit(new ArrayList<>()); // Chỉ dùng khi tạo mới quiz
+        quiz.setUserSubmit(new ArrayList<>());
 
 
         if(img != null) {
