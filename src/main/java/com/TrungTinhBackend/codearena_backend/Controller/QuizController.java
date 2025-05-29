@@ -8,6 +8,7 @@ import com.TrungTinhBackend.codearena_backend.Service.Quiz.QuizService;
 import com.TrungTinhBackend.codearena_backend.Utils.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class QuizController {
     @Autowired
     private AuditLogService auditLogService;
 
-    @PostMapping("teacher/quizzes/add")
+    @PostMapping(value = "teacher/quizzes/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<APIResponse> addQuiz(@Valid @RequestPart(value = "quiz") QuizDTO quizDTO,
                                                  @RequestPart(value = "img", required = false) MultipartFile img) throws Exception {
         String username = SecurityUtils.getCurrentUsername();
