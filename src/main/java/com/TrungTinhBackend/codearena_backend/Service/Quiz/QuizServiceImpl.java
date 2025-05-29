@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,8 +92,10 @@ public class QuizServiceImpl implements QuizService{
             quiz.setQuizEnum(quizDTO.getQuizEnum());
             quiz.setDeleted(false);
             quiz.setDate(LocalDateTime.now());
+        quiz.setUserSubmit(new ArrayList<>()); // Chỉ dùng khi tạo mới quiz
 
-            if(img != null) {
+
+        if(img != null) {
                 quiz.setImg(imgService.uploadImg(img));
             }
             quiz.setLesson(lesson);
