@@ -49,7 +49,7 @@ public class PaymentTransactionController {
     @GetMapping("/execute/paypal")
     public ResponseEntity<APIResponse> executePaymentPayPal(
             @RequestParam("paymentId") String paymentId,
-            @RequestParam("PayerId") String payerId,
+            @RequestParam("payerId") String payerId,
             @RequestParam("userId") Long userId) throws Exception {
         return ResponseEntity.ok(paypalService.executePayment(paymentId, payerId, userId));
     }
